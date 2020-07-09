@@ -34,6 +34,9 @@
   "name": "form",
   "author": "rzane",
   "module": "dist/form.esm.js",
+  "peerDependencies": {
+    "@stackup/validate": "^0.2.0"
+  },
   "devDependencies": {
     "@types/react": "^16.9.41",
     "@types/react-dom": "^16.9.8",

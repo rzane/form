@@ -1019,6 +1019,11 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
+"@stackup/validate@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@stackup/validate/-/validate-0.2.0.tgz#3e41a766a730d6eb55ab014990e3ab36782a5920"
+  integrity sha512-xvo8deU0XH2C8pQm0x+IsWG+eQIDu1RnYSQo4+PHAUjGP828gpRloFIr30BXLn1wV8of1fuyF9QERmRUbQrjOw==
+
 "@types/babel__core@^7.1.0":
   version "7.1.9"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.9.tgz#77e59d438522a6fb898fa43dc3455c6e72f3963d"
