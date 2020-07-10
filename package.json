@@ -1,7 +1,10 @@
 {
   "version": "0.1.0",
   "license": "MIT",
+  "name": "form",
+  "author": "rzane",
   "main": "dist/index.js",
+  "module": "dist/form.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
@@ -14,11 +17,8 @@
     "start": "tsdx watch",
     "build": "tsdx build",
     "test": "tsdx test --passWithNoTests",
-    "lint": "tsdx lint",
+    "lint": "tsdx lint src test",
     "prepare": "tsdx build"
-  },
-  "peerDependencies": {
-    "react": ">=16"
   },
   "husky": {
     "hooks": {
@@ -26,18 +26,15 @@
     }
   },
   "prettier": {
-    "printWidth": 80,
-    "semi": true,
-    "singleQuote": true,
-    "trailingComma": "es5"
+    "arrowParens": "avoid",
+    "trailingComma": "none"
   },
-  "name": "form",
-  "author": "rzane",
-  "module": "dist/form.esm.js",
   "peerDependencies": {
+    "react": ">=16",
     "@stackup/validate": "^0.2.0"
   },
   "devDependencies": {
+    "@stackup/validate": "^0.2.0",
     "@types/react": "^16.9.41",
     "@types/react-dom": "^16.9.8",
     "husky": "^4.2.5",
