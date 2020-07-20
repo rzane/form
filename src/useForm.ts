@@ -8,6 +8,9 @@ export function useForm<T>(options: FormOptions<T>): Form<T> {
   const initialTouched = React.useRef(options.initialTouched ?? {}).current;
   const [touched, setTouched] = React.useState(initialTouched);
 
+  const initialErrors = React.useRef(options.initialErrors ?? {}).current;
+  const [errors, setErrors] = React.useState(initialErrors);
+
   return {
     initialValues,
     values,
@@ -15,6 +18,10 @@ export function useForm<T>(options: FormOptions<T>): Form<T> {
 
     initialTouched,
     touched,
-    setTouched
+    setTouched,
+
+    initialErrors,
+    errors,
+    setErrors
   };
 }
