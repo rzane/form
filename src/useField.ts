@@ -13,8 +13,8 @@ export function useField<T, K extends keyof T>(
   return {
     name: name as string,
     value: fields.values[name],
-    error: fields.errors[name] as string,
-    touched: fields.touched[name] as boolean,
+    error: fields.errors[name],
+    touched: fields.touched[name],
     setValue(value) {
       fields.setValues({ ...fields.values, [name]: value });
     },

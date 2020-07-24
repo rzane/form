@@ -1,21 +1,25 @@
+export type FieldErrors<T> = T extends any[]
+  ? T[number] extends object
+    ? FormErrors<T[number]>[] | string | string[]
+    : string | string[]
+  : T extends object
+  ? FormErrors<T>
+  : string;
+
 export type FormErrors<T> = {
-  [K in keyof T]?: T[K] extends any[]
-    ? T[K][number] extends object
-      ? FormErrors<T[K][number]>[] | string | string[]
-      : string | string[]
-    : T[K] extends object
-    ? FormErrors<T[K]>
-    : string;
+  [K in keyof T]?: FieldErrors<T[K]>;
 };
 
+export type FieldTouched<T> = T extends any[]
+  ? T[number] extends object
+    ? FormTouched<T[number]>[]
+    : boolean
+  : T extends object
+  ? FormTouched<T>
+  : boolean;
+
 export type FormTouched<T> = {
-  [K in keyof T]?: T[K] extends any[]
-    ? T[K][number] extends object
-      ? FormTouched<T[K][number]>[]
-      : boolean
-    : T[K] extends object
-    ? FormTouched<T[K]>
-    : boolean;
+  [K in keyof T]?: FieldTouched<T[K]>;
 };
 
 export interface FormOptions<T> {
@@ -42,8 +46,8 @@ export interface Form<T> extends Fields<T> {
 export interface Field<T> {
   name: string;
   value: T;
-  error: string | undefined;
-  touched: boolean;
+  error: FieldErrors<T> | undefined;
+  touched: FieldTouched<T> | undefined;
   setValue: (value: T) => void;
   setError: (error: string) => void;
   setTouched: (touched: boolean) => void;
