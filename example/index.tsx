@@ -1,10 +1,22 @@
 import "react-app-polyfill/ie11";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { useForm, useField } from "../src";
+import { useForm, useField, Field } from "../src";
 
 interface Values {
   name: string;
+}
+
+function useInput(field: Field<string>) {
+  return {
+    value: field.value,
+    onBlur() {
+      field.setTouched(true);
+    },
+    onChange(event: React.ChangeEvent<HTMLInputElement>) {
+      field.setValue(event.target.value);
+    }
+  };
 }
 
 function App() {
@@ -15,7 +27,7 @@ function App() {
     }
   });
 
-  const name = useField(form, "name");
+  const name = useInput(useField(form, "name"));
 
   return (
     <div>
@@ -23,12 +35,7 @@ function App() {
 
       <div>
         <label htmlFor="name">Name</label>
-        <input
-          id="name"
-          value={name.value}
-          onBlur={() => name.setTouched(true)}
-          onChange={event => name.setValue(event.target.value)}
-        />
+        <input id="name" {...name} />
       </div>
     </div>
   );

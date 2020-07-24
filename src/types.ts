@@ -40,6 +40,7 @@ export interface Form<T> extends Fields<T> {
 }
 
 export interface Field<T> {
+  name: string;
   value: T;
   error: string | undefined;
   touched: boolean;
