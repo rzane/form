@@ -12,16 +12,28 @@ export interface FormOptions<T> {
   initialTouched?: FormTouched;
 }
 
-export interface Form<T> {
-  initialValues: T;
+type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
+
+export interface Fields<T> {
   values: T;
-  setValues: (values: T) => void;
-
-  initialErrors: FormErrors;
+  setValues: SetState<T>;
   errors: FormErrors;
-  setErrors: (errors: FormErrors) => void;
-
-  initialTouched: FormTouched;
+  setErrors: SetState<FormErrors>;
   touched: FormTouched;
-  setTouched: (touched: FormTouched) => void;
+  setTouched: SetState<FormTouched>;
+}
+
+export interface Form<T> extends Fields<T> {
+  initialValues: T;
+  initialErrors: FormErrors;
+  initialTouched: FormTouched;
+}
+
+export interface Field<T> {
+  value: T;
+  setValue: SetState<T>;
+  error: string | undefined;
+  setError: SetState<string>;
+  touched: boolean;
+  setTouched: SetState<boolean>;
 }
