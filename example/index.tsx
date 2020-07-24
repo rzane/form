@@ -1,14 +1,17 @@
 import "react-app-polyfill/ie11";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { useForm, useField, Field } from "../src";
+import { useForm, Fields, KeysOfType, useFieldWithType } from "../src";
 
 interface Values {
   name: string;
 }
 
-function useInput(field: Field<string>) {
+function useInput<T>(fields: Fields<T>, name: KeysOfType<T, string>) {
+  const field = useFieldWithType(fields, name);
+
   return {
+    name,
     value: field.value,
     onBlur() {
       field.setTouched(true);
@@ -27,7 +30,7 @@ function App() {
     }
   });
 
-  const name = useInput(useField(form, "name"));
+  const name = useInput(form, "name");
 
   return (
     <div>

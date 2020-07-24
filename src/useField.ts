@@ -1,5 +1,11 @@
 import { Fields, Field } from "./types";
 
+type Filter<T, V> = {
+  [P in keyof T]: T[P] extends V ? P : never;
+};
+
+export type KeysOfType<T, V> = Filter<T, V>[keyof T];
+
 export function useField<T, K extends keyof T>(
   fields: Fields<T>,
   name: K
@@ -19,4 +25,11 @@ export function useField<T, K extends keyof T>(
       fields.setErrors({ ...fields.errors, [name]: error });
     }
   };
+}
+
+export function useFieldWithType<T, V>(
+  fields: Fields<T>,
+  name: KeysOfType<T, V>
+): Field<V> {
+  return useField(fields, name) as any;
 }
