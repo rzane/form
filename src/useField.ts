@@ -27,9 +27,9 @@ export function useField<T, K extends keyof T>(
   };
 }
 
-export function useFieldWithType<T, V>(
+export function useTypedField<T, V>(
   fields: Fields<T>,
   name: KeysOfType<T, V>
 ): Field<V> {
-  return useField(fields, name) as any;
+  return useField<any, any>(fields, name);
 }
