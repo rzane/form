@@ -1,14 +1,14 @@
 import "react-app-polyfill/ie11";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { useForm, Fields, KeysOfType, useFieldWithType } from "../src";
+import { useForm, Fields, NamesOfType, useFieldOfType } from "../src";
 
 interface Values {
   name: string;
 }
 
-function useInput<T>(fields: Fields<T>, name: KeysOfType<T, string>) {
-  const field = useFieldWithType(fields, name);
+function useInput<T>(fields: Fields<T>, name: NamesOfType<T, string>) {
+  const field = useFieldOfType(fields, name);
 
   return {
     name,

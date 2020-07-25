@@ -4,7 +4,7 @@ type Filter<T, V> = {
   [P in keyof T]: T[P] extends V ? P : never;
 };
 
-export type KeysOfType<T, V> = Filter<T, V>[keyof T];
+export type NamesOfType<T, V> = Filter<T, V>[keyof T];
 
 export function useField<T, K extends keyof T>(
   fields: Fields<T>,
@@ -27,9 +27,9 @@ export function useField<T, K extends keyof T>(
   };
 }
 
-export function useTypedField<T, V>(
+export function useFieldOfType<T, V>(
   fields: Fields<T>,
-  name: KeysOfType<T, V>
+  name: NamesOfType<T, V>
 ): Field<V> {
   return useField<any, any>(fields, name);
 }
