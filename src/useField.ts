@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useComponentId } from "./useComponentId";
 import { Form, Field } from "./types";
 
@@ -8,26 +9,30 @@ type Filter<T, V> = {
 export type NamesOfType<T, V> = Filter<T, V>[keyof T];
 
 export function useField<T, K extends keyof T>(
-  fields: Form<T>,
+  form: Form<T>,
   name: K
 ): Field<T[K]> {
   const componentId = useComponentId();
+  const { setFieldValue, setFieldError, setFieldTouched } = form;
 
   return {
     id: `field-${componentId}`,
     name: name as string,
-    value: fields.values[name],
-    error: fields.errors[name],
-    touched: fields.touched[name],
-    setValue(value) {
-      fields.setValues({ ...fields.values, [name]: value });
-    },
-    setTouched(touched) {
-      fields.setTouched({ ...fields.touched, [name]: touched });
-    },
-    setError(error) {
-      fields.setErrors({ ...fields.errors, [name]: error });
-    }
+    value: form.values[name],
+    error: form.errors[name],
+    touched: form.touched[name],
+    setValue: useCallback(value => setFieldValue(name, value), [
+      name,
+      setFieldValue
+    ]),
+    setError: useCallback(error => setFieldError(name, error), [
+      name,
+      setFieldError
+    ]),
+    setTouched: useCallback(touched => setFieldTouched(name, touched), [
+      name,
+      setFieldTouched
+    ])
   };
 }
 

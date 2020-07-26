@@ -34,6 +34,19 @@ export interface FormState<T> {
   touched: FormTouched<T>;
 }
 
+export type FormAction<T, K extends keyof T> =
+  | { type: "form/setValues"; values: T }
+  | { type: "form/setErrors"; errors: FormErrors<T> }
+  | { type: "form/setTouched"; touched: FormTouched<T> }
+  | { type: "field/setValue"; name: K; value: T[K] }
+  | { type: "field/setError"; name: K; error: FormErrors<T>[K] }
+  | { type: "field/setTouched"; name: K; touched: FormTouched<T>[K] };
+
+export type FormReducer<T> = React.Reducer<
+  FormState<T>,
+  FormAction<T, keyof T>
+>;
+
 export interface Form<T> extends FormState<T> {
   initialValues: T;
   initialErrors: FormErrors<T>;
@@ -41,6 +54,9 @@ export interface Form<T> extends FormState<T> {
   setValues(values: T): void;
   setErrors(errors: FormErrors<T>): void;
   setTouched(touched: FormTouched<T>): void;
+  setFieldValue<K extends keyof T>(name: K, value: T[K]): void;
+  setFieldError<K extends keyof T>(name: K, error: FormErrors<T>[K]): void;
+  setFieldTouched<K extends keyof T>(name: K, touched: FormTouched<T>[K]): void;
 }
 
 export interface Field<T> {
@@ -50,6 +66,6 @@ export interface Field<T> {
   error: FieldErrors<T> | undefined;
   touched: FieldTouched<T> | undefined;
   setValue(value: T): void;
-  setError(error: string): void;
-  setTouched(touched: boolean): void;
+  setError(error: FieldErrors<T>): void;
+  setTouched(touched: FieldTouched<T>): void;
 }

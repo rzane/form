@@ -1,27 +1,46 @@
-import * as React from "react";
-import { FormOptions, Form } from "./types";
+import { reducer } from "./reducer";
+import { FormOptions, Form, FormReducer } from "./types";
+import { useRef, useReducer, useCallback } from "react";
 
 export function useForm<T>(options: FormOptions<T>): Form<T> {
-  const initialValues = React.useRef(options.initialValues).current;
-  const [values, setValues] = React.useState(initialValues);
+  const initialValues = useRef(options.initialValues).current;
+  const initialTouched = useRef(options.initialTouched ?? {}).current;
+  const initialErrors = useRef(options.initialErrors ?? {}).current;
 
-  const initialTouched = React.useRef(options.initialTouched ?? {}).current;
-  const [touched, setTouched] = React.useState(initialTouched);
-
-  const initialErrors = React.useRef(options.initialErrors ?? {}).current;
-  const [errors, setErrors] = React.useState(initialErrors);
+  const [state, dispatch] = useReducer<FormReducer<T>>(reducer, {
+    values: initialValues,
+    errors: initialErrors,
+    touched: initialTouched
+  });
 
   return {
+    ...state,
     initialValues,
-    values,
-    setValues,
-
-    initialTouched,
-    touched,
-    setTouched,
-
     initialErrors,
-    errors,
-    setErrors
+    initialTouched,
+    setValues: useCallback(
+      values => dispatch({ type: "form/setValues", values }),
+      [dispatch]
+    ),
+    setErrors: useCallback(
+      errors => dispatch({ type: "form/setErrors", errors }),
+      [dispatch]
+    ),
+    setTouched: useCallback(
+      touched => dispatch({ type: "form/setTouched", touched }),
+      [dispatch]
+    ),
+    setFieldValue: useCallback(
+      (name, value) => dispatch({ type: "field/setValue", name, value }),
+      [dispatch]
+    ),
+    setFieldError: useCallback(
+      (name, error) => dispatch({ type: "field/setError", name, error }),
+      [dispatch]
+    ),
+    setFieldTouched: useCallback(
+      (name, touched) => dispatch({ type: "field/setTouched", name, touched }),
+      [dispatch]
+    )
   };
 }
