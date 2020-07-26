@@ -1,3 +1,4 @@
+import { useComponentId } from "./useComponentId";
 import { Fields, Field } from "./types";
 
 type Filter<T, V> = {
@@ -10,7 +11,10 @@ export function useField<T, K extends keyof T>(
   fields: Fields<T>,
   name: K
 ): Field<T[K]> {
+  const componentId = useComponentId();
+
   return {
+    id: `field-${componentId}`,
     name: name as string,
     value: fields.values[name],
     error: fields.errors[name],

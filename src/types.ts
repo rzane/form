@@ -44,6 +44,7 @@ export interface Form<T> extends Fields<T> {
 }
 
 export interface Field<T> {
+  id: string;
   name: string;
   value: T;
   error: FieldErrors<T> | undefined;
