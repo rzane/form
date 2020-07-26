@@ -1,5 +1,5 @@
 import { useComponentId } from "./useComponentId";
-import { Fields, Field } from "./types";
+import { Form, Field } from "./types";
 
 type Filter<T, V> = {
   [P in keyof T]: T[P] extends V ? P : never;
@@ -8,7 +8,7 @@ type Filter<T, V> = {
 export type NamesOfType<T, V> = Filter<T, V>[keyof T];
 
 export function useField<T, K extends keyof T>(
-  fields: Fields<T>,
+  fields: Form<T>,
   name: K
 ): Field<T[K]> {
   const componentId = useComponentId();
@@ -32,7 +32,7 @@ export function useField<T, K extends keyof T>(
 }
 
 export function useFieldOfType<T, V>(
-  fields: Fields<T>,
+  fields: Form<T>,
   name: NamesOfType<T, V>
 ): Field<V> {
   return useField<any, any>(fields, name);

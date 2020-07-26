@@ -28,19 +28,19 @@ export interface FormOptions<T> {
   initialTouched?: FormTouched<T>;
 }
 
-export interface Fields<T> {
+export interface FormState<T> {
   values: T;
   errors: FormErrors<T>;
   touched: FormTouched<T>;
-  setValues: (values: T) => void;
-  setErrors: (errors: FormErrors<T>) => void;
-  setTouched: (touched: FormTouched<T>) => void;
 }
 
-export interface Form<T> extends Fields<T> {
+export interface Form<T> extends FormState<T> {
   initialValues: T;
   initialErrors: FormErrors<T>;
   initialTouched: FormTouched<T>;
+  setValues(values: T): void;
+  setErrors(errors: FormErrors<T>): void;
+  setTouched(touched: FormTouched<T>): void;
 }
 
 export interface Field<T> {
@@ -49,7 +49,7 @@ export interface Field<T> {
   value: T;
   error: FieldErrors<T> | undefined;
   touched: FieldTouched<T> | undefined;
-  setValue: (value: T) => void;
-  setError: (error: string) => void;
-  setTouched: (touched: boolean) => void;
+  setValue(value: T): void;
+  setError(error: string): void;
+  setTouched(touched: boolean): void;
 }
