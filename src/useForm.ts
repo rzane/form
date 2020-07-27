@@ -1,5 +1,5 @@
-import { FormOptions, Form } from "./types";
 import { useRef, useState } from "react";
+import { FormOptions, Form } from "./types";
 
 export function useForm<T>(options: FormOptions<T>): Form<T> {
   const initialValues = useRef(options.initialValues).current;

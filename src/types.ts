@@ -53,3 +53,9 @@ export interface Field<T> {
   setError(error: SetState<FieldErrors<T>>): void;
   setTouched(touched: SetState<FieldTouched<T>>): void;
 }
+
+type Filter<T, V> = {
+  [P in keyof T]: T[P] extends V ? P : never;
+};
+
+export type NamesOfType<T, V> = Filter<T, V>[keyof T];

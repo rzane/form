@@ -1,16 +1,25 @@
 import { useCallback } from "react";
 import { useComponentId } from "./useComponentId";
-import { Form, Field, SetState } from "./types";
+import { Form, Field, SetState, Transform } from "./types";
 
-type Filter<T, V> = {
-  [P in keyof T]: T[P] extends V ? P : never;
+const isTransform = <T>(value: SetState<T>): value is Transform<T> => {
+  return typeof value === "function";
 };
 
-export type NamesOfType<T, V> = Filter<T, V>[keyof T];
-
-function apply<T>(next: SetState<T>, prev: T) {
-  return typeof next === "function" ? (next as any)(prev) : next;
-}
+const useNestedState = <T, K extends keyof T>(
+  setState: (values: SetState<T>) => void,
+  name: K
+) => {
+  return useCallback(
+    update => {
+      setState(state => ({
+        ...state,
+        [name]: isTransform(update) ? update(state[name]) : update
+      }));
+    },
+    [setState, name]
+  );
+};
 
 export function useField<T, K extends keyof T>(
   form: Form<T>,
@@ -25,28 +34,8 @@ export function useField<T, K extends keyof T>(
     value: form.values[name],
     error: form.errors[name],
     touched: form.touched[name],
-    setValue: useCallback(
-      value =>
-        setValues(values => ({
-          ...values,
-          [name]: apply(value, values[name])
-        })),
-      [setValues, name]
-    ),
-    setError: useCallback(
-      error => setErrors(values => ({ ...values, [name]: error })),
-      [setErrors, name]
-    ),
-    setTouched: useCallback(
-      touched => setTouched(values => ({ ...values, [name]: touched })),
-      [setTouched, name]
-    )
+    setValue: useNestedState(setValues, name),
+    setError: useNestedState(setErrors, name),
+    setTouched: useNestedState(setTouched, name)
   };
-}
-
-export function useFieldOfType<T, V>(
-  fields: Form<T>,
-  name: NamesOfType<T, V>
-): Field<V> {
-  return useField<any, any>(fields, name);
 }
