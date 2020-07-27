@@ -61,6 +61,12 @@ export interface NestedField<T> extends FormState<T> {
   name: string;
 }
 
+export interface ListField<T> extends FormState<T[]> {
+  name: string;
+  addItem(item: T): void;
+  removeItem(index: number): void;
+}
+
 type Filter<T, V> = {
   [P in keyof T]: T[P] extends V ? P : never;
 };
