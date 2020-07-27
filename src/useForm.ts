@@ -2,23 +2,23 @@ import { useRef, useState } from "react";
 import { FormOptions, Form } from "./types";
 
 export function useForm<T>(options: FormOptions<T>): Form<T> {
-  const initialValues = useRef(options.initialValues).current;
+  const initialValue = useRef(options.initialValue).current;
+  const initialError = useRef(options.initialError ?? {}).current;
   const initialTouched = useRef(options.initialTouched ?? {}).current;
-  const initialErrors = useRef(options.initialErrors ?? {}).current;
 
-  const [values, setValues] = useState(initialValues);
-  const [errors, setErrors] = useState(initialErrors);
+  const [value, setValue] = useState(initialValue);
+  const [error, setError] = useState(initialError);
   const [touched, setTouched] = useState(initialTouched);
 
   return {
-    initialValues,
-    initialErrors,
+    initialValue,
+    initialError,
     initialTouched,
-    values,
-    errors,
+    value,
+    error,
     touched,
-    setValues,
-    setErrors,
+    setValue,
+    setError,
     setTouched
   };
 }

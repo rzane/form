@@ -1,11 +1,11 @@
-export type FieldErrors<T> = T extends any[]
-  ? string | string[] | FieldErrors<T[number]>[]
+export type FieldError<T> = T extends any[]
+  ? string | string[] | FieldError<T[number]>[]
   : T extends object
-  ? FormErrors<T>
+  ? FormError<T>
   : string;
 
-export type FormErrors<T> = {
-  [K in keyof T]?: FieldErrors<T[K]>;
+export type FormError<T> = {
+  [K in keyof T]?: FieldError<T[K]>;
 };
 
 export type FieldTouched<T> = T extends any[]
@@ -19,8 +19,8 @@ export type FormTouched<T> = {
 };
 
 export interface FormOptions<T> {
-  initialValues: T;
-  initialErrors?: FormErrors<T>;
+  initialValue: T;
+  initialError?: FormError<T>;
   initialTouched?: FormTouched<T>;
 }
 
@@ -28,14 +28,14 @@ export type Transform<T> = (value: T) => T;
 export type SetState<T> = (value: T | Transform<T>) => void;
 
 export interface Form<T> {
-  initialValues: T;
-  initialErrors: FormErrors<T>;
+  initialValue: T;
+  initialError: FormError<T>;
   initialTouched: FormTouched<T>;
-  values: T;
-  errors: FormErrors<T>;
+  value: T;
+  error: FormError<T>;
   touched: FormTouched<T>;
-  setValues: SetState<T>;
-  setErrors: SetState<FormErrors<T>>;
+  setValue: SetState<T>;
+  setError: SetState<FormError<T>>;
   setTouched: SetState<FormTouched<T>>;
 }
 
@@ -43,10 +43,10 @@ export interface Field<T> {
   id: string;
   name: string;
   value: T;
-  error: FieldErrors<T> | undefined;
+  error: FieldError<T> | undefined;
   touched: FieldTouched<T> | undefined;
   setValue: SetState<T>;
-  setError: SetState<FieldErrors<T> | undefined>;
+  setError: SetState<FieldError<T> | undefined>;
   setTouched: SetState<FieldTouched<T> | undefined>;
 }
 

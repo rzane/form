@@ -9,11 +9,11 @@ export function useField<T, K extends keyof T>(
   return {
     id: `field-${useComponentId()}`,
     name: name as string,
-    value: form.values[name],
-    error: form.errors[name],
+    value: form.value[name],
+    error: form.error[name],
     touched: form.touched[name],
-    setValue: useNestedState(form.setValues, name),
-    setError: useNestedState(form.setErrors, name),
+    setValue: useNestedState(form.setValue, name),
+    setError: useNestedState(form.setError, name),
     setTouched: useNestedState(form.setTouched, name)
   };
 }
