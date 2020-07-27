@@ -1,9 +1,9 @@
 import { useComponentId } from "./useComponentId";
 import { useNestedState } from "./useNestedState";
-import { Form, Field } from "./types";
+import { Field, FormState } from "./types";
 
 export function useField<T, K extends keyof T>(
-  form: Form<T>,
+  form: FormState<T>,
   name: K
 ): Field<T[K]> {
   return {

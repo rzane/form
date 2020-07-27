@@ -31,16 +31,19 @@ export interface FormOptions<T> {
 export type Transform<T> = (value: T) => T;
 export type SetState<T> = T | Transform<T>;
 
-export interface Form<T> {
-  initialValues: T;
-  initialErrors: FormErrors<T>;
-  initialTouched: FormTouched<T>;
+export interface FormState<T> {
   values: T;
   errors: FormErrors<T>;
   touched: FormTouched<T>;
   setValues(values: SetState<T>): void;
   setErrors(errors: SetState<FormErrors<T>>): void;
   setTouched(touched: SetState<FormTouched<T>>): void;
+}
+
+export interface Form<T> extends FormState<T> {
+  initialValues: T;
+  initialErrors: FormErrors<T>;
+  initialTouched: FormTouched<T>;
 }
 
 export interface Field<T> {
