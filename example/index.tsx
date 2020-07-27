@@ -1,45 +1,65 @@
 import "react-app-polyfill/ie11";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { useForm, Fields, NamesOfType, useFieldOfType } from "../src";
+import { useForm, useField, Field, useNestedField } from "../src";
 
-interface Values {
+interface Profile {
   name: string;
 }
 
-function useInput<T>(fields: Fields<T>, name: NamesOfType<T, string>) {
-  const field = useFieldOfType(fields, name);
-
-  return {
-    name,
-    value: field.value,
-    onBlur() {
-      field.setTouched(true);
-    },
-    onChange(event: React.ChangeEvent<HTMLInputElement>) {
-      field.setValue(event.target.value);
-    }
-  };
+interface Values {
+  email: string;
+  profile: Profile;
 }
+
+const useInput = ({
+  id,
+  name,
+  value,
+  setTouched,
+  setValue
+}: Field<string>) => ({
+  id,
+  name,
+  value,
+  onBlur: React.useCallback(() => setTouched(true), [setTouched]),
+  onChange: React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setValue(event.target.value);
+    },
+    [setValue]
+  )
+});
 
 function App() {
   const form = useForm<Values>({
-    initialValues: { name: "" },
-    initialErrors: {
-      name: "Oh, no. This is bad."
+    initialValues: {
+      email: "",
+      profile: { name: "" }
     }
   });
 
-  const name = useInput(form, "name");
+  const email = useInput(useField(form, "email"));
+  const profile = useNestedField(form, "profile");
+  const name = useInput(useField(profile, "name"));
 
   return (
     <div>
       <h1>@stackup/form</h1>
 
       <div>
-        <label htmlFor="name">Name</label>
-        <input id="name" {...name} />
+        <label htmlFor={email.id}>Email</label>
+        <input type="email" {...email} />
       </div>
+
+      <fieldset>
+        <legend>Profile</legend>
+
+        <div>
+          <label htmlFor={name.id}>Name</label>
+          <input type="text" {...name} />
+        </div>
+      </fieldset>
     </div>
   );
 }
