@@ -13,7 +13,7 @@ export function useField<T, K extends keyof T>(
   name: K
 ): Field<T[K]> {
   const componentId = useComponentId();
-  const { setFieldValue, setFieldError, setFieldTouched } = form;
+  const { putValue, putError, putTouched } = form;
 
   return {
     id: `field-${componentId}`,
@@ -21,17 +21,11 @@ export function useField<T, K extends keyof T>(
     value: form.values[name],
     error: form.errors[name],
     touched: form.touched[name],
-    setValue: useCallback(value => setFieldValue(name, value), [
+    setValue: useCallback(value => putValue(name, value), [name, putValue]),
+    setError: useCallback(error => putError(name, error), [name, putError]),
+    setTouched: useCallback(touched => putTouched(name, touched), [
       name,
-      setFieldValue
-    ]),
-    setError: useCallback(error => setFieldError(name, error), [
-      name,
-      setFieldError
-    ]),
-    setTouched: useCallback(touched => setFieldTouched(name, touched), [
-      name,
-      setFieldTouched
+      putTouched
     ])
   };
 }

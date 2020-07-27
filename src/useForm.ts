@@ -18,28 +18,26 @@ export function useForm<T>(options: FormOptions<T>): Form<T> {
     initialValues,
     initialErrors,
     initialTouched,
-    setValues: useCallback(
-      values => dispatch({ type: "form/setValues", values }),
-      [dispatch]
-    ),
-    setErrors: useCallback(
-      errors => dispatch({ type: "form/setErrors", errors }),
-      [dispatch]
-    ),
+    setValues: useCallback(values => dispatch({ type: "SET_VALUES", values }), [
+      dispatch
+    ]),
+    setErrors: useCallback(errors => dispatch({ type: "SET_ERRORS", errors }), [
+      dispatch
+    ]),
     setTouched: useCallback(
-      touched => dispatch({ type: "form/setTouched", touched }),
+      touched => dispatch({ type: "SET_TOUCHED", touched }),
       [dispatch]
     ),
-    setFieldValue: useCallback(
-      (name, value) => dispatch({ type: "field/setValue", name, value }),
+    putValue: useCallback(
+      (name, value) => dispatch({ type: "PUT_VALUE", name, value }),
       [dispatch]
     ),
-    setFieldError: useCallback(
-      (name, error) => dispatch({ type: "field/setError", name, error }),
+    putError: useCallback(
+      (name, error) => dispatch({ type: "PUT_ERROR", name, error }),
       [dispatch]
     ),
-    setFieldTouched: useCallback(
-      (name, touched) => dispatch({ type: "field/setTouched", name, touched }),
+    putTouched: useCallback(
+      (name, touched) => dispatch({ type: "PUT_TOUCHED", name, touched }),
       [dispatch]
     )
   };
