@@ -57,6 +57,10 @@ export interface Field<T> {
   setTouched(touched: SetState<FieldTouched<T>>): void;
 }
 
+export interface NestedField<T> extends FormState<T> {
+  name: string;
+}
+
 type Filter<T, V> = {
   [P in keyof T]: T[P] extends V ? P : never;
 };
