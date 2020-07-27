@@ -28,8 +28,8 @@ export interface FormOptions<T> {
   initialTouched?: FormTouched<T>;
 }
 
-type Transform<T> = (value: T) => T;
-type SetState<T> = T | Transform<T>;
+export type Transform<T> = (value: T) => T;
+export type SetState<T> = T | Transform<T>;
 
 export interface Form<T> {
   initialValues: T;
@@ -49,7 +49,7 @@ export interface Field<T> {
   value: T;
   error: FieldErrors<T> | undefined;
   touched: FieldTouched<T> | undefined;
-  setValue(value: T): void;
-  setError(error: FieldErrors<T>): void;
-  setTouched(touched: FieldTouched<T>): void;
+  setValue(value: SetState<T>): void;
+  setError(error: SetState<FieldErrors<T>>): void;
+  setTouched(touched: SetState<FieldTouched<T>>): void;
 }
