@@ -1,7 +1,5 @@
 export type FieldErrors<T> = T extends any[]
-  ? T[number] extends object
-    ? FormErrors<T[number]>[] | string | string[]
-    : string | string[]
+  ? string | string[] | FieldErrors<T[number]>[]
   : T extends object
   ? FormErrors<T>
   : string;
@@ -11,9 +9,7 @@ export type FormErrors<T> = {
 };
 
 export type FieldTouched<T> = T extends any[]
-  ? T[number] extends object
-    ? FormTouched<T[number]>[]
-    : boolean
+  ? FormTouched<T[number]>[]
   : T extends object
   ? FormTouched<T>
   : boolean;
