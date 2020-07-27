@@ -6,25 +6,34 @@ export function reducer<T, K extends keyof T>(
 ): FormState<T> {
   switch (action.type) {
     case "SET_VALUES":
-      return { ...state, values: action.values };
+      return { ...state, values: action.payload };
     case "SET_ERRORS":
-      return { ...state, errors: action.errors };
+      return { ...state, errors: action.payload };
     case "SET_TOUCHED":
-      return { ...state, touched: action.touched };
+      return { ...state, touched: action.payload };
     case "PUT_VALUE":
       return {
         ...state,
-        values: { ...state.values, [action.name]: action.value }
+        values: {
+          ...state.values,
+          [action.payload.name]: action.payload.value
+        }
       };
     case "PUT_ERROR":
       return {
         ...state,
-        errors: { ...state.values, [action.name]: action.error }
+        errors: {
+          ...state.errors,
+          [action.payload.name]: action.payload.error
+        }
       };
     case "PUT_TOUCHED":
       return {
         ...state,
-        touched: { ...state.touched, [action.name]: action.touched }
+        touched: {
+          ...state.touched,
+          [action.payload.name]: action.payload.touched
+        }
       };
   }
 }

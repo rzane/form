@@ -35,12 +35,12 @@ export interface FormState<T> {
 }
 
 export type FormAction<T, K extends keyof T> =
-  | { type: "SET_VALUES"; values: T }
-  | { type: "SET_ERRORS"; errors: FormErrors<T> }
-  | { type: "SET_TOUCHED"; touched: FormTouched<T> }
-  | { type: "PUT_VALUE"; name: K; value: T[K] }
-  | { type: "PUT_ERROR"; name: K; error: FormErrors<T>[K] }
-  | { type: "PUT_TOUCHED"; name: K; touched: FormTouched<T>[K] };
+  | { type: "SET_VALUES"; payload: T }
+  | { type: "SET_ERRORS"; payload: FormErrors<T> }
+  | { type: "SET_TOUCHED"; payload: FormTouched<T> }
+  | { type: "PUT_VALUE"; payload: { name: K; value: T[K] } }
+  | { type: "PUT_ERROR"; payload: { name: K; error: FormErrors<T>[K] } }
+  | { type: "PUT_TOUCHED"; payload: { name: K; touched: FormTouched<T>[K] } };
 
 export type FormReducer<T> = React.Reducer<
   FormState<T>,
