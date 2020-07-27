@@ -25,21 +25,18 @@ export interface FormOptions<T> {
 }
 
 export type Transform<T> = (value: T) => T;
-export type SetState<T> = T | Transform<T>;
+export type SetState<T> = (value: T | Transform<T>) => void;
 
-export interface FormState<T> {
-  values: T;
-  errors: FormErrors<T>;
-  touched: FormTouched<T>;
-  setValues(values: SetState<T>): void;
-  setErrors(errors: SetState<FormErrors<T>>): void;
-  setTouched(touched: SetState<FormTouched<T>>): void;
-}
-
-export interface Form<T> extends FormState<T> {
+export interface Form<T> {
   initialValues: T;
   initialErrors: FormErrors<T>;
   initialTouched: FormTouched<T>;
+  values: T;
+  errors: FormErrors<T>;
+  touched: FormTouched<T>;
+  setValues: SetState<T>;
+  setErrors: SetState<FormErrors<T>>;
+  setTouched: SetState<FormTouched<T>>;
 }
 
 export interface Field<T> {
@@ -48,19 +45,9 @@ export interface Field<T> {
   value: T;
   error: FieldErrors<T> | undefined;
   touched: FieldTouched<T> | undefined;
-  setValue(value: SetState<T>): void;
-  setError(error: SetState<FieldErrors<T>>): void;
-  setTouched(touched: SetState<FieldTouched<T>>): void;
-}
-
-export interface NestedField<T> extends FormState<T> {
-  name: string;
-}
-
-export interface ListField<T> extends FormState<T[]> {
-  name: string;
-  addItem(item: T): void;
-  removeItem(index: number): void;
+  setValue: SetState<T>;
+  setError: SetState<FieldErrors<T> | undefined>;
+  setTouched: SetState<FieldTouched<T> | undefined>;
 }
 
 type Filter<T, V> = {
