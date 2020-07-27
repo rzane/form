@@ -28,35 +28,19 @@ export interface FormOptions<T> {
   initialTouched?: FormTouched<T>;
 }
 
-export interface FormState<T> {
-  values: T;
-  errors: FormErrors<T>;
-  touched: FormTouched<T>;
-}
+type Transform<T> = (value: T) => T;
+type SetState<T> = T | Transform<T>;
 
-export type FormAction<T, K extends keyof T> =
-  | { type: "SET_VALUES"; payload: T }
-  | { type: "SET_ERRORS"; payload: FormErrors<T> }
-  | { type: "SET_TOUCHED"; payload: FormTouched<T> }
-  | { type: "PUT_VALUE"; payload: { name: K; value: T[K] } }
-  | { type: "PUT_ERROR"; payload: { name: K; error: FormErrors<T>[K] } }
-  | { type: "PUT_TOUCHED"; payload: { name: K; touched: FormTouched<T>[K] } };
-
-export type FormReducer<T> = React.Reducer<
-  FormState<T>,
-  FormAction<T, keyof T>
->;
-
-export interface Form<T> extends FormState<T> {
+export interface Form<T> {
   initialValues: T;
   initialErrors: FormErrors<T>;
   initialTouched: FormTouched<T>;
-  setValues(values: T): void;
-  setErrors(errors: FormErrors<T>): void;
-  setTouched(touched: FormTouched<T>): void;
-  putValue<K extends keyof T>(name: K, value: T[K]): void;
-  putError<K extends keyof T>(name: K, error: FormErrors<T>[K]): void;
-  putTouched<K extends keyof T>(name: K, touched: FormTouched<T>[K]): void;
+  values: T;
+  errors: FormErrors<T>;
+  touched: FormTouched<T>;
+  setValues(values: SetState<T>): void;
+  setErrors(errors: SetState<FormErrors<T>>): void;
+  setTouched(touched: SetState<FormTouched<T>>): void;
 }
 
 export interface Field<T> {
