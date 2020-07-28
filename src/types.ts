@@ -29,6 +29,15 @@ export interface FormOptions<T> {
   initialTouched?: TouchedObject<T>;
 }
 
+export interface Fields<T> {
+  value: T;
+  error: ErrorsObject<T> | undefined;
+  touched: TouchedObject<T> | undefined;
+  setValue: SetState<T>;
+  setError: SetState<ErrorsObject<T> | undefined>;
+  setTouched: SetState<TouchedObject<T> | undefined>;
+}
+
 export interface Form<T> {
   initialValue: T;
   initialError: ErrorsObject<T>;

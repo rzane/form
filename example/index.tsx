@@ -1,7 +1,7 @@
 import "react-app-polyfill/ie11";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { useForm, useField, Field, useNestedField } from "../src";
+import { useForm, useField, Field } from "../src";
 
 interface Profile {
   name: string;
@@ -33,14 +33,14 @@ const useInput = ({
 
 function App() {
   const form = useForm<Values>({
-    initialValues: {
+    initialValue: {
       email: "",
       profile: { name: "" }
     }
   });
 
   const email = useInput(useField(form, "email"));
-  const profile = useNestedField(form, "profile");
+  const profile = useField(form, "profile");
   const name = useInput(useField(profile, "name"));
 
   return (
