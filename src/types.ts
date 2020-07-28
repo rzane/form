@@ -26,23 +26,38 @@ interface FieldState<T> {
   setTouched: SetState<Touched<T> | undefined>;
 }
 
+/**
+ * These are options that can be passed to `useForm`.
+ */
 export interface FormOptions<T> {
   initialValue: T;
   initialError?: Errors<T>;
   initialTouched?: Touched<T>;
 }
 
+/**
+ * The value returned by `useForm`.
+ */
 export interface Form<T> extends FieldState<T> {
   initialValue: T;
   initialError: Errors<T> | undefined;
   initialTouched: Touched<T> | undefined;
 }
 
+/**
+ * The value returned by `useField`.
+ */
 export interface Field<T> extends FieldState<T> {
   id: string;
   name: string;
 }
 
+/**
+ * An object consisting of the state for multiple fields.
+ *
+ * Any object that complies with this interface can be
+ * passed to `useField`.
+ */
 export interface NestedField<T> {
   value: T;
   error: ErrorMap<T> | undefined;
