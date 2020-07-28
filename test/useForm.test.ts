@@ -10,26 +10,26 @@ const TOUCHED = { name: true };
 const ERRORS = { name: "is invalid" };
 
 function setup(options: Partial<FormOptions<Values>> = {}) {
-  return renderHook(() => useForm({ initialValues: VALUES, ...options }));
+  return renderHook(() => useForm({ initialValue: VALUES, ...options }));
 }
 
 describe("useForm", () => {
-  test("initialValues", () => {
+  test("initialValue", () => {
     const { result } = setup();
-    expect(result.current.initialValues).toEqual(VALUES);
+    expect(result.current.initialValue).toEqual(VALUES);
   });
 
   test("values", () => {
     const { result } = setup();
-    expect(result.current.values).toEqual(VALUES);
+    expect(result.current.value).toEqual(VALUES);
   });
 
-  test("setValues", () => {
+  test("setValue", () => {
     const { result } = setup();
-    expect(result.current.values).toEqual(VALUES);
+    expect(result.current.value).toEqual(VALUES);
 
-    act(() => result.current.setValues({ name: "Rick" }));
-    expect(result.current.values).toEqual({ name: "Rick" });
+    act(() => result.current.setValue({ name: "Rick" }));
+    expect(result.current.value).toEqual({ name: "Rick" });
   });
 
   test("initialTouched", () => {
@@ -55,26 +55,26 @@ describe("useForm", () => {
     expect(result.current.touched).toEqual(TOUCHED);
   });
 
-  test("initialErrors", () => {
-    const { result } = setup({ initialErrors: ERRORS });
-    expect(result.current.initialErrors).toEqual(ERRORS);
+  test("initialError", () => {
+    const { result } = setup({ initialError: ERRORS });
+    expect(result.current.initialError).toEqual(ERRORS);
   });
 
-  test("initialErrors (default)", () => {
+  test("initialError (default)", () => {
     const { result } = setup();
-    expect(result.current.initialErrors).toEqual({});
+    expect(result.current.initialError).toEqual({});
   });
 
-  test("errors", () => {
-    const { result } = setup({ initialErrors: ERRORS });
-    expect(result.current.errors).toEqual(ERRORS);
+  test("error", () => {
+    const { result } = setup({ initialError: ERRORS });
+    expect(result.current.error).toEqual(ERRORS);
   });
 
-  test("setErrors", () => {
+  test("setError", () => {
     const { result } = setup();
-    expect(result.current.errors).toEqual({});
+    expect(result.current.error).toEqual({});
 
-    act(() => result.current.setErrors(ERRORS));
-    expect(result.current.errors).toEqual(ERRORS);
+    act(() => result.current.setError(ERRORS));
+    expect(result.current.error).toEqual(ERRORS);
   });
 });
