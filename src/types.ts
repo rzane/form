@@ -38,16 +38,10 @@ export interface Fields<T> {
   setTouched: SetState<TouchedObject<T> | undefined>;
 }
 
-export interface Form<T> {
+export interface Form<T> extends Fields<T> {
   initialValue: T;
-  initialError: ErrorsObject<T>;
-  initialTouched: TouchedObject<T>;
-  value: T;
-  error: ErrorsObject<T>;
-  touched: TouchedObject<T>;
-  setValue: SetState<T>;
-  setError: SetState<ErrorsObject<T>>;
-  setTouched: SetState<TouchedObject<T>>;
+  initialError: ErrorsObject<T> | undefined;
+  initialTouched: TouchedObject<T> | undefined;
 }
 
 export interface Field<T> {

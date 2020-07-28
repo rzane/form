@@ -19,7 +19,7 @@ describe("useForm", () => {
     expect(result.current.initialValue).toEqual(VALUES);
   });
 
-  test("values", () => {
+  test("value", () => {
     const { result } = setup();
     expect(result.current.value).toEqual(VALUES);
   });
@@ -39,7 +39,7 @@ describe("useForm", () => {
 
   test("initialTouched (default)", () => {
     const { result } = setup();
-    expect(result.current.initialTouched).toEqual({});
+    expect(result.current.initialTouched).toBeUndefined();
   });
 
   test("touched", () => {
@@ -49,7 +49,7 @@ describe("useForm", () => {
 
   test("setTouched", () => {
     const { result } = setup();
-    expect(result.current.touched).toEqual({});
+    expect(result.current.touched).toBeUndefined();
 
     act(() => result.current.setTouched(TOUCHED));
     expect(result.current.touched).toEqual(TOUCHED);
@@ -62,7 +62,7 @@ describe("useForm", () => {
 
   test("initialError (default)", () => {
     const { result } = setup();
-    expect(result.current.initialError).toEqual({});
+    expect(result.current.initialError).toBeUndefined();
   });
 
   test("error", () => {
@@ -72,7 +72,7 @@ describe("useForm", () => {
 
   test("setError", () => {
     const { result } = setup();
-    expect(result.current.error).toEqual({});
+    expect(result.current.error).toBeUndefined();
 
     act(() => result.current.setError(ERRORS));
     expect(result.current.error).toEqual(ERRORS);
