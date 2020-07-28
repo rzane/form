@@ -1,58 +1,55 @@
+export type ErrorMap<T> = { [K in keyof T]?: Errors<T[K]> };
+export type ErrorList<T> = string | string[] | Errors<T>[];
 export type Errors<T> = T extends any[]
-  ? ErrorsArray<T[number]>
+  ? ErrorList<T[number]>
   : T extends object
-  ? ErrorsObject<T>
+  ? ErrorMap<T>
   : string;
 
-export type ErrorsArray<T> = string | string[] | Errors<T>[];
-
-export type ErrorsObject<T> = {
-  [K in keyof T]?: Errors<T[K]>;
-};
-
+export type TouchedList<T> = TouchedMap<T>[];
+export type TouchedMap<T> = { [K in keyof T]?: Touched<T[K]> };
 export type Touched<T> = T extends any[]
-  ? TouchedObject<T[number]>[]
+  ? TouchedList<T[number]>
   : T extends object
-  ? TouchedObject<T>
+  ? TouchedMap<T>
   : boolean;
-
-export type TouchedObject<T> = {
-  [K in keyof T]?: Touched<T[K]>;
-};
 
 export type Transform<T> = (value: T) => T;
 export type SetState<T> = (value: T | Transform<T>) => void;
 
-export interface FormOptions<T> {
-  initialValue: T;
-  initialError?: ErrorsObject<T>;
-  initialTouched?: TouchedObject<T>;
-}
-
-export interface Fields<T> {
+export interface NestedField<T> {
   value: T;
-  error: ErrorsObject<T> | undefined;
-  touched: TouchedObject<T> | undefined;
+  error: ErrorMap<T> | undefined;
+  touched: TouchedMap<T> | undefined;
   setValue: SetState<T>;
-  setError: SetState<ErrorsObject<T> | undefined>;
-  setTouched: SetState<TouchedObject<T> | undefined>;
+  setError: SetState<ErrorMap<T> | undefined>;
+  setTouched: SetState<TouchedMap<T> | undefined>;
 }
 
-export interface Form<T> extends Fields<T> {
-  initialValue: T;
-  initialError: ErrorsObject<T> | undefined;
-  initialTouched: TouchedObject<T> | undefined;
-}
-
-export interface Field<T> {
-  id: string;
-  name: string;
+interface FieldState<T> {
   value: T;
   error: Errors<T> | undefined;
   touched: Touched<T> | undefined;
   setValue: SetState<T>;
   setError: SetState<Errors<T> | undefined>;
   setTouched: SetState<Touched<T> | undefined>;
+}
+
+export interface FormOptions<T> {
+  initialValue: T;
+  initialError?: Errors<T>;
+  initialTouched?: Touched<T>;
+}
+
+export interface Form<T> extends FieldState<T> {
+  initialValue: T;
+  initialError: Errors<T> | undefined;
+  initialTouched: Touched<T> | undefined;
+}
+
+export interface Field<T> extends FieldState<T> {
+  id: string;
+  name: string;
 }
 
 type Filter<T, V> = {
