@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { transform } from "./utilities";
 import { Field, Fields } from "./types";
-import { useComponentId } from "./useComponentId";
+import { useIdentifier } from "./useIdentifier";
 
 export function useField<T, K extends keyof T>(
   form: Fields<T>,
@@ -10,7 +10,7 @@ export function useField<T, K extends keyof T>(
   const { setValue, setError, setTouched } = form;
 
   return {
-    id: `field-${useComponentId()}`,
+    id: `field-${useIdentifier()}`,
     name: name as string,
     value: form.value[name],
     error: form.error?.[name],
