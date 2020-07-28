@@ -66,3 +66,11 @@ export interface FieldMap<T> {
   setError: SetState<ErrorMap<T> | undefined>;
   setTouched: SetState<TouchedMap<T> | undefined>;
 }
+
+/**
+ * An array consisting of the state for multiple fields.
+ */
+export interface FieldList<T> extends Field<T[]> {
+  insert: (index: number, value: T) => void;
+  remove: (index: number) => void;
+}
