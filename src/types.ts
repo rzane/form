@@ -1,53 +1,55 @@
-export type FieldError<T> = T extends any[]
-  ? string | string[] | FieldError<T[number]>[]
+export type Errors<T> = T extends any[]
+  ? ErrorsArray<T[number]>
   : T extends object
-  ? FormError<T>
+  ? ErrorsObject<T>
   : string;
 
-export type FormError<T> = {
-  [K in keyof T]?: FieldError<T[K]>;
+export type ErrorsArray<T> = string | string[] | Errors<T>[];
+
+export type ErrorsObject<T> = {
+  [K in keyof T]?: Errors<T[K]>;
 };
 
-export type FieldTouched<T> = T extends any[]
-  ? FormTouched<T[number]>[]
+export type Touched<T> = T extends any[]
+  ? TouchedObject<T[number]>[]
   : T extends object
-  ? FormTouched<T>
+  ? TouchedObject<T>
   : boolean;
 
-export type FormTouched<T> = {
-  [K in keyof T]?: FieldTouched<T[K]>;
+export type TouchedObject<T> = {
+  [K in keyof T]?: Touched<T[K]>;
 };
-
-export interface FormOptions<T> {
-  initialValue: T;
-  initialError?: FormError<T>;
-  initialTouched?: FormTouched<T>;
-}
 
 export type Transform<T> = (value: T) => T;
 export type SetState<T> = (value: T | Transform<T>) => void;
 
+export interface FormOptions<T> {
+  initialValue: T;
+  initialError?: ErrorsObject<T>;
+  initialTouched?: TouchedObject<T>;
+}
+
 export interface Form<T> {
   initialValue: T;
-  initialError: FormError<T>;
-  initialTouched: FormTouched<T>;
+  initialError: ErrorsObject<T>;
+  initialTouched: TouchedObject<T>;
   value: T;
-  error: FormError<T>;
-  touched: FormTouched<T>;
+  error: ErrorsObject<T>;
+  touched: TouchedObject<T>;
   setValue: SetState<T>;
-  setError: SetState<FormError<T>>;
-  setTouched: SetState<FormTouched<T>>;
+  setError: SetState<ErrorsObject<T>>;
+  setTouched: SetState<TouchedObject<T>>;
 }
 
 export interface Field<T> {
   id: string;
   name: string;
   value: T;
-  error: FieldError<T> | undefined;
-  touched: FieldTouched<T> | undefined;
+  error: Errors<T> | undefined;
+  touched: Touched<T> | undefined;
   setValue: SetState<T>;
-  setError: SetState<FieldError<T> | undefined>;
-  setTouched: SetState<FieldTouched<T> | undefined>;
+  setError: SetState<Errors<T> | undefined>;
+  setTouched: SetState<Touched<T> | undefined>;
 }
 
 type Filter<T, V> = {
