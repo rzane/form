@@ -1,4 +1,4 @@
-export type ErrorMap<T> = { [K in keyof T]?: Errors<T[K]> };
+export type ErrorMap<T> = string | { [K in keyof T]?: Errors<T[K]> };
 export type ErrorList<T> = string | string[] | Errors<T>[];
 export type Errors<T> = T extends any[]
   ? ErrorList<T[number]>
@@ -6,8 +6,8 @@ export type Errors<T> = T extends any[]
   ? ErrorMap<T>
   : string;
 
-export type TouchedList<T> = TouchedMap<T>[];
-export type TouchedMap<T> = { [K in keyof T]?: Touched<T[K]> };
+export type TouchedList<T> = boolean | boolean[] | Touched<T>[];
+export type TouchedMap<T> = boolean | { [K in keyof T]?: Touched<T[K]> };
 export type Touched<T> = T extends any[]
   ? TouchedList<T[number]>
   : T extends object
@@ -17,7 +17,7 @@ export type Touched<T> = T extends any[]
 export type Transform<T> = (value: T) => T;
 export type SetState<T> = (value: T | Transform<T>) => void;
 
-interface FieldState<T> {
+export interface FieldState<T> {
   value: T;
   error: Errors<T> | undefined;
   touched: Touched<T> | undefined;
@@ -50,21 +50,6 @@ export interface Form<T> extends FieldState<T> {
 export interface Field<T> extends FieldState<T> {
   id: string;
   name: string;
-}
-
-/**
- * An object consisting of the state for multiple fields.
- *
- * Any object that complies with this interface can be
- * passed to `useField`.
- */
-export interface FieldMap<T> {
-  value: T;
-  error: ErrorMap<T> | undefined;
-  touched: TouchedMap<T> | undefined;
-  setValue: SetState<T>;
-  setError: SetState<ErrorMap<T> | undefined>;
-  setTouched: SetState<TouchedMap<T> | undefined>;
 }
 
 /**
