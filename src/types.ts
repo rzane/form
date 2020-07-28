@@ -58,7 +58,7 @@ export interface Field<T> extends FieldState<T> {
  * Any object that complies with this interface can be
  * passed to `useField`.
  */
-export interface NestedField<T> {
+export interface FieldMap<T> {
   value: T;
   error: ErrorMap<T> | undefined;
   touched: TouchedMap<T> | undefined;

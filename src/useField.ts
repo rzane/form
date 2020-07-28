@@ -1,10 +1,10 @@
 import { useCallback } from "react";
 import { transform } from "./utilities";
-import { Field, NestedField } from "./types";
+import { Field, FieldMap } from "./types";
 import { useIdentifier } from "./useIdentifier";
 
 export function useField<T, K extends keyof T>(
-  form: NestedField<T>,
+  form: FieldMap<T>,
   name: K
 ): Field<T[K]> {
   const { setValue, setError, setTouched } = form;
