@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { transform } from "./utilities";
 import { useIdentifier } from "./useIdentifier";
-import { Field, FieldList, SetState } from "./types";
+import { FieldList, SetState, FieldItem } from "./types";
 
 function get(data: any, index: number): any {
   return Array.isArray(data) ? data[index] : undefined;
@@ -20,7 +20,12 @@ function useNested(setState: SetState<any>, index: number): SetState<any> {
   );
 }
 
-export function useFieldItem<T>(form: FieldList<T>, index: number): Field<T> {
+export function useFieldItem<T>(
+  form: FieldList<T>,
+  index: number
+): FieldItem<T> {
+  const { remove } = form;
+
   return {
     id: `field-${useIdentifier()}`,
     name: index.toString(),
@@ -29,6 +34,7 @@ export function useFieldItem<T>(form: FieldList<T>, index: number): Field<T> {
     touched: get(form.touched, index),
     setValue: useNested(form.setValue, index),
     setError: useNested(form.setError, index),
-    setTouched: useNested(form.setTouched, index)
+    setTouched: useNested(form.setTouched, index),
+    remove: useCallback(() => remove(index), [index, remove])
   };
 }

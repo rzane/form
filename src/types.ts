@@ -59,3 +59,10 @@ export interface FieldList<T> extends Field<T[]> {
   insert: (index: number, value: T) => void;
   remove: (index: number) => void;
 }
+
+/**
+ * An item in an array
+ */
+export interface FieldItem<T> extends Field<T> {
+  remove: () => void;
+}
