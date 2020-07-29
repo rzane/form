@@ -27,10 +27,18 @@ export interface Field<T> {
   setTouched: SetState<Touched<T> | undefined>;
 }
 
+type MaybeAsync<T> = T | Promise<T>;
+
+export type Result<T, R> = { value: R } | { error: Errors<T> };
+export type Validate<T, R> = (value: T) => MaybeAsync<Result<T, R>>;
+export type Submit<T> = (value: T) => MaybeAsync<void>;
+
 /**
  * These are options that can be passed to `useForm`.
  */
-export interface FormOptions<T> {
+export interface FormOptions<T, R> {
+  submit: Submit<R>;
+  validate: Validate<T, R>;
   initialValue: T;
   initialError?: Errors<T>;
   initialTouched?: Touched<T>;
@@ -43,6 +51,8 @@ export interface Form<T> extends Field<T> {
   initialValue: T;
   initialError: Errors<T> | undefined;
   initialTouched: Touched<T> | undefined;
+  isSubmitting: boolean;
+  submit: () => Promise<void>;
 }
 
 /**

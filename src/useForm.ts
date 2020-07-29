@@ -1,8 +1,10 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import { useIdentifier } from "./useIdentifier";
 import { FormOptions, Form } from "./types";
 
-export function useForm<T>(options: FormOptions<T>): Form<T> {
+export function useForm<T, R>(options: FormOptions<T, R>): Form<T> {
+  const { validate, submit } = options;
+
   const id = useIdentifier();
   const initialValue = useRef(options.initialValue).current;
   const initialError = useRef(options.initialError).current;
@@ -11,6 +13,24 @@ export function useForm<T>(options: FormOptions<T>): Form<T> {
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState(initialError);
   const [touched, setTouched] = useState(initialTouched);
+
+  const [isSubmitting, setSubmitting] = useState(false);
+
+  const executeSubmit = useCallback(() => {
+    setSubmitting(true);
+
+    return Promise.resolve(validate(value))
+      .then(result => {
+        if ("error" in result) {
+          setError(result.error);
+        } else {
+          return submit(result.value);
+        }
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
+  }, [value, submit, validate]);
 
   return {
     id: `form-${id}`,
@@ -23,6 +43,8 @@ export function useForm<T>(options: FormOptions<T>): Form<T> {
     touched,
     setValue,
     setError,
-    setTouched
+    setTouched,
+    isSubmitting,
+    submit: executeSubmit
   };
 }

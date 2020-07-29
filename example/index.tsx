@@ -8,14 +8,25 @@ import { useForm, useField } from "../src";
 interface ProfileValues {
   name: string;
 }
+
 interface Values {
   email: string;
   profile: ProfileValues;
   pets: PetValues[];
 }
 
+function validate(value: Values) {
+  return { value };
+}
+
+function submit(value: Values) {
+  console.log(value);
+}
+
 function App() {
-  const form = useForm<Values>({
+  const form = useForm<Values, Values>({
+    validate,
+    submit,
     initialValue: {
       email: "",
       profile: { name: "" },
