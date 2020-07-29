@@ -1,40 +1,65 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { Field, FieldItem } from "./types";
-import { removeItem, getItem, useSetItem } from "./utilities";
+import { removeItem, useGetItem, useSetItem } from "./utilities";
 
 export function useFieldItem<T>(
   field: Field<T[]>,
   index: number
 ): FieldItem<T> {
-  const { setValue, setError, setTouched } = field;
+  const {
+    setValue: setFieldValue,
+    setError: setFieldError,
+    setTouched: setFieldTouched
+  } = field;
+
+  const value = useGetItem(field.value, index);
+  const error = useGetItem(field.error, index);
+  const touched = useGetItem(field.touched, index);
+
+  const setValue = useSetItem(setFieldValue, index);
+  const setError = useSetItem(setFieldError, index);
+  const setTouched = useSetItem(setFieldTouched, index);
 
   const remove = useCallback(() => {
-    setValue(values => removeItem(values, index));
-    setError(errors => {
+    setFieldValue(values => removeItem(values, index));
+    setFieldError(errors => {
       if (Array.isArray(errors)) {
         return removeItem(errors, index);
       } else {
         return errors;
       }
     });
-    setTouched(touched => {
+    setFieldTouched(touched => {
       if (Array.isArray(touched)) {
         return removeItem(touched, index);
       } else {
         return touched;
       }
     });
-  }, [index, setValue, setError, setTouched]);
+  }, [index, setFieldError, setFieldTouched, setFieldValue]);
 
-  return {
-    id: `${field.id}_${index}`,
-    name: `${field.name}[${index}]`,
-    value: field.value[index],
-    error: getItem(field.error, index),
-    touched: getItem(field.touched, index),
-    setValue: useSetItem(field.setValue, index),
-    setError: useSetItem(field.setError, index),
-    setTouched: useSetItem(field.setTouched, index),
-    remove
-  };
+  return useMemo(
+    () => ({
+      id: `${field.id}_${index}`,
+      name: index.toString(),
+      value,
+      error,
+      touched,
+      setValue,
+      setError,
+      setTouched,
+      remove
+    }),
+    [
+      field.id,
+      index,
+      value,
+      error,
+      touched,
+      setValue,
+      setError,
+      setTouched,
+      remove
+    ]
+  );
 }

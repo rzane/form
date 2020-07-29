@@ -1,5 +1,5 @@
 import { Transform, SetState } from "./types";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 function isTransform<T>(value: T | Transform<T>): value is Transform<T> {
   return typeof value === "function";
@@ -27,6 +27,14 @@ export function getProperty(data: any, key: any): any {
 
 export function getItem(data: any, index: number): any {
   return Array.isArray(data) ? data[index] : undefined;
+}
+
+export function useGetProperty(data: any, key: any): any {
+  return useMemo(() => getProperty(data, key), [data, key]);
+}
+
+export function useGetItem(data: any, index: number): any {
+  return useMemo(() => getItem(data, index), [data, index]);
 }
 
 export function useSetProperty(

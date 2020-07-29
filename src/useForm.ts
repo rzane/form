@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useMemo } from "react";
 import { useIdentifier } from "./useIdentifier";
 import { FormOptions, Form } from "./types";
 
@@ -33,19 +33,32 @@ export function useForm<T, R = T>(options: FormOptions<T, R>): Form<T> {
       });
   }, [value, submit, validate]);
 
-  return {
-    id: `form-${id}`,
-    name: "form",
-    initialValue,
-    initialError,
-    initialTouched,
-    value,
-    error,
-    touched,
-    setValue,
-    setError,
-    setTouched,
-    isSubmitting,
-    submit: executeSubmit
-  };
+  return useMemo(
+    () => ({
+      id: `form-${id}`,
+      name: "form",
+      initialValue,
+      initialError,
+      initialTouched,
+      value,
+      error,
+      touched,
+      setValue,
+      setError,
+      setTouched,
+      isSubmitting,
+      submit: executeSubmit
+    }),
+    [
+      id,
+      value,
+      error,
+      touched,
+      initialError,
+      initialTouched,
+      initialValue,
+      isSubmitting,
+      executeSubmit
+    ]
+  );
 }

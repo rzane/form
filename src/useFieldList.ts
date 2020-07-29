@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { Field, FieldList } from "./types";
 import { insertItem, removeItem } from "./utilities";
 
@@ -54,10 +54,13 @@ export function useFieldList<T>(field: Field<T[]>): FieldList<T> {
     [setValue, setError, setTouched]
   );
 
-  return {
-    ...field,
-    push,
-    insert,
-    remove
-  };
+  return useMemo(
+    () => ({
+      ...field,
+      push,
+      insert,
+      remove
+    }),
+    [field, push, insert, remove]
+  );
 }
