@@ -29,7 +29,7 @@ describe("basic", () => {
   test("has a stable `id`", () => {
     const { result, rerender } = setup();
     const id = result.current.field.id;
-    expect(id).toMatch(/^field-\d+$/);
+    expect(id).toMatch(/^form-\d+_name$/);
 
     rerender();
 
