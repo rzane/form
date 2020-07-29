@@ -1,5 +1,5 @@
-import { useForm, useField, FormOptions, useFieldItem } from "../src";
 import { renderHook, act } from "@testing-library/react-hooks";
+import { useForm, useField, FormOptions, useFieldItem } from "../src";
 
 interface Basic {
   name: string;
@@ -17,6 +17,8 @@ describe("basic", () => {
   function setup(options: Partial<FormOptions<Basic>> = {}) {
     return renderHook(() => {
       const form = useForm<Basic>({
+        submit: jest.fn(),
+        validate: jest.fn(),
         initialValue: { name: "" },
         ...options
       });
@@ -83,6 +85,8 @@ describe("nested", () => {
   function setup(options: Partial<FormOptions<Nested>> = {}) {
     return renderHook(() => {
       const form = useForm<Nested>({
+        submit: jest.fn(),
+        validate: jest.fn(),
         initialValue: { basic: { name: "" } },
         ...options
       });
@@ -138,6 +142,8 @@ describe("list", () => {
   function setup(options: Partial<FormOptions<List>> = {}) {
     return renderHook(() => {
       const form = useForm<List>({
+        submit: jest.fn(),
+        validate: jest.fn(),
         initialValue: { items: [{ name: "" }] },
         ...options
       });

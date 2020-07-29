@@ -4,6 +4,8 @@ import { FormOptions, useForm, useFieldList } from "../src";
 function setup(options: Partial<FormOptions<number[]>> = {}) {
   return renderHook(() => {
     const form = useForm<number[]>({
+      submit: jest.fn(),
+      validate: jest.fn(),
       initialValue: [1, 2],
       ...options
     });

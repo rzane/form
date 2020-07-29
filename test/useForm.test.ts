@@ -2,7 +2,14 @@ import { act, renderHook } from "@testing-library/react-hooks";
 import { useForm, FormOptions } from "../src";
 
 function setup(options: Partial<FormOptions<string>> = {}) {
-  return renderHook(() => useForm({ initialValue: "", ...options }));
+  return renderHook(() =>
+    useForm({
+      submit: jest.fn(),
+      validate: jest.fn(),
+      initialValue: "",
+      ...options
+    })
+  );
 }
 
 test("initializes value, error, and touched", () => {
