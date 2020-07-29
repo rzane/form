@@ -10,7 +10,7 @@ export function useFieldItem<T>(
 
   return {
     id: `${field.id}_${index}`,
-    name: index.toString(),
+    name: `${field.name}[${index}]`,
     value: field.value[index],
     error: getItem(field.error, index),
     touched: getItem(field.touched, index),
