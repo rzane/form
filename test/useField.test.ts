@@ -165,7 +165,7 @@ describe("list", () => {
 
   test("changes `touched` with `setTouched`", () => {
     const { result } = setup();
-    expect(result.current.form.touched).toBeUndefined();
+    expect(result.current.field.touched).toBeUndefined();
     act(() => result.current.field.setTouched(true));
     expect(result.current.field.touched).toEqual(true);
   });
