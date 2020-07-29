@@ -1,57 +1,63 @@
 import { useCallback } from "react";
 import { Field, FieldList } from "./types";
-import { insert, remove } from "./utilities";
+import { insertItem, removeItem } from "./utilities";
 
 export function useFieldList<T>(field: Field<T[]>): FieldList<T> {
   const { setValue, setError, setTouched } = field;
 
+  const push = useCallback(
+    (value: T) => {
+      setValue(values => [...values, value]);
+    },
+    [setValue]
+  );
+
+  const insert = useCallback(
+    (index: number, value: T) => {
+      setValue(values => insertItem(values, index, value));
+      setError(errors => {
+        if (Array.isArray(errors)) {
+          return insertItem(errors, index, undefined);
+        } else {
+          return errors;
+        }
+      });
+      setTouched(touched => {
+        if (Array.isArray(touched)) {
+          return insertItem(touched, index, undefined);
+        } else {
+          return touched;
+        }
+      });
+    },
+    [setValue, setError, setTouched]
+  );
+
+  const remove = useCallback(
+    (index: number) => {
+      setValue(values => removeItem(values, index));
+      setError(errors => {
+        if (Array.isArray(errors)) {
+          return removeItem(errors, index);
+        } else {
+          return errors;
+        }
+      });
+      setTouched(touched => {
+        if (Array.isArray(touched)) {
+          return removeItem(touched, index);
+        } else {
+          return touched;
+        }
+      });
+    },
+    [setValue, setError, setTouched]
+  );
+
   return {
     ...field,
-    push: useCallback(
-      value => {
-        setValue(values => [...values, value]);
-      },
-      [setValue]
-    ),
-    insert: useCallback(
-      (index, value) => {
-        setValue(values => insert(values, index, value));
-        setError(errors => {
-          if (Array.isArray(errors)) {
-            return insert(errors, index, undefined);
-          } else {
-            return errors;
-          }
-        });
-        setTouched(touched => {
-          if (Array.isArray(touched)) {
-            return insert(touched, index, undefined);
-          } else {
-            return touched;
-          }
-        });
-      },
-      [setValue, setError, setTouched]
-    ),
-    remove: useCallback(
-      index => {
-        setValue(values => remove(values, index));
-        setError(errors => {
-          if (Array.isArray(errors)) {
-            return remove(errors, index);
-          } else {
-            return errors;
-          }
-        });
-        setTouched(touched => {
-          if (Array.isArray(touched)) {
-            return remove(touched, index);
-          } else {
-            return touched;
-          }
-        });
-      },
-      [setValue, setError, setTouched]
-    )
+    push,
+    insert,
+    remove
   };
 }

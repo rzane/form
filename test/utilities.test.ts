@@ -1,15 +1,15 @@
-import { insert, remove, transform } from "../src/utilities";
+import { insertItem, removeItem, transform } from "../src/utilities";
 
-test("insert", () => {
+test("insertItem", () => {
   const values = [1, 2, 3];
-  const nextValues = insert(values, 1, 4);
+  const nextValues = insertItem(values, 1, 4);
   expect(nextValues).toEqual([1, 4, 2, 3]);
   expect(nextValues).not.toBe(values);
 });
 
-test("remove", () => {
+test("removeItem", () => {
   const values = [1, 2, 3];
-  const nextValues = remove(values, 1);
+  const nextValues = removeItem(values, 1);
   expect(nextValues).toEqual([1, 3]);
   expect(nextValues).not.toBe(values);
 });

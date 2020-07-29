@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { Field, FieldItem } from "./types";
-import { remove, getItem, useSetItem } from "./utilities";
+import { removeItem, getItem, useSetItem } from "./utilities";
 
 export function useFieldItem<T>(
   field: Field<T[]>,
@@ -18,17 +18,17 @@ export function useFieldItem<T>(
     setError: useSetItem(field.setError, index),
     setTouched: useSetItem(field.setTouched, index),
     remove: useCallback(() => {
-      setValue(values => remove(values, index));
+      setValue(values => removeItem(values, index));
       setError(errors => {
         if (Array.isArray(errors)) {
-          return remove(errors, index);
+          return removeItem(errors, index);
         } else {
           return errors;
         }
       });
       setTouched(touched => {
         if (Array.isArray(touched)) {
-          return remove(touched, index);
+          return removeItem(touched, index);
         } else {
           return touched;
         }
