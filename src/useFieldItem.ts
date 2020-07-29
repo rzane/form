@@ -1,11 +1,8 @@
-import { useCallback, useMemo } from "react";
-import { Field, FieldItem } from "./types";
-import { removeItem, useGetItem, useSetItem } from "./utilities";
+import { useMemo } from "react";
+import { Field } from "./types";
+import { useGetItem, useSetItem } from "./utilities";
 
-export function useFieldItem<T>(
-  field: Field<T[]>,
-  index: number
-): FieldItem<T> {
+export function useFieldItem<T>(field: Field<T[]>, index: number): Field<T> {
   const {
     setValue: setFieldValue,
     setError: setFieldError,
@@ -20,24 +17,6 @@ export function useFieldItem<T>(
   const setError = useSetItem(setFieldError, index);
   const setTouched = useSetItem(setFieldTouched, index);
 
-  const remove = useCallback(() => {
-    setFieldValue(values => removeItem(values, index));
-    setFieldError(errors => {
-      if (Array.isArray(errors)) {
-        return removeItem(errors, index);
-      } else {
-        return errors;
-      }
-    });
-    setFieldTouched(touched => {
-      if (Array.isArray(touched)) {
-        return removeItem(touched, index);
-      } else {
-        return touched;
-      }
-    });
-  }, [index, setFieldError, setFieldTouched, setFieldValue]);
-
   return useMemo(
     () => ({
       id: `${field.id}_${index}`,
@@ -47,19 +26,8 @@ export function useFieldItem<T>(
       touched,
       setValue,
       setError,
-      setTouched,
-      remove
+      setTouched
     }),
-    [
-      field.id,
-      index,
-      value,
-      error,
-      touched,
-      setValue,
-      setError,
-      setTouched,
-      remove
-    ]
+    [field.id, index, value, error, touched, setValue, setError, setTouched]
   );
 }

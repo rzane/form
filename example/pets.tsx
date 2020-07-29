@@ -1,33 +1,39 @@
 import * as React from "react";
 import { Input } from "./Input";
-import { useField, useFieldList, useFieldItem, Field } from "../src";
+import {
+  Field,
+  useField,
+  useFieldItem,
+  usePushItem,
+  useRemoveItem
+} from "../src";
 
 export interface PetValues {
   name: string;
 }
 
 export interface PetListProps {
-  field: Field<PetValues[]>;
+  pets: Field<PetValues[]>;
 }
 
 export interface PetItemProps {
-  field: Field<PetValues[]>;
+  pets: Field<PetValues[]>;
   index: number;
 }
 
-export function PetList(props: PetListProps) {
-  const field = useFieldList(props.field);
+export function PetList({ pets }: PetListProps) {
+  const addPet = usePushItem(pets);
 
   return (
     <fieldset>
       <legend>Pets</legend>
 
-      {field.value.map((_value, index) => (
-        <PetItem key={index} field={field} index={index} />
+      {pets.value.map((_value, index) => (
+        <PetItem key={index} pets={pets} index={index} />
       ))}
 
       <p>
-        <button type="button" onClick={() => field.push({ name: "" })}>
+        <button type="button" onClick={() => addPet({ name: "" })}>
           Add pet
         </button>
       </p>
@@ -35,15 +41,16 @@ export function PetList(props: PetListProps) {
   );
 }
 
-export function PetItem(props: PetItemProps) {
-  const field = useFieldItem(props.field, props.index);
-  const name = useField(field, "name");
+export function PetItem({ pets, index }: PetItemProps) {
+  const removePet = useRemoveItem(pets);
+  const pet = useFieldItem(pets, index);
+  const name = useField(pet, "name");
 
   return (
     <fieldset>
-      <legend>Pet #{props.index + 1}</legend>
+      <legend>Pet #{index + 1}</legend>
       <Input label="Name" field={name} />
-      <button type="button" onClick={field.remove}>
+      <button type="button" onClick={() => removePet(index)}>
         Remove
       </button>
     </fieldset>

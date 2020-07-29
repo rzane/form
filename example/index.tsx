@@ -59,7 +59,7 @@ function App() {
         <Input label="Name" field={name} />
       </fieldset>
 
-      <PetList field={pets} />
+      <PetList pets={pets} />
 
       <p>
         <button type="submit">Submit</button>
