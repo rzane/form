@@ -17,7 +17,7 @@ function setup(options: Partial<FormOptions<number[]>> = {}) {
 
 test("`name` reflects array index", () => {
   const { result } = setup();
-  expect(result.current.field.name).toEqual("0");
+  expect(result.current.field.name).toEqual(0);
 });
 
 test("changes `value` with `setValue`", () => {

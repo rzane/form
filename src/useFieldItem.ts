@@ -20,7 +20,7 @@ export function useFieldItem<T>(field: Field<T[]>, index: number): Field<T> {
   return useMemo(
     () => ({
       id: `${field.id}_${index}`,
-      name: index.toString(),
+      name: index,
       value,
       error,
       touched,

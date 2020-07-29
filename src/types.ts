@@ -18,7 +18,7 @@ export type SetState<T> = (value: T | Transform<T>) => void;
  */
 export interface Field<T> {
   id: string;
-  name: string;
+  name: string | number;
   value: T;
   error: Errors<T> | undefined;
   touched: Touched<T> | undefined;
