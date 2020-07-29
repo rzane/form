@@ -3,7 +3,13 @@ import { useForm, useFieldItem, FormOptions } from "../src";
 
 function setup(options: Partial<FormOptions<number[]>> = {}) {
   return renderHook(() => {
-    const form = useForm<number[]>({ initialValue: [1], ...options });
+    const form = useForm<number[]>({
+      initialValue: [1],
+      validate: value => ({ value }),
+      submit: value => {},
+      ...options
+    });
+
     const field = useFieldItem(form, 0);
     return { form, field };
   });

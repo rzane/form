@@ -2,7 +2,7 @@ import { useRef, useState, useCallback } from "react";
 import { useIdentifier } from "./useIdentifier";
 import { FormOptions, Form } from "./types";
 
-export function useForm<T, R>(options: FormOptions<T, R>): Form<T> {
+export function useForm<T, R = T>(options: FormOptions<T, R>): Form<T> {
   const { validate, submit } = options;
 
   const id = useIdentifier();
@@ -18,6 +18,7 @@ export function useForm<T, R>(options: FormOptions<T, R>): Form<T> {
 
   const executeSubmit = useCallback(() => {
     setSubmitting(true);
+    setError(undefined);
 
     return Promise.resolve(validate(value))
       .then(result => {

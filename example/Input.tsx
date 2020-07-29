@@ -8,7 +8,7 @@ export interface InputProps {
 
 export function Input(props: InputProps) {
   const { label, field } = props;
-  const { id, name, value, setValue, setTouched } = field;
+  const { id, name, value, error, setValue, setTouched } = field;
 
   const onBlur = React.useCallback(() => setTouched(true), [setTouched]);
   const onChange = React.useCallback(event => setValue(event.target.value), [
@@ -25,6 +25,7 @@ export function Input(props: InputProps) {
         onBlur={onBlur}
         onChange={onChange}
       />
+      {error && <div style={{ color: "red", marginBottom: 20 }}>{error}</div>}
     </div>
   );
 }

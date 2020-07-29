@@ -16,7 +16,11 @@ interface Values {
 }
 
 function validate(value: Values) {
-  return { value };
+  if (!value.email) {
+    return { error: { email: "This field is required" } };
+  } else {
+    return { value };
+  }
 }
 
 function submit(value: Values) {
@@ -24,7 +28,7 @@ function submit(value: Values) {
 }
 
 function App() {
-  const form = useForm<Values, Values>({
+  const form = useForm<Values>({
     validate,
     submit,
     initialValue: {
@@ -40,7 +44,12 @@ function App() {
   const pets = useField(form, "pets");
 
   return (
-    <div>
+    <form
+      onSubmit={event => {
+        event.preventDefault();
+        form.submit();
+      }}
+    >
       <h1>@stackup/form</h1>
 
       <Input label="Email" field={email} />
@@ -51,7 +60,11 @@ function App() {
       </fieldset>
 
       <PetList field={pets} />
-    </div>
+
+      <p>
+        <button type="submit">Submit</button>
+      </p>
+    </form>
   );
 }
 
