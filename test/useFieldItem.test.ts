@@ -45,8 +45,14 @@ test("changes `touched` with `setTouched`", () => {
   expect(result.current.form.touched).toEqual([true]);
 });
 
-test("removes the value with `remove`", () => {
-  const { result } = setup();
+test("removes the value, error, and touched with `remove`", () => {
+  const { result } = setup({
+    initialError: ["error"],
+    initialTouched: [true]
+  });
+
   act(() => result.current.field.remove());
   expect(result.current.form.value).toEqual([]);
+  expect(result.current.form.error).toEqual([]);
+  expect(result.current.form.touched).toEqual([]);
 });

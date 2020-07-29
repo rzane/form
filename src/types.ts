@@ -1,18 +1,14 @@
-export type ErrorMap<T> = string | { [K in keyof T]?: Errors<T[K]> };
-export type ErrorList<T> = string | string[] | Errors<T>[];
 export type Errors<T> = T extends any[]
-  ? ErrorList<T[number]>
+  ? string | undefined | Array<string | undefined | Touched<T[number]>>
   : T extends object
-  ? ErrorMap<T>
-  : string;
+  ? string | undefined | { [K in keyof T]?: Touched<T[K]> }
+  : string | undefined;
 
-export type TouchedList<T> = boolean | boolean[] | Touched<T>[];
-export type TouchedMap<T> = boolean | { [K in keyof T]?: Touched<T[K]> };
 export type Touched<T> = T extends any[]
-  ? TouchedList<T[number]>
+  ? boolean | undefined | Array<boolean | undefined | Touched<T[number]>>
   : T extends object
-  ? TouchedMap<T>
-  : boolean;
+  ? boolean | undefined | { [K in keyof T]?: Touched<T[K]> }
+  : boolean | undefined;
 
 export type Transform<T> = (value: T) => T;
 export type SetState<T> = (value: T | Transform<T>) => void;

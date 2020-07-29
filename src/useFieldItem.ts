@@ -6,7 +6,7 @@ export function useFieldItem<T>(
   field: Field<T[]>,
   index: number
 ): FieldItem<T> {
-  const { setValue } = field;
+  const { setValue, setError, setTouched } = field;
 
   return {
     id: `${field.id}_${index}`,
@@ -17,9 +17,22 @@ export function useFieldItem<T>(
     setValue: useSetItem(field.setValue, index),
     setError: useSetItem(field.setError, index),
     setTouched: useSetItem(field.setTouched, index),
-    remove: useCallback(() => setValue(values => remove(values, index)), [
-      index,
-      setValue
-    ])
+    remove: useCallback(() => {
+      setValue(values => remove(values, index));
+      setError(errors => {
+        if (Array.isArray(errors)) {
+          return remove(errors, index);
+        } else {
+          return errors;
+        }
+      });
+      setTouched(touched => {
+        if (Array.isArray(touched)) {
+          return remove(touched, index);
+        } else {
+          return touched;
+        }
+      });
+    }, [index, setValue, setError, setTouched])
   };
 }

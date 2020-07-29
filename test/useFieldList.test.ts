@@ -20,15 +20,25 @@ test("adds an item with `push`", () => {
 });
 
 test("adds an item with `insert`", () => {
-  const { result } = setup();
+  const { result } = setup({
+    initialError: ["a", "b"],
+    initialTouched: [true, false]
+  });
 
   act(() => result.current.insert(1, 3));
   expect(result.current.value).toEqual([1, 3, 2]);
+  expect(result.current.error).toEqual(["a", undefined, "b"]);
+  expect(result.current.touched).toEqual([true, undefined, false]);
 });
 
-test("removes an item", () => {
-  const { result } = setup();
+test("removes the value, error, and touched with `remove`", () => {
+  const { result } = setup({
+    initialError: ["a", "b"],
+    initialTouched: [true, false]
+  });
 
   act(() => result.current.remove(1));
   expect(result.current.value).toEqual([1]);
+  expect(result.current.error).toEqual(["a"]);
+  expect(result.current.touched).toEqual([true]);
 });
