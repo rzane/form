@@ -1,6 +1,6 @@
 import { Transform } from "./types";
 
-export function isTransform<T>(value: T | Transform<T>): value is Transform<T> {
+function isTransform<T>(value: T | Transform<T>): value is Transform<T> {
   return typeof value === "function";
 }
 
