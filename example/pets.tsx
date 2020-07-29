@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Input } from "./Input";
-import { FieldList, useFieldItem, Field, useFieldList, useField } from "../src";
+import { useField, useFieldList, useFieldItem, Field } from "../src";
 
 export interface PetValues {
   name: string;
@@ -11,7 +11,7 @@ export interface PetListProps {
 }
 
 export interface PetItemProps {
-  field: FieldList<PetValues>;
+  field: Field<PetValues[]>;
   index: number;
 }
 
@@ -22,13 +22,15 @@ export function PetList(props: PetListProps) {
     <fieldset>
       <legend>Pets</legend>
 
-      {field.value.map((_, index) => (
+      {field.value.map((_value, index) => (
         <PetItem key={index} field={field} index={index} />
       ))}
 
-      <button type="button" onClick={() => field.insert(-1, { name: "" })}>
-        Add pet
-      </button>
+      <p>
+        <button type="button" onClick={() => field.push({ name: "" })}>
+          Add pet
+        </button>
+      </p>
     </fieldset>
   );
 }
@@ -41,7 +43,6 @@ export function PetItem(props: PetItemProps) {
     <fieldset>
       <legend>Pet #{props.index + 1}</legend>
       <Input label="Name" field={name} />
-
       <button type="button" onClick={field.remove}>
         Remove
       </button>

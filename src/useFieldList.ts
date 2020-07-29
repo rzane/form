@@ -1,28 +1,27 @@
 import { useCallback } from "react";
 import { Field, FieldList } from "./types";
+import { insert, remove } from "./utilities";
 
 export function useFieldList<T>(field: Field<T[]>): FieldList<T> {
   const { setValue } = field;
 
   return {
     ...field,
+    push: useCallback(
+      value => {
+        setValue(values => [...values, value]);
+      },
+      [setValue]
+    ),
     insert: useCallback(
       (index, value) => {
-        setValue(prev => {
-          const next = [...prev];
-          next.splice(index, 0, value);
-          return next;
-        });
+        setValue(values => insert(values, index, value));
       },
       [setValue]
     ),
     remove: useCallback(
       index => {
-        setValue(prev => {
-          const next = [...prev];
-          next.splice(index, 1);
-          return next;
-        });
+        setValue(values => remove(values, index));
       },
       [setValue]
     )

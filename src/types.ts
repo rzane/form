@@ -56,6 +56,7 @@ export interface Field<T> extends FieldState<T> {
  * An array consisting of the state for multiple fields.
  */
 export interface FieldList<T> extends Field<T[]> {
+  push: (value: T) => void;
   insert: (index: number, value: T) => void;
   remove: (index: number) => void;
 }
