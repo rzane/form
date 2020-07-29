@@ -1,4 +1,4 @@
-import { useForm, useField, FormOptions } from "../src";
+import { useForm, useField, FormOptions, useFieldItem } from "../src";
 import { renderHook, act } from "@testing-library/react-hooks";
 
 interface Basic {
@@ -9,7 +9,11 @@ interface Nested {
   basic: Basic;
 }
 
-describe("a basic field", () => {
+interface List {
+  items: Basic[];
+}
+
+describe("basic", () => {
   function setup(options: Partial<FormOptions<Basic>> = {}) {
     return renderHook(() => {
       const form = useForm<Basic>({
@@ -75,7 +79,7 @@ describe("a basic field", () => {
   });
 });
 
-describe("a nested field", () => {
+describe("nested", () => {
   function setup(options: Partial<FormOptions<Nested>> = {}) {
     return renderHook(() => {
       const form = useForm<Nested>({
@@ -127,5 +131,42 @@ describe("a nested field", () => {
     expect(result.current.field.touched).toEqual(true);
     expect(result.current.fields.touched).toEqual({ name: true });
     expect(result.current.form.touched).toEqual({ basic: { name: true } });
+  });
+});
+
+describe("list", () => {
+  function setup(options: Partial<FormOptions<List>> = {}) {
+    return renderHook(() => {
+      const form = useForm<List>({
+        initialValue: { items: [{ name: "" }] },
+        ...options
+      });
+
+      const items = useField(form, "items");
+      const item = useFieldItem(items, 0);
+      const field = useField(item, "name");
+      return { form, items, item, field };
+    });
+  }
+
+  test("changes `value` with `setValue`", () => {
+    const { result } = setup();
+    expect(result.current.field.value).toEqual("");
+    act(() => result.current.field.setValue("changed"));
+    expect(result.current.field.value).toEqual("changed");
+  });
+
+  test("changes `error` with `setError`", () => {
+    const { result } = setup();
+    expect(result.current.field.error).toBeUndefined();
+    act(() => result.current.field.setError("changed"));
+    expect(result.current.field.error).toEqual("changed");
+  });
+
+  test("changes `touched` with `setTouched`", () => {
+    const { result } = setup();
+    expect(result.current.form.touched).toBeUndefined();
+    act(() => result.current.field.setTouched(true));
+    expect(result.current.field.touched).toEqual(true);
   });
 });

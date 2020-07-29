@@ -1,80 +1,59 @@
 import { act, renderHook } from "@testing-library/react-hooks";
 import { useForm, FormOptions } from "../src";
 
-interface Values {
-  name: string;
+function setup(options: Partial<FormOptions<string>> = {}) {
+  return renderHook(() => useForm({ initialValue: "", ...options }));
 }
 
-const VALUES: Values = { name: "" };
-const TOUCHED = { name: true };
-const ERRORS = { name: "is invalid" };
-
-function setup(options: Partial<FormOptions<Values>> = {}) {
-  return renderHook(() => useForm({ initialValue: VALUES, ...options }));
-}
-
-describe("useForm", () => {
-  test("initialValue", () => {
-    const { result } = setup();
-    expect(result.current.initialValue).toEqual(VALUES);
+test("initializes value, error, and touched", () => {
+  const { result } = setup({
+    initialValue: "value",
+    initialError: "error",
+    initialTouched: true
   });
 
-  test("value", () => {
-    const { result } = setup();
-    expect(result.current.value).toEqual(VALUES);
-  });
+  expect(result.current.value).toEqual("value");
+  expect(result.current.initialValue).toEqual("value");
 
-  test("setValue", () => {
-    const { result } = setup();
-    expect(result.current.value).toEqual(VALUES);
+  expect(result.current.error).toEqual("error");
+  expect(result.current.initialError).toEqual("error");
 
-    act(() => result.current.setValue({ name: "Rick" }));
-    expect(result.current.value).toEqual({ name: "Rick" });
-  });
+  expect(result.current.touched).toEqual(true);
+  expect(result.current.initialTouched).toEqual(true);
+});
 
-  test("initialTouched", () => {
-    const { result } = setup({ initialTouched: TOUCHED });
-    expect(result.current.initialTouched).toEqual(TOUCHED);
-  });
+test("changes `value` with `setValue`", () => {
+  const { result } = setup();
 
-  test("initialTouched (default)", () => {
-    const { result } = setup();
-    expect(result.current.initialTouched).toBeUndefined();
-  });
+  expect(result.current.value).toEqual("");
+  expect(result.current.initialValue).toEqual("");
 
-  test("touched", () => {
-    const { result } = setup({ initialTouched: TOUCHED });
-    expect(result.current.touched).toEqual(TOUCHED);
-  });
+  act(() => result.current.setValue("changed"));
 
-  test("setTouched", () => {
-    const { result } = setup();
-    expect(result.current.touched).toBeUndefined();
+  expect(result.current.value).toEqual("changed");
+  expect(result.current.initialValue).toEqual("");
+});
 
-    act(() => result.current.setTouched(TOUCHED));
-    expect(result.current.touched).toEqual(TOUCHED);
-  });
+test("changes `error` with `setError`", () => {
+  const { result } = setup();
 
-  test("initialError", () => {
-    const { result } = setup({ initialError: ERRORS });
-    expect(result.current.initialError).toEqual(ERRORS);
-  });
+  expect(result.current.error).toBeUndefined();
+  expect(result.current.initialError).toBeUndefined();
 
-  test("initialError (default)", () => {
-    const { result } = setup();
-    expect(result.current.initialError).toBeUndefined();
-  });
+  act(() => result.current.setError("changed"));
 
-  test("error", () => {
-    const { result } = setup({ initialError: ERRORS });
-    expect(result.current.error).toEqual(ERRORS);
-  });
+  expect(result.current.error).toEqual("changed");
+  expect(result.current.initialError).toBeUndefined();
+});
 
-  test("setError", () => {
-    const { result } = setup();
-    expect(result.current.error).toBeUndefined();
+test("changes `touched` with `setTouched`", () => {
+  const { result } = setup();
 
-    act(() => result.current.setError(ERRORS));
-    expect(result.current.error).toEqual(ERRORS);
-  });
+  expect(result.current.touched).toBeUndefined();
+  expect(result.current.initialTouched).toBeUndefined();
+
+  act(() => result.current.setTouched(true));
+
+  expect(result.current.touched).toEqual(true);
+  expect(result.current.initialTouched).toBeUndefined();
 });
