@@ -1,7 +1,7 @@
 export type Errors<T> = T extends any[]
-  ? string | undefined | Array<string | undefined | Touched<T[number]>>
+  ? string | undefined | Array<string | undefined | Errors<T[number]>>
   : T extends object
-  ? string | undefined | { [K in keyof T]?: Touched<T[K]> }
+  ? string | undefined | { [K in keyof T]?: Errors<T[K]> }
   : string | undefined;
 
 export type Touched<T> = T extends any[]
