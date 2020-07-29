@@ -17,7 +17,12 @@ export type Touched<T> = T extends any[]
 export type Transform<T> = (value: T) => T;
 export type SetState<T> = (value: T | Transform<T>) => void;
 
-export interface FieldState<T> {
+/**
+ * The primary form data structure.
+ */
+export interface Field<T> {
+  id: string;
+  name: string;
   value: T;
   error: Errors<T> | undefined;
   touched: Touched<T> | undefined;
@@ -38,18 +43,10 @@ export interface FormOptions<T> {
 /**
  * The value returned by `useForm`.
  */
-export interface Form<T> extends FieldState<T> {
+export interface Form<T> extends Field<T> {
   initialValue: T;
   initialError: Errors<T> | undefined;
   initialTouched: Touched<T> | undefined;
-}
-
-/**
- * The value returned by `useField`.
- */
-export interface Field<T> extends FieldState<T> {
-  id: string;
-  name: string;
 }
 
 /**

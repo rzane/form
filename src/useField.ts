@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { transform } from "./utilities";
-import { useIdentifier } from "./useIdentifier";
-import { Field, FieldState, SetState } from "./types";
+import { Field, SetState } from "./types";
 
 function get(data: any, key: any): any {
   return data && typeof data === "object" ? data[key] : undefined;
@@ -20,17 +19,17 @@ function useNested(setState: SetState<any>, name: any): SetState<any> {
 }
 
 export function useField<T, K extends keyof T>(
-  form: FieldState<T>,
+  field: Field<T>,
   name: K
 ): Field<T[K]> {
   return {
-    id: `field-${useIdentifier()}`,
+    id: `${field.id}_${name}`,
     name: name as string,
-    value: form.value[name],
-    error: get(form.error, name),
-    touched: get(form.touched, name),
-    setValue: useNested(form.setValue, name),
-    setError: useNested(form.setError, name),
-    setTouched: useNested(form.setTouched, name)
+    value: field.value[name],
+    error: get(field.error, name),
+    touched: get(field.touched, name),
+    setValue: useNested(field.setValue, name),
+    setError: useNested(field.setError, name),
+    setTouched: useNested(field.setTouched, name)
   };
 }

@@ -9,9 +9,7 @@ const generate: () => string = (() => {
  * Creates a unique identifier that will remain consistent
  * across re-renders.
  *
- * This hook does not currently support SSR. Support for SSR can
- * be added upon request; however, upcoming versions of React will
- * add support for similar behavior soon.
+ * This hook does not currently support SSR.
  *
  * @private
  */
