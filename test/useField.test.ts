@@ -9,144 +9,123 @@ interface Nested {
   basic: Basic;
 }
 
-function basic(options: Partial<FormOptions<Basic>> = {}) {
-  return renderHook(() => {
-    const form = useForm<Basic>({
-      initialValue: { name: "" },
-      ...options
+describe("a basic field", () => {
+  function setup(options: Partial<FormOptions<Basic>> = {}) {
+    return renderHook(() => {
+      const form = useForm<Basic>({
+        initialValue: { name: "" },
+        ...options
+      });
+
+      const field = useField(form, "name");
+      return { form, field };
     });
+  }
 
-    const field = useField(form, "name");
-    return { form, field };
-  });
-}
+  test("has a stable `id`", () => {
+    const { result, rerender } = setup();
+    const id = result.current.field.id;
+    expect(id).toMatch(/^field-\d+$/);
 
-function nested(options: Partial<FormOptions<Nested>> = {}) {
-  return renderHook(() => {
-    const form = useForm<Nested>({
-      initialValue: { basic: { name: "" } },
-      ...options
-    });
+    rerender();
 
-    const fields = useField(form, "basic");
-    const field = useField(fields, "name");
-    return { form, fields, field };
-  });
-}
-
-describe("useField", () => {
-  test("id", () => {
-    const { result } = basic();
-    expect(result.current.field.id).toMatch(/^field-\d+$/);
+    const nextId = result.current.field.id;
+    expect(nextId).toEqual(id);
   });
 
-  test("name", () => {
-    const { result } = basic();
+  test("has a `name`", () => {
+    const { result } = setup();
     expect(result.current.field.name).toEqual("name");
   });
 
-  test("value", () => {
-    const { result } = basic({
-      initialValue: { name: "value" }
-    });
+  test("changes `value` with `setValue`", () => {
+    const { result } = setup();
 
-    expect(result.current.field.value).toEqual("value");
-  });
+    expect(result.current.field.value).toEqual("");
+    expect(result.current.form.value).toEqual({ name: "" });
 
-  test("error", () => {
-    const { result } = basic({
-      initialError: { name: "error" }
-    });
-
-    expect(result.current.field.error).toEqual("error");
-  });
-
-  test("touched", () => {
-    const { result } = basic({
-      initialTouched: { name: true }
-    });
-
-    expect(result.current.field.touched).toEqual(true);
-  });
-
-  test("setValue", () => {
-    const { result } = basic();
     act(() => result.current.field.setValue("changed"));
+
     expect(result.current.field.value).toEqual("changed");
     expect(result.current.form.value).toEqual({ name: "changed" });
   });
 
-  test("setError", () => {
-    const { result } = basic();
+  test("changes `error` with `setError`", () => {
+    const { result } = setup();
+
+    expect(result.current.field.error).toBeUndefined();
+    expect(result.current.form.error).toBeUndefined();
+
     act(() => result.current.field.setError("changed"));
+
     expect(result.current.field.error).toEqual("changed");
     expect(result.current.form.error).toEqual({ name: "changed" });
   });
 
-  test("setTouched", () => {
-    const { result } = basic();
+  test("changes `touched` with `setTouched`", () => {
+    const { result } = setup();
+
+    expect(result.current.field.touched).toBeUndefined();
+    expect(result.current.form.touched).toBeUndefined();
+
     act(() => result.current.field.setTouched(true));
+
     expect(result.current.field.touched).toEqual(true);
     expect(result.current.form.touched).toEqual({ name: true });
   });
+});
 
-  describe("a nested form", () => {
-    test("id", () => {
-      const { result } = nested();
-      expect(result.current.field.id).toMatch(/^field-\d+$/);
-    });
-
-    test("name", () => {
-      const { result } = nested();
-      expect(result.current.field.name).toEqual("name");
-    });
-
-    test("value", () => {
-      const { result } = nested({
-        initialValue: { basic: { name: "value" } }
+describe("a nested field", () => {
+  function setup(options: Partial<FormOptions<Nested>> = {}) {
+    return renderHook(() => {
+      const form = useForm<Nested>({
+        initialValue: { basic: { name: "" } },
+        ...options
       });
 
-      expect(result.current.field.value).toEqual("value");
+      const fields = useField(form, "basic");
+      const field = useField(fields, "name");
+      return { form, fields, field };
     });
+  }
 
-    test("error", () => {
-      const { result } = nested({
-        initialError: { basic: { name: "error" } }
-      });
+  test("changes `value` with `setValue`", () => {
+    const { result } = setup();
 
-      expect(result.current.field.error).toEqual("error");
-    });
+    expect(result.current.field.value).toEqual("");
+    expect(result.current.fields.value).toEqual({ name: "" });
+    expect(result.current.form.value).toEqual({ basic: { name: "" } });
 
-    test("touched", () => {
-      const { result } = nested({
-        initialTouched: { basic: { name: true } }
-      });
+    act(() => result.current.field.setValue("changed"));
 
-      expect(result.current.field.touched).toEqual(true);
-    });
+    expect(result.current.field.value).toEqual("changed");
+    expect(result.current.fields.value).toEqual({ name: "changed" });
+    expect(result.current.form.value).toEqual({ basic: { name: "changed" } });
+  });
 
-    test("setValue", () => {
-      const { result } = nested();
-      act(() => result.current.field.setValue("changed"));
-      expect(result.current.field.value).toEqual("changed");
-      expect(result.current.fields.value).toEqual({ name: "changed" });
-      expect(result.current.form.value).toEqual({ basic: { name: "changed" } });
-    });
+  test("changes `error` with `setError`", () => {
+    const { result } = setup();
 
-    test("setError", () => {
-      const { result } = nested();
-      act(() => result.current.field.setError("changed"));
-      expect(result.current.field.error).toEqual("changed");
-      expect(result.current.fields.error).toEqual({ name: "changed" });
-      expect(result.current.form.error).toEqual({ basic: { name: "changed" } });
-    });
+    expect(result.current.field.error).toBeUndefined();
+    expect(result.current.form.error).toBeUndefined();
 
-    test("setTouched", () => {
-      const { result } = nested();
-      act(() => result.current.field.setTouched(true));
-      expect(result.current.field.touched).toEqual(true);
-      expect(result.current.fields.touched).toEqual({ name: true });
-      expect(result.current.form.touched).toEqual({ basic: { name: true } });
-    });
+    act(() => result.current.field.setError("changed"));
+
+    expect(result.current.field.error).toEqual("changed");
+    expect(result.current.fields.error).toEqual({ name: "changed" });
+    expect(result.current.form.error).toEqual({ basic: { name: "changed" } });
+  });
+
+  test("changes `touched` with `setTouched`", () => {
+    const { result } = setup();
+
+    expect(result.current.field.touched).toBeUndefined();
+    expect(result.current.form.touched).toBeUndefined();
+
+    act(() => result.current.field.setTouched(true));
+
+    expect(result.current.field.touched).toEqual(true);
+    expect(result.current.fields.touched).toEqual({ name: true });
+    expect(result.current.form.touched).toEqual({ basic: { name: true } });
   });
 });
