@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { transform, remove } from "./utilities";
 import { useIdentifier } from "./useIdentifier";
-import { Field, FieldItem, SetState } from "./types";
+import { FieldState, FieldItem, SetState } from "./types";
 
 function get(data: any, index: number): any {
   return Array.isArray(data) ? data[index] : undefined;
@@ -20,7 +20,10 @@ function useNested(setState: SetState<any>, index: number): SetState<any> {
   );
 }
 
-export function useFieldItem<T>(form: Field<T[]>, index: number): FieldItem<T> {
+export function useFieldItem<T>(
+  form: FieldState<T[]>,
+  index: number
+): FieldItem<T> {
   const { setValue } = form;
 
   return {
