@@ -1,11 +1,10 @@
-import { unstable_trace as trace } from "scheduler/tracing";
-
 import * as React from "react";
-import { Field } from "../../src";
+import { FormField } from "../../src";
+import { unstable_trace as trace } from "scheduler/tracing";
 
 export interface InputProps {
   label: string;
-  field: Field<string>;
+  field: FormField<string>;
 }
 
 export function Input(props: InputProps) {

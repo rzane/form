@@ -1,8 +1,11 @@
 import { useMemo } from "react";
-import { Field } from "./types";
+import { FormField } from "./types";
 import { useGetItem, useSetItem } from "./utilities";
 
-export function useFieldItem<T>(field: Field<T[]>, index: number): Field<T> {
+export function useFieldItem<T>(
+  field: FormField<T[]>,
+  index: number
+): FormField<T> {
   const {
     setValue: setFieldValue,
     setError: setFieldError,

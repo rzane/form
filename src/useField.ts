@@ -1,11 +1,11 @@
 import { useMemo } from "react";
-import { Field } from "./types";
+import { FormField } from "./types";
 import { useGetProperty, useSetProperty } from "./utilities";
 
 export function useField<T, K extends keyof T>(
-  field: Field<T>,
+  field: FormField<T>,
   name: K
-): Field<T[K]> {
+): FormField<T[K]> {
   const value = useGetProperty(field.value, name);
   const error = useGetProperty(field.error, name);
   const touched = useGetProperty(field.touched, name);

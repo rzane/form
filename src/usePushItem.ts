@@ -1,7 +1,7 @@
-import { Field } from "./types";
+import { FormField } from "./types";
 import { useCallback } from "react";
 
-export function usePushItem<T>(field: Field<T[]>) {
+export function usePushItem<T>(field: FormField<T[]>) {
   const { setValue } = field;
 
   return useCallback(

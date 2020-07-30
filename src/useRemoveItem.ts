@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { removeItem } from "./utilities";
-import { Field } from "./types";
+import { FormField } from "./types";
 
-export function useRemoveItem<T>(field: Field<T[]>) {
+export function useRemoveItem<T>(field: FormField<T[]>) {
   const { setValue, setError, setTouched } = field;
 
   return useCallback(

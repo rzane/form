@@ -1,8 +1,8 @@
 import { useCallback } from "react";
-import { Field } from "./types";
+import { FormField } from "./types";
 import { insertItem } from "./utilities";
 
-export function useInsertItem<T>(field: Field<T[]>) {
+export function useInsertItem<T>(field: FormField<T[]>) {
   const { setValue, setError, setTouched } = field;
 
   return useCallback(

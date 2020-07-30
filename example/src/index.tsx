@@ -1,6 +1,7 @@
 import "react-app-polyfill/ie11";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import { Code } from "./Code";
 import { Input } from "./Input";
 import { Pet, PetList } from "./PetList";
 import { useForm, useField, useSchema } from "../../src";
@@ -12,7 +13,6 @@ import {
   refute,
   assert
 } from "@stackup/validate";
-import { Code } from "./Code";
 
 export interface Profile {
   name: string;
