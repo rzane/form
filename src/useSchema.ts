@@ -40,9 +40,7 @@ function convert<T>(result: Valid<T> | Invalid): any {
   }
 
   const error: any = {};
-  for (const err of result.errors) {
-    setIn(error, err.path, err.message);
-  }
+  result.errors.forEach(err => setIn(error, err.path, err.message));
   return { valid: false, error };
 }
 
