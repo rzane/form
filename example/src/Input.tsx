@@ -1,7 +1,7 @@
 import { unstable_trace as trace } from "scheduler/tracing";
 
 import * as React from "react";
-import { Field } from "../src";
+import { Field } from "../../src";
 
 export interface InputProps {
   label: string;

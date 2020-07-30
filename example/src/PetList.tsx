@@ -6,18 +6,18 @@ import {
   useFieldItem,
   usePushItem,
   useRemoveItem
-} from "../src";
+} from "../../src";
 
-export interface PetValues {
+export interface Pet {
   name: string;
 }
 
 export interface PetListProps {
-  pets: Field<PetValues[]>;
+  pets: Field<Pet[]>;
 }
 
 export interface PetItemProps {
-  pets: Field<PetValues[]>;
+  pets: Field<Pet[]>;
   index: number;
 }
 
