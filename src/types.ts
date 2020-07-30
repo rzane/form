@@ -29,7 +29,10 @@ export interface Field<T> {
 
 type MaybeAsync<T> = T | Promise<T>;
 
-export type Result<T, R> = { value: R } | { error: Errors<T> };
+export type Result<T, R> =
+  | { valid: true; value: R }
+  | { valid: false; error: Errors<T> };
+
 export type Validate<T, R> = (value: T) => MaybeAsync<Result<T, R>>;
 export type Submit<T> = (value: T) => MaybeAsync<void>;
 
@@ -42,15 +45,19 @@ export interface FormOptions<T, R = T> {
   initialValue: T;
   initialError?: Errors<T>;
   initialTouched?: Touched<T>;
+  validateOnChange?: boolean;
+  validateOnBlur?: boolean;
 }
 
 /**
  * The value returned by `useForm`.
  */
-export interface Form<T> extends Field<T> {
+export interface Form<T, R = T> extends Field<T> {
   initialValue: T;
   initialError: Errors<T> | undefined;
   initialTouched: Touched<T> | undefined;
   isSubmitting: boolean;
+  isValidating: boolean;
   submit: () => Promise<void>;
+  validate: () => Promise<Result<T, R>>;
 }

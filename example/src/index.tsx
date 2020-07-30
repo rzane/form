@@ -34,7 +34,8 @@ function App() {
   const form = useForm<User>({
     validate: useSchema(userSchema),
     submit: value => console.log(value),
-    initialValue: { email: "", pets: [], profile: { name: "" } }
+    initialValue: { email: "", pets: [], profile: { name: "" } },
+    validateOnBlur: true
   });
 
   const email = useField(form, "email");

@@ -1,9 +1,9 @@
-import { useRef, useState, useCallback, useMemo } from "react";
+import { useRef, useState, useCallback, useMemo, useEffect } from "react";
 import { useIdentifier } from "./useIdentifier";
 import { FormOptions, Form } from "./types";
 
-export function useForm<T, R = T>(options: FormOptions<T, R>): Form<T> {
-  const { validate, submit } = options;
+export function useForm<T, R = T>(options: FormOptions<T, R>): Form<T, R> {
+  const { validate: runValidate, submit: runSubmit } = options;
 
   const id = useIdentifier();
   const initialValue = useRef(options.initialValue).current;
@@ -14,23 +14,39 @@ export function useForm<T, R = T>(options: FormOptions<T, R>): Form<T> {
   const [error, setError] = useState(initialError);
   const [touched, setTouched] = useState(initialTouched);
   const [isSubmitting, setSubmitting] = useState(false);
+  const [isValidating, setValidating] = useState(false);
 
-  const executeSubmit = useCallback(() => {
+  const validate = useCallback(async () => {
+    setValidating(true);
+
+    try {
+      const result = await runValidate(value);
+      const errors = result.valid ? undefined : result.error;
+      setError(errors);
+      return result;
+    } finally {
+      setValidating(false);
+    }
+  }, [value, runValidate]);
+
+  const submit = useCallback(async () => {
     setSubmitting(true);
 
-    return Promise.resolve(validate(value))
-      .then(result => {
-        if ("error" in result) {
-          setError(result.error);
-        } else {
-          setError(undefined);
-          return submit(result.value);
-        }
-      })
-      .finally(() => {
-        setSubmitting(false);
-      });
-  }, [value, submit, validate]);
+    try {
+      const result = await validate();
+      if (result.valid) await runSubmit(result.value);
+    } finally {
+      setSubmitting(false);
+    }
+  }, [validate, runSubmit]);
+
+  useEffect(() => {
+    if (options.validateOnChange) validate();
+  }, [value, validate, options.validateOnChange]);
+
+  useEffect(() => {
+    if (options.validateOnBlur) validate();
+  }, [touched, validate, options.validateOnBlur]);
 
   return useMemo(
     () => ({
@@ -46,7 +62,9 @@ export function useForm<T, R = T>(options: FormOptions<T, R>): Form<T> {
       setError,
       setTouched,
       isSubmitting,
-      submit: executeSubmit
+      isValidating,
+      submit,
+      validate
     }),
     [
       id,
@@ -57,7 +75,9 @@ export function useForm<T, R = T>(options: FormOptions<T, R>): Form<T> {
       initialTouched,
       initialValue,
       isSubmitting,
-      executeSubmit
+      isValidating,
+      submit,
+      validate
     ]
   );
 }

@@ -11,6 +11,7 @@ test("passes along a valid value", async () => {
   const { result } = renderHook(() => useSchema(profile));
 
   expect(await result.current({ name: "rick" })).toEqual({
+    valid: true,
     value: { name: "rick" }
   });
 });
@@ -19,6 +20,7 @@ test("converts errors", async () => {
   const { result } = renderHook(() => useSchema(profile));
 
   expect(await result.current({})).toEqual({
+    valid: false,
     error: { name: "This field is invalid" }
   });
 });
@@ -27,6 +29,7 @@ test("converts errors in an array", async () => {
   const { result } = renderHook(() => useSchema(profile));
 
   expect(await result.current({ name: "", pets: ["", 1] })).toEqual({
+    valid: false,
     error: { pets: [undefined, "This field is invalid"] }
   });
 });

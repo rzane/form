@@ -10,7 +10,7 @@ export interface InputProps {
 
 export function Input(props: InputProps) {
   const { label, field } = props;
-  const { id, name, value, error, setValue, setTouched } = field;
+  const { setValue, setTouched } = field;
 
   const onBlur = React.useCallback(() => {
     trace("blur", performance.now(), () => {
@@ -29,15 +29,17 @@ export function Input(props: InputProps) {
 
   return (
     <div>
-      <label htmlFor={id}>{label}</label>
+      <label htmlFor={field.id}>{label}</label>
       <input
-        id={id}
-        name={name}
-        value={value}
+        id={field.id}
+        name={field.name.toString()}
+        value={field.value}
         onBlur={onBlur}
         onChange={onChange}
       />
-      {error && <div style={{ color: "red", marginBottom: 20 }}>{error}</div>}
+      {field.touched && field.error && (
+        <div style={{ color: "red", marginBottom: 20 }}>{field.error}</div>
+      )}
     </div>
   );
 }

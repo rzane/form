@@ -36,15 +36,14 @@ function setIn(obj: any, keys: Array<string | number>, val: any) {
 
 function convert<T>(result: Valid<T> | Invalid): any {
   if (result.valid) {
-    const { value } = result;
-    return { value };
+    return result;
   }
 
   const error: any = {};
   for (const err of result.errors) {
     setIn(error, err.path, err.message);
   }
-  return { error };
+  return { valid: false, error };
 }
 
 /**
