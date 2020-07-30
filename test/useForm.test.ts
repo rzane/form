@@ -2,6 +2,10 @@ import { act, renderHook } from "@testing-library/react-hooks";
 import { useForm, FormOptions } from "../src";
 
 function makeValidator() {
+  return jest.fn().mockImplementation(value => ({ valid: true, value }));
+}
+
+function makeErrorValidator() {
   return jest.fn().mockImplementation(() => ({
     valid: false,
     error: "invalid"
@@ -12,7 +16,7 @@ function setup(options: Partial<FormOptions<string>> = {}) {
   return renderHook(() =>
     useForm({
       submit: jest.fn(),
-      validate: jest.fn(),
+      validate: makeValidator(),
       initialValue: "",
       ...options
     })
@@ -74,7 +78,7 @@ test("changes `touched` with `setTouched`", () => {
 
 describe("validateOnChange", () => {
   test("does not run validations by default", () => {
-    const validate = makeValidator();
+    const validate = makeErrorValidator();
     const { result } = setup({ validate });
 
     act(() => result.current.setValue("changed"));
@@ -82,7 +86,7 @@ describe("validateOnChange", () => {
   });
 
   test("runs validations when enabled", async () => {
-    const validate = makeValidator();
+    const validate = makeErrorValidator();
     const { result, waitForNextUpdate } = setup({
       validate,
       validateOnChange: true
@@ -98,7 +102,7 @@ describe("validateOnChange", () => {
 
 describe("validateOnBlur", () => {
   test("does not run validations by default", () => {
-    const validate = makeValidator();
+    const validate = makeErrorValidator();
     const { result } = setup({ validate });
 
     act(() => result.current.setTouched(true));
@@ -106,7 +110,7 @@ describe("validateOnBlur", () => {
   });
 
   test("runs validations when enabled", async () => {
-    const validate = makeValidator();
+    const validate = makeErrorValidator();
     const { result, waitForNextUpdate } = setup({
       validate,
       validateOnBlur: true
@@ -117,5 +121,67 @@ describe("validateOnBlur", () => {
 
     await waitForNextUpdate();
     expect(result.current.error).toEqual("invalid");
+  });
+});
+
+describe("submit", () => {
+  test("invokes the `submit` option when valid", async () => {
+    const submit = jest.fn();
+    const validate = makeValidator();
+    const { result } = setup({ validate, submit });
+
+    await act(result.current.submit);
+
+    expect(validate).toHaveBeenCalled();
+    expect(submit).toHaveBeenCalled();
+    expect(result.current.isValidating).toEqual(false);
+    expect(result.current.isSubmitting).toEqual(false);
+  });
+
+  test("aborts when validator throws sync", async () => {
+    const submit = jest.fn();
+    const error = new Error("boom");
+    const validate = jest.fn(() => {
+      throw error;
+    });
+
+    const { result } = setup({ validate, submit });
+    await expect(act(result.current.submit)).rejects.toThrow(error);
+
+    expect(validate).toHaveBeenCalled();
+    expect(submit).not.toHaveBeenCalled();
+    expect(result.current.isValidating).toEqual(false);
+    expect(result.current.isSubmitting).toEqual(false);
+  });
+
+  test("aborts when validator throws async", async () => {
+    const submit = jest.fn();
+    const error = new Error("boom");
+    const validate = jest.fn().mockRejectedValue(error);
+
+    const { result, waitForNextUpdate } = setup({ validate, submit });
+    await expect(act(result.current.submit)).rejects.toThrow(error);
+
+    expect(validate).toHaveBeenCalled();
+    expect(submit).not.toHaveBeenCalled();
+
+    await waitForNextUpdate();
+
+    expect(result.current.isValidating).toEqual(false);
+    expect(result.current.isSubmitting).toEqual(false);
+  });
+
+  test("aborts when validator produces an error", async () => {
+    const submit = jest.fn();
+    const validate = makeErrorValidator();
+
+    const { result } = setup({ validate, submit });
+    await act(result.current.submit);
+
+    expect(validate).toHaveBeenCalled();
+    expect(submit).not.toHaveBeenCalled();
+
+    expect(result.current.isValidating).toEqual(false);
+    expect(result.current.isSubmitting).toEqual(false);
   });
 });
