@@ -26,3 +26,15 @@ test("adds an item with `insert`", () => {
   expect(result.current.field.error).toEqual(["a", undefined, "b"]);
   expect(result.current.field.touched).toEqual([true, undefined, false]);
 });
+
+test("only modifies `error` and `touched` when they are arrays", () => {
+  const { result } = setup({
+    initialError: "error",
+    initialTouched: true
+  });
+
+  act(() => result.current.insert(1, 3));
+  expect(result.current.field.value).toEqual([1, 3, 2]);
+  expect(result.current.field.error).toEqual("error");
+  expect(result.current.field.touched).toEqual(true);
+});

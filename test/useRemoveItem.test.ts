@@ -26,3 +26,15 @@ test("removes the value, error, and touched with `remove`", () => {
   expect(result.current.field.error).toEqual(["a"]);
   expect(result.current.field.touched).toEqual([true]);
 });
+
+test("only modifies `error` and `touched` when they are arrays", () => {
+  const { result } = setup({
+    initialError: "error",
+    initialTouched: true
+  });
+
+  act(() => result.current.remove(1));
+  expect(result.current.field.value).toEqual([1]);
+  expect(result.current.field.error).toEqual("error");
+  expect(result.current.field.touched).toEqual(true);
+});

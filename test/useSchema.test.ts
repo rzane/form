@@ -3,32 +3,45 @@ import { useSchema } from "../src";
 import { assert, each, isString, optional, schema } from "@stackup/validate";
 
 const profile = schema({
-  name: assert(isString),
-  pets: optional(each(assert(isString)))
+  name: optional(assert(isString)),
+  pets: optional(each(assert(isString))),
+  profile: optional(schema({ name: assert(isString) }))
 });
 
 test("passes along a valid value", async () => {
   const { result } = renderHook(() => useSchema(profile));
 
-  expect(await result.current({ name: "rick" })).toEqual({
-    valid: true,
-    value: { name: "rick" }
-  });
+  const value = {
+    name: "rick",
+    pets: ["fido"],
+    profile: { name: "bob" }
+  };
+
+  expect(await result.current(value)).toEqual({ valid: true, value });
 });
 
-test("converts errors", async () => {
+test("converts top-level errors", async () => {
   const { result } = renderHook(() => useSchema(profile));
 
-  expect(await result.current({})).toEqual({
+  expect(await result.current({ name: 1 })).toEqual({
     valid: false,
     error: { name: "This field is invalid" }
   });
 });
 
-test("converts errors in an array", async () => {
+test("converts nested errors", async () => {
   const { result } = renderHook(() => useSchema(profile));
 
-  expect(await result.current({ name: "", pets: ["", 1] })).toEqual({
+  expect(await result.current({ profile: { name: 1 } })).toEqual({
+    valid: false,
+    error: { profile: { name: "This field is invalid" } }
+  });
+});
+
+test("converts array errors", async () => {
+  const { result } = renderHook(() => useSchema(profile));
+
+  expect(await result.current({ pets: ["", 1] })).toEqual({
     valid: false,
     error: { pets: [undefined, "This field is invalid"] }
   });
