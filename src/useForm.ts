@@ -13,18 +13,17 @@ export function useForm<T, R = T>(options: FormOptions<T, R>): Form<T> {
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState(initialError);
   const [touched, setTouched] = useState(initialTouched);
-
   const [isSubmitting, setSubmitting] = useState(false);
 
   const executeSubmit = useCallback(() => {
     setSubmitting(true);
-    setError(undefined);
 
     return Promise.resolve(validate(value))
       .then(result => {
         if ("error" in result) {
           setError(result.error);
         } else {
+          setError(undefined);
           return submit(result.value);
         }
       })
