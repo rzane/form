@@ -25,7 +25,6 @@
     "trailingComma": "none"
   },
   "peerDependencies": {
-    "@stackup/validate": "^0.2.0",
     "react": ">=16"
   },
   "devDependencies": {
@@ -35,11 +34,9 @@
     "@types/react-dom": "^16.9.8",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-test-renderer": "^16.13.1",
     "tsdx": "^0.13.2",
     "tslib": "^2.0.0",
     "typescript": "^3.9.7"
-  },
-  "dependencies": {
-    "react-test-renderer": "^16.13.1"
   }
 }
