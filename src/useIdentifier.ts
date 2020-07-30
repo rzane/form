@@ -10,8 +10,6 @@ const generate: () => string = (() => {
  * across re-renders.
  *
  * This hook does not currently support SSR.
- *
- * @private
  */
 export const useIdentifier = (): string => {
   const ref = React.useRef<string>();
