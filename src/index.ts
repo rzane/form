@@ -5,3 +5,4 @@ export * from "./useFieldItem";
 export * from "./usePushItem";
 export * from "./useInsertItem";
 export * from "./useRemoveItem";
+export * from "./useSchema";
