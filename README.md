@@ -17,26 +17,11 @@ A type-safe approach to managing complex form state in React.
 import React from "react";
 import { useForm, useField, useNoValidate } from "@stackup/form";
 
-const Input = ({
-  label,
-  field: { id, value, error, touched, setValue, setTouched }
-}) => (
-  <div>
-    <label htmlFor={id}>{label}</label>
-    <input
-      id={id}
-      value={value}
-      onBlur={useCallback(() => setTouched(true), [])}
-      onChange={useCallback(e => setValue(e.target.value), [setValue])}
-    />
-    {touched && error && <p>{error}</p>}
-  </div>
-);
-
 const Form = () => {
   const form = useForm({
     initialValue: {
-      email: ""
+      email: "",
+      name: ""
     },
     validate(value) {
       if (value.email) {
@@ -51,11 +36,30 @@ const Form = () => {
 
   return (
     <form onSubmit={form.onSubmit}>
-      <Input label="Email" field={useField(form, "email")} />
+      <Input type="email" label="Email" field={useField(form, "email")} />
+      <Input type="text" label="Name" field={useField(form, "name")} />
       <button type="submit">Save</button>
     </form>
   );
 };
+
+const Input = ({
+  label,
+  field: { id, value, error, touched, setValue, setTouched },
+  ...props
+}) => (
+  <div>
+    <label htmlFor={id}>{label}</label>
+    <input
+      {...props}
+      id={id}
+      value={value}
+      onBlur={useCallback(() => setTouched(true), [])}
+      onChange={useCallback(e => setValue(e.target.value), [setValue])}
+    />
+    {touched && error && <p>{error}</p>}
+  </div>
+);
 ```
 
 ## API
