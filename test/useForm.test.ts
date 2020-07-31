@@ -184,4 +184,15 @@ describe("submit", () => {
     expect(result.current.isValidating).toEqual(false);
     expect(result.current.isSubmitting).toEqual(false);
   });
+
+  test("marks all erroneous fields as touched", async () => {
+    const submit = jest.fn();
+    const validate = makeErrorValidator();
+
+    const { result } = setup({ validate, submit });
+
+    expect(result.current.touched).toBeUndefined();
+    await act(result.current.submit);
+    expect(result.current.touched).toBe(true);
+  });
 });

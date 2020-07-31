@@ -1,6 +1,7 @@
 import { useRef, useState, useCallback, useMemo, useEffect } from "react";
 import { useIdentifier } from "./useIdentifier";
 import { FormOptions, Form } from "./types";
+import { getAllTouched } from "./utilities";
 
 export function useForm<T, R = T>(options: FormOptions<T, R>): Form<T, R> {
   const { validate: runValidate, submit: runSubmit } = options;
@@ -22,6 +23,7 @@ export function useForm<T, R = T>(options: FormOptions<T, R>): Form<T, R> {
     try {
       const result = await runValidate(value);
       const errors = result.valid ? undefined : result.error;
+      setTouched(getAllTouched(errors));
       setError(errors);
       return result;
     } finally {
