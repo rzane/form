@@ -42,6 +42,14 @@ export function useForm<T, R = T>(options: FormOptions<T, R>): Form<T, R> {
     }
   }, [validate, runSubmit]);
 
+  const onSubmit = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      return submit();
+    },
+    [submit]
+  );
+
   useEffect(() => {
     if (options.validateOnChange) validate();
   }, [value, validate, options.validateOnChange]);
@@ -66,7 +74,8 @@ export function useForm<T, R = T>(options: FormOptions<T, R>): Form<T, R> {
       isSubmitting,
       isValidating,
       submit,
-      validate
+      validate,
+      onSubmit
     }),
     [
       id,
@@ -79,7 +88,8 @@ export function useForm<T, R = T>(options: FormOptions<T, R>): Form<T, R> {
       isSubmitting,
       isValidating,
       submit,
-      validate
+      validate,
+      onSubmit
     ]
   );
 }

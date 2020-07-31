@@ -44,12 +44,7 @@ function App() {
   const pets = useField(form, "pets");
 
   return (
-    <form
-      onSubmit={event => {
-        event.preventDefault();
-        form.submit();
-      }}
-    >
+    <form onSubmit={form.onSubmit}>
       <h1>@stackup/form</h1>
 
       {/** A plain ol' field */}

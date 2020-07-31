@@ -67,4 +67,5 @@ export interface Form<T, R = T> extends FormField<T> {
   isValidating: boolean;
   submit: () => Promise<void>;
   validate: () => Promise<ValidationResult<T, R>>;
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }
