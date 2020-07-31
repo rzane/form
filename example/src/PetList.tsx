@@ -22,7 +22,7 @@ export interface PetItemProps {
 }
 
 export function PetList({ pets }: PetListProps) {
-  const addPet = usePushItem(pets);
+  const addPet = usePushItem(pets, { name: "" });
 
   return (
     <fieldset>
@@ -33,7 +33,7 @@ export function PetList({ pets }: PetListProps) {
       ))}
 
       <p>
-        <button type="button" onClick={() => addPet({ name: "" })}>
+        <button type="button" onClick={addPet}>
           Add pet
         </button>
       </p>
@@ -50,7 +50,7 @@ export function PetItem({ pets, index }: PetItemProps) {
     <fieldset>
       <legend>Pet #{index + 1}</legend>
       <Input label="Name" field={name} />
-      <button type="button" onClick={() => removePet(index)}>
+      <button type="button" onClick={removePet}>
         Remove
       </button>
     </fieldset>

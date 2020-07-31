@@ -4,7 +4,7 @@ import * as ReactDOM from "react-dom";
 import { Code } from "./Code";
 import { Input } from "./Input";
 import { Pet, PetList } from "./PetList";
-import { useForm, useField, useSchema } from "../../src";
+import { useForm, useField, useValidator } from "../../src";
 import {
   schema,
   each,
@@ -32,9 +32,13 @@ const userSchema = schema<User, User>({
 
 function App() {
   const form = useForm<User>({
-    validate: useSchema(userSchema),
+    validate: useValidator(userSchema),
     submit: value => console.log(value),
-    initialValue: { email: "", pets: [], profile: { name: "" } },
+    initialValue: {
+      email: "",
+      pets: [],
+      profile: { name: "" }
+    },
     validateOnBlur: true
   });
 
