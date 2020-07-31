@@ -1,5 +1,5 @@
 import { renderHook } from "@testing-library/react-hooks";
-import { useSchema } from "../src";
+import { useValidator } from "../src";
 import { assert, each, isString, optional, schema } from "@stackup/validate";
 
 const profile = schema({
@@ -9,7 +9,7 @@ const profile = schema({
 });
 
 test("passes along a valid value", async () => {
-  const { result } = renderHook(() => useSchema(profile));
+  const { result } = renderHook(() => useValidator(profile));
 
   const value = {
     name: "rick",
@@ -21,7 +21,7 @@ test("passes along a valid value", async () => {
 });
 
 test("converts top-level errors", async () => {
-  const { result } = renderHook(() => useSchema(profile));
+  const { result } = renderHook(() => useValidator(profile));
 
   expect(await result.current({ name: 1 })).toEqual({
     valid: false,
@@ -30,7 +30,7 @@ test("converts top-level errors", async () => {
 });
 
 test("converts nested errors", async () => {
-  const { result } = renderHook(() => useSchema(profile));
+  const { result } = renderHook(() => useValidator(profile));
 
   expect(await result.current({ profile: { name: 1 } })).toEqual({
     valid: false,
@@ -39,7 +39,7 @@ test("converts nested errors", async () => {
 });
 
 test("converts array errors", async () => {
-  const { result } = renderHook(() => useSchema(profile));
+  const { result } = renderHook(() => useValidator(profile));
 
   expect(await result.current({ pets: ["", 1] })).toEqual({
     valid: false,

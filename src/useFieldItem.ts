@@ -2,6 +2,22 @@ import { useMemo } from "react";
 import { FormField } from "./types";
 import { useGetItem, useSetItem } from "./utilities";
 
+/**
+ * Create a field for a specific index in an array.
+ *
+ * This hook is intended for use in building forms with "Add another" functionality.
+ *
+ * @example
+ * const form = useForm({
+ *   initialValue: {
+ *     pets: [{ name: "" }]
+ *   }
+ * });
+ *
+ * const pets = useField(form, "pets");
+ * const pet = useFieldItem(pets, 0);
+ * const name = useField(pet, "name");
+ */
 export function useFieldItem<T>(
   field: FormField<T[]>,
   index: number

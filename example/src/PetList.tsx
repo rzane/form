@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Input } from "./Input";
 import {
-  Field,
+  FormField,
   useField,
   useFieldItem,
   usePushItem,
@@ -13,11 +13,11 @@ export interface Pet {
 }
 
 export interface PetListProps {
-  pets: Field<Pet[]>;
+  pets: FormField<Pet[]>;
 }
 
 export interface PetItemProps {
-  pets: Field<Pet[]>;
+  pets: FormField<Pet[]>;
   index: number;
 }
 
@@ -42,7 +42,7 @@ export function PetList({ pets }: PetListProps) {
 }
 
 export function PetItem({ pets, index }: PetItemProps) {
-  const removePet = useRemoveItem(pets);
+  const removePet = useRemoveItem(pets, index);
   const pet = useFieldItem(pets, index);
   const name = useField(pet, "name");
 

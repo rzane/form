@@ -50,135 +50,253 @@ const Form = () => {
 
 #### Table of Contents
 
--   [FormError](#formerror)
--   [usePushItem](#usepushitem)
+-   [useForm](#useform)
     -   [Parameters](#parameters)
+    -   [Examples](#examples)
 -   [useField](#usefield)
     -   [Parameters](#parameters-1)
+    -   [Examples](#examples-1)
 -   [useFieldItem](#usefielditem)
     -   [Parameters](#parameters-2)
--   [useInsertItem](#useinsertitem)
-    -   [Parameters](#parameters-3)
--   [useRemoveItem](#useremoveitem)
-    -   [Parameters](#parameters-4)
--   [useForm](#useform)
-    -   [Parameters](#parameters-5)
--   [FormTouched](#formtouched)
+    -   [Examples](#examples-2)
 -   [useNoValidate](#usenovalidate)
--   [useIdentifier](#useidentifier)
+    -   [Examples](#examples-3)
+-   [useValidator](#usevalidator)
+    -   [Parameters](#parameters-3)
+    -   [Examples](#examples-4)
+-   [usePushItem](#usepushitem)
+    -   [Parameters](#parameters-4)
+    -   [Examples](#examples-5)
+-   [useInsertItem](#useinsertitem)
+    -   [Parameters](#parameters-5)
+    -   [Examples](#examples-6)
+-   [useRemoveItem](#useremoveitem)
     -   [Parameters](#parameters-6)
--   [insertItem](#insertitem)
+    -   [Examples](#examples-7)
+-   [useIdentifier](#useidentifier)
     -   [Parameters](#parameters-7)
--   [Transform](#transform)
--   [SetState](#setstate)
--   [removeItem](#removeitem)
-    -   [Parameters](#parameters-8)
--   [FormField](#formfield)
--   [useGetProperty](#usegetproperty)
-    -   [Parameters](#parameters-9)
--   [ValidationResult](#validationresult)
--   [useGetItem](#usegetitem)
-    -   [Parameters](#parameters-10)
--   [Validate](#validate)
--   [Submit](#submit)
--   [useSetProperty](#usesetproperty)
-    -   [Parameters](#parameters-11)
 -   [FormOptions](#formoptions)
--   [useSchema](#useschema)
-    -   [Parameters](#parameters-12)
--   [useSetItem](#usesetitem)
-    -   [Parameters](#parameters-13)
+    -   [id](#id)
+    -   [submit](#submit)
+    -   [validate](#validate)
+    -   [initialValue](#initialvalue)
+    -   [initialError](#initialerror)
+    -   [initialTouched](#initialtouched)
+    -   [validateOnChange](#validateonchange)
+    -   [validateOnBlur](#validateonblur)
 -   [Form](#form)
--   [getAllTouched](#getalltouched)
-    -   [Parameters](#parameters-14)
+    -   [initialValue](#initialvalue-1)
+    -   [initialError](#initialerror-1)
+    -   [initialTouched](#initialtouched-1)
+    -   [isSubmitting](#issubmitting)
+    -   [isValidating](#isvalidating)
+    -   [submit](#submit-1)
+    -   [validate](#validate-1)
+    -   [onSubmit](#onsubmit)
+-   [FormField](#formfield)
+    -   [id](#id-1)
+    -   [name](#name)
+    -   [value](#value)
+    -   [error](#error)
+    -   [touched](#touched)
+    -   [setValue](#setvalue)
+    -   [setError](#seterror)
+    -   [setTouched](#settouched)
+-   [Validate](#validate-2)
+-   [ValidationResult](#validationresult)
+-   [Submit](#submit-2)
 
-### FormError
+### useForm
 
-[src/types.ts:1-8](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/types.ts#L1-L8 "Source code on GitHub")
+Create a new form. A form requires an initial value, a function to validate,
+and a submit handler.
 
-Type: ([undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined) \| [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | any)
+A form behaves just like any other field, but with some extra properties for
+managing submission.
 
-### usePushItem
+The initial value for the form can be literally anything! Usually, it's an
+object, but it could be any type of value.
 
-[src/usePushItem.ts:4-13](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/usePushItem.ts#L4-L13 "Source code on GitHub")
+The `useForm` function takes two generic parameters. The first describes the
+shape of your form state. The second is optional, but it describes the result
+of casting your form state with a validator. The casted value is what will be
+passed to `submit`.
+
+If your form doesn't require validation, see [useNoValidate](#usenovalidate).
 
 #### Parameters
 
--   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>** 
+-   `options` **[FormOptions](#formoptions)&lt;T, R>** 
+
+#### Examples
+
+```javascript
+const form = useForm({
+  initialValue: "",
+  validate: useSchema(mySchema),
+  submit: value => alert(`The value is ${value}`)
+});
+```
+
+Returns **[Form](#form)&lt;T, R>** 
 
 ### useField
 
-[src/useField.ts:5-30](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/useField.ts#L5-L30 "Source code on GitHub")
+Create a field for a given property.
 
 #### Parameters
 
--   `field` **[FormField](#formfield)&lt;T>** 
--   `name` **K** 
+-   `field` **[FormField](#formfield)&lt;Value>** 
+-   `name` **[Name](https://developer.mozilla.org/)** 
+
+#### Examples
+
+```javascript
+const form = useForm({
+  initialValue: {
+    email: "",
+    profile: { name: "" } }
+  }
+});
+
+const email = useField(form, "email");
+const profile = useField(form, "profile");
+const name = useField(profile, "name");
+```
 
 Returns **[FormField](#formfield)&lt;any>** 
 
 ### useFieldItem
 
-[src/useFieldItem.ts:5-36](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/useFieldItem.ts#L5-L36 "Source code on GitHub")
+Create a field for a specific index in an array.
+
+This hook is intended for use in building forms with "Add another" functionality.
 
 #### Parameters
 
 -   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>** 
 -   `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 
+#### Examples
+
+```javascript
+const form = useForm({
+  initialValue: {
+    pets: [{ name: "" }]
+  }
+});
+
+const pets = useField(form, "pets");
+const pet = useFieldItem(pets, 0);
+const name = useField(pet, "name");
+```
+
 Returns **[FormField](#formfield)&lt;T>** 
-
-### useInsertItem
-
-[src/useInsertItem.ts:5-28](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/useInsertItem.ts#L5-L28 "Source code on GitHub")
-
-#### Parameters
-
--   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>** 
-
-### useRemoveItem
-
-[src/useRemoveItem.ts:5-28](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/useRemoveItem.ts#L5-L28 "Source code on GitHub")
-
-#### Parameters
-
--   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>** 
-
-### useForm
-
-[src/useForm.ts:9-98](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/useForm.ts#L9-L98 "Source code on GitHub")
-
-Create a form.
-
-#### Parameters
-
--   `options` **[FormOptions](#formoptions)&lt;T, R>** 
-
-Returns **[Form](#form)&lt;T, R>** 
-
-### FormTouched
-
-[src/types.ts:10-17](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/types.ts#L10-L17 "Source code on GitHub")
-
-Type: ([undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined) \| [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean) | any)
 
 ### useNoValidate
 
-[src/useNoValidate.ts:10-12](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/useNoValidate.ts#L10-L12 "Source code on GitHub")
+This can be used to create a form that doesn't require any validation.
 
-This can be used to create a form that doesn't require
-any validation. Granted, this is kind of stupid, but
-it does make the types in this library significantly
-simpler.
+#### Examples
+
+```javascript
+const form = useForm({
+  submit: createUser,
+  validate: useNoValidate(),
+  initialValue: { name: "" }
+});
+```
 
 Returns **[Validate](#validate)&lt;T, T>** 
 
+### useValidator
+
+Use a validation schema produced by [@stackup/validate](https://github.com/rzane/validate)
+
+#### Parameters
+
+-   `validator` **Validator&lt;T, R>** 
+
+#### Examples
+
+```javascript
+import { useForm, useValidator } from "@stackup/form";
+import { schema, assert, isString } from "@stackup/validate";
+
+const validator = schema({
+  name: assert(isString)
+});
+
+const form = useForm({
+  submit: createUser,
+  validate: useValidator(validator),
+  initialValue: { name: "" }
+});
+```
+
+Returns **[Validate](#validate)&lt;T, R>** 
+
+### usePushItem
+
+Adds a new value to the end to an array of values.
+
+This can be used to create a form with repeating fields.
+
+#### Parameters
+
+-   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>** 
+-   `value` **T** 
+
+#### Examples
+
+```javascript
+const pets = useField(form, "pets");
+const pet = useFieldItem(pets, 0);
+const addPet = usePushItem(pets, { name: ""  });
+```
+
+### useInsertItem
+
+Adds a new value at a specific position to an array of values.
+
+This can be used to create a form with repeating fields.
+
+#### Parameters
+
+-   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>** 
+-   `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+-   `value` **T** 
+
+#### Examples
+
+```javascript
+const pets = useField(form, "pets");
+const pet = useFieldItem(pets, 0);
+const insert = useInsertItem(pets, 0, { name: "" });
+```
+
+### useRemoveItem
+
+Removes a value at the given index from array of values.
+
+This can be used to create a form with repeating fields.
+
+#### Parameters
+
+-   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>** 
+-   `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+
+#### Examples
+
+```javascript
+const pets = useField(form, "pets");
+const pet = useFieldItem(pets, 0);
+const removePet = useRemoveItem(pets, 0);
+```
+
 ### useIdentifier
 
-[src/useIdentifier.ts:14-22](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/useIdentifier.ts#L14-L22 "Source code on GitHub")
-
-Creates a unique identifier that will remain consistent
-across re-renders.
+Creates a unique identifier that will remain consistent across re-renders.
 
 This hook does not currently support SSR.
 
@@ -188,141 +306,186 @@ This hook does not currently support SSR.
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
-### insertItem
-
-[src/utilities.ts:16-20](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/utilities.ts#L16-L20 "Source code on GitHub")
-
-#### Parameters
-
--   `values` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>** 
--   `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
--   `value` **T** 
-
-Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>** 
-
-### Transform
-
-[src/types.ts:19-19](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/types.ts#L19-L19 "Source code on GitHub")
-
-Type: function (value: T): T
-
-### SetState
-
-[src/types.ts:20-20](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/types.ts#L20-L20 "Source code on GitHub")
-
-Type: function (value: (T | [Transform](#transform)&lt;T>)): void
-
-### removeItem
-
-[src/utilities.ts:22-26](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/utilities.ts#L22-L26 "Source code on GitHub")
-
-#### Parameters
-
--   `values` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>** 
--   `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
-
-Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>** 
-
-### FormField
-
-[src/types.ts:25-34](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/types.ts#L25-L34 "Source code on GitHub")
-
-The primary form data structure.
-
-### useGetProperty
-
-[src/utilities.ts:36-38](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/utilities.ts#L36-L38 "Source code on GitHub")
-
-#### Parameters
-
--   `data` **any** 
--   `key` **any** 
-
-Returns **any** 
-
-### ValidationResult
-
-[src/types.ts:38-40](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/types.ts#L38-L40 "Source code on GitHub")
-
-Type: ({valid: `true`, value: R} | {valid: `false`, error: [FormError](#formerror)&lt;T>})
-
-### useGetItem
-
-[src/utilities.ts:40-42](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/utilities.ts#L40-L42 "Source code on GitHub")
-
-#### Parameters
-
--   `data` **any** 
--   `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
-
-Returns **any** 
-
-### Validate
-
-[src/types.ts:42-42](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/types.ts#L42-L42 "Source code on GitHub")
-
-Type: function (value: T): MaybeAsync&lt;[ValidationResult](#validationresult)&lt;T, R>>
-
-### Submit
-
-[src/types.ts:43-43](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/types.ts#L43-L43 "Source code on GitHub")
-
-Type: function (value: T): MaybeAsync&lt;void>
-
-### useSetProperty
-
-[src/utilities.ts:44-57](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/utilities.ts#L44-L57 "Source code on GitHub")
-
-#### Parameters
-
--   `setState` **[SetState](#setstate)&lt;any>** 
--   `name` **any** 
-
-Returns **[SetState](#setstate)&lt;any>** 
-
 ### FormOptions
 
-[src/types.ts:48-57](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/types.ts#L48-L57 "Source code on GitHub")
+The options that can be passed to [useForm](#useform).
 
-These are options that can be passed to `useForm`.
+#### id
 
-### useSchema
+Customize the base ID for all fields.
 
-[src/useSchema.ts:55-57](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/useSchema.ts#L55-L57 "Source code on GitHub")
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-Use a validation schema produced by `@stackup/validate`
+#### submit
 
-#### Parameters
+Handles the submission of the form.
 
--   `schema` **Schema&lt;T, R>** 
+Type: [Submit](#submit)&lt;R>
 
-Returns **[Validate](#validate)&lt;T, R>** 
+#### validate
 
-### useSetItem
+Validates the form.
 
-[src/utilities.ts:59-73](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/utilities.ts#L59-L73 "Source code on GitHub")
+Type: [Validate](#validate)&lt;T, R>
 
-#### Parameters
+#### initialValue
 
--   `setState` **[SetState](#setstate)&lt;any>** 
--   `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+The initial values for the form.
 
-Returns **[SetState](#setstate)&lt;any>** 
+Type: T
+
+#### initialError
+
+The initial errors on the fields.
+
+Type: FormError&lt;T>
+
+#### initialTouched
+
+The initially touched fields.
+
+Type: FormTouched&lt;T>
+
+#### validateOnChange
+
+Enables validation whenever values change.
+
+Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
+
+#### validateOnBlur
+
+Enables validation whenever a field is touched.
+
+Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
 
 ### Form
-
-[src/types.ts:62-71](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/types.ts#L62-L71 "Source code on GitHub")
 
 **Extends FormField&lt;T>**
 
 The value returned by `useForm`.
 
-### getAllTouched
+#### initialValue
 
-[src/utilities.ts:75-93](https://github.com/rzane/form/blob/c32c8a8bac1af0f9d9cd52584b488e37b8ee0038/src/utilities.ts#L75-L93 "Source code on GitHub")
+The initial values for the form.
 
-#### Parameters
+Type: T
 
--   `errors` **any** 
+#### initialError
 
-Returns **any** 
+The initial errors on the fields.
+
+Type: FormError&lt;T>
+
+#### initialTouched
+
+The initially touched fields.
+
+Type: FormTouched&lt;T>
+
+#### isSubmitting
+
+Indicates that the form is currently submitting.
+
+Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
+
+#### isValidating
+
+Indicates that the form is currently validating.
+
+Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
+
+#### submit
+
+Trigger form submission.
+
+Type: function (): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>
+
+#### validate
+
+Trigger form validation.
+
+Type: function (): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[ValidationResult](#validationresult)&lt;T, R>>
+
+#### onSubmit
+
+This is the same as `submit`, but it'll `preventDefault` on the `event`.
+
+Type: function (event: React.FormEvent&lt;[HTMLFormElement](https://developer.mozilla.org/docs/Web/API/HTMLFormElement)>): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>
+
+### FormField
+
+The primary form data structure.
+
+#### id
+
+A unique ID for this form field. This can be used to associate fields with a label.
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### name
+
+The name or array index that was given to [useField](#usefield) or [useFieldItem](#usefielditem).
+
+Type: ([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))
+
+#### value
+
+The current value of the field.
+
+Type: T
+
+#### error
+
+An error or errors that are associated with this field or it's children.
+
+Type: FormError&lt;T>
+
+#### touched
+
+Indicates that this field or it's children have been modified by the user.
+
+Type: FormTouched&lt;T>
+
+#### setValue
+
+Change the value. Just like with `setState`, you can pass a callback
+to this function to get the current value and update it.
+
+Type: SetState&lt;T>
+
+#### setError
+
+Update the error.
+
+Type: SetState&lt;FormError&lt;T>>
+
+#### setTouched
+
+Indicate that this field has been touched. This is usually called in `onBlur`.
+
+Type: SetState&lt;FormTouched&lt;T>>
+
+### Validate
+
+A function that is called to validate the form.
+
+Type: function (value: T): ([ValidationResult](#validationresult)&lt;T, R> | [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[ValidationResult](#validationresult)&lt;T, R>>)
+
+### ValidationResult
+
+The validation function should return either a `value` or an `error`.
+
+Many validation libraries support casting the data that you input. The
+`value` that you return will be passed to your submit handler.
+
+The `error` should have the same shape of your form data, but all of the
+values should be strings.
+
+Type: ({valid: `true`, value: R} | {valid: `false`, error: FormError&lt;T>})
+
+### Submit
+
+The function called when the form is submitted. The data will be validated
+and converted before this function is called.
+
+Type: function (value: T): (void | [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>)

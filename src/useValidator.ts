@@ -16,7 +16,7 @@ interface Problem {
   message: string;
 }
 
-interface Schema<T, R> {
+interface Validator<T, R> {
   validate(values: T): Promise<Valid<R> | Invalid>;
 }
 
@@ -50,8 +50,24 @@ function convert<T>(result: Valid<T> | Invalid): any {
 }
 
 /**
- * Use a validation schema produced by `@stackup/validate`
+ * Use a validation schema produced by {@link https://github.com/rzane/validate @stackup/validate}
+ *
+ * @example
+ * import { useForm, useValidator } from "@stackup/form";
+ * import { schema, assert, isString } from "@stackup/validate";
+ *
+ * const validator = schema({
+ *   name: assert(isString)
+ * });
+ *
+ * const form = useForm({
+ *   submit: createUser,
+ *   validate: useValidator(validator),
+ *   initialValue: { name: "" }
+ * });
  */
-export function useSchema<T, R>(schema: Schema<T, R>): Validate<T, R> {
-  return useCallback(values => schema.validate(values).then(convert), [schema]);
+export function useValidator<T, R>(validator: Validator<T, R>): Validate<T, R> {
+  return useCallback(values => validator.validate(values).then(convert), [
+    validator
+  ]);
 }

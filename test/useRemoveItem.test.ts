@@ -10,7 +10,7 @@ function setup(options: Partial<FormOptions<number[]>> = {}) {
       ...options
     });
 
-    const remove = useRemoveItem(field);
+    const remove = useRemoveItem(field, 1);
     return { remove, field };
   });
 }
@@ -21,7 +21,7 @@ test("removes the value, error, and touched with `remove`", () => {
     initialTouched: [true, false]
   });
 
-  act(() => result.current.remove(1));
+  act(result.current.remove);
   expect(result.current.field.value).toEqual([1]);
   expect(result.current.field.error).toEqual(["a"]);
   expect(result.current.field.touched).toEqual([true]);
@@ -33,7 +33,7 @@ test("only modifies `error` and `touched` when they are arrays", () => {
     initialTouched: true
   });
 
-  act(() => result.current.remove(1));
+  act(result.current.remove);
   expect(result.current.field.value).toEqual([1]);
   expect(result.current.field.error).toEqual("error");
   expect(result.current.field.touched).toEqual(true);

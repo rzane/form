@@ -7,4 +7,4 @@ export * from "./useInsertItem";
 export * from "./useNoValidate";
 export * from "./usePushItem";
 export * from "./useRemoveItem";
-export * from "./useSchema";
+export * from "./useValidator";

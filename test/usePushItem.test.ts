@@ -10,7 +10,7 @@ function setup(options: Partial<FormOptions<number[]>> = {}) {
       ...options
     });
 
-    const push = usePushItem(field);
+    const push = usePushItem(field, 3);
     return { push, field };
   });
 }
@@ -18,6 +18,6 @@ function setup(options: Partial<FormOptions<number[]>> = {}) {
 test("adds an item with `push`", () => {
   const { result } = setup();
 
-  act(() => result.current.push(3));
+  act(result.current.push);
   expect(result.current.field.value).toEqual([1, 2, 3]);
 });

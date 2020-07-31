@@ -6,8 +6,7 @@ const generate: () => string = (() => {
 })();
 
 /**
- * Creates a unique identifier that will remain consistent
- * across re-renders.
+ * Creates a unique identifier that will remain consistent across re-renders.
  *
  * This hook does not currently support SSR.
  */
