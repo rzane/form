@@ -5,7 +5,11 @@ function isTransform<T>(value: T | Transform<T>): value is Transform<T> {
   return typeof value === "function";
 }
 
-export function transform<T>(next: T | Transform<T>, prev: T): T {
+function isObject(value: any): value is Object {
+  return value !== null && typeof value === "object";
+}
+
+function transform<T>(next: T | Transform<T>, prev: T): T {
   return isTransform(next) ? next(prev) : next;
 }
 
@@ -21,11 +25,11 @@ export function removeItem<T>(values: T[], index: number): T[] {
   return result;
 }
 
-export function getProperty(data: any, key: any): any {
-  return data && typeof data === "object" ? data[key] : undefined;
+function getProperty(data: any, key: any): any {
+  return isObject(data) ? data[key] : undefined;
 }
 
-export function getItem(data: any, index: number): any {
+function getItem(data: any, index: number): any {
   return Array.isArray(data) ? data[index] : undefined;
 }
 
@@ -66,4 +70,24 @@ export function useSetItem(
     },
     [setState, index]
   );
+}
+
+export function getAllTouched(errors: any): any {
+  if (errors === undefined) {
+    return errors;
+  }
+
+  if (Array.isArray(errors)) {
+    return errors.map(getAllTouched);
+  }
+
+  if (isObject(errors)) {
+    const result: any = {};
+    for (const key in errors) {
+      result[key] = getAllTouched(errors[key]);
+    }
+    return result;
+  }
+
+  return true;
 }

@@ -1,4 +1,4 @@
-import { insertItem, removeItem, transform } from "../src/utilities";
+import { insertItem, removeItem, getAllTouched } from "../src/utilities";
 
 test("insertItem", () => {
   const values = [1, 2, 3];
@@ -14,7 +14,15 @@ test("removeItem", () => {
   expect(nextValues).not.toBe(values);
 });
 
-test("transform", () => {
-  expect(transform(1, 2)).toEqual(1);
-  expect(transform(v => v * 2, 2)).toEqual(4);
+test("getAllTouched", () => {
+  expect(getAllTouched(undefined)).toEqual(undefined);
+  expect(getAllTouched(true)).toEqual(true);
+  expect(getAllTouched(false)).toEqual(true);
+  expect(getAllTouched("")).toEqual(true);
+  expect(getAllTouched(0)).toEqual(true);
+  expect(getAllTouched([])).toEqual([]);
+  expect(getAllTouched(["a"])).toEqual([true]);
+  expect(getAllTouched({})).toEqual({});
+  expect(getAllTouched({ a: "blah" })).toEqual({ a: true });
+  expect(getAllTouched([{ a: "blah" }])).toEqual([{ a: true }]);
 });

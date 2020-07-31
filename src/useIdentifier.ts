@@ -14,7 +14,7 @@ const generate: () => string = (() => {
 export const useIdentifier = (): string => {
   const ref = React.useRef<string>();
 
-  if (typeof ref.current === "undefined") {
+  if (ref.current === undefined) {
     ref.current = generate();
   }
 
