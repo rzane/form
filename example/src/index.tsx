@@ -32,6 +32,7 @@ const userSchema = schema<User, User>({
 
 function App() {
   const form = useForm<User>({
+    validateOnBlur: true,
     validate: useValidator(userSchema),
     submit: value => console.log(value),
     initialValue: {
@@ -39,7 +40,6 @@ function App() {
       pets: [],
       profile: { name: "" }
     }
-    // validateOnBlur: true
   });
 
   const email = useField(form, "email");
@@ -72,6 +72,8 @@ function App() {
       <Code label="Values" data={form.value} />
       <Code label="Errors" data={form.error} />
       <Code label="Touched" data={form.touched} />
+      <Code label="Submitting" data={form.isSubmitting} />
+      <Code label="Validating" data={form.isValidating} />
     </form>
   );
 }

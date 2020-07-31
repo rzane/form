@@ -1,7 +1,7 @@
-import { useRef, useState, useCallback, useMemo, useEffect } from "react";
+import { useRef, useState, useMemo, useEffect } from "react";
 import { useIdentifier } from "./useIdentifier";
 import { FormOptions, Form } from "./types";
-import { getAllTouched } from "./utilities";
+import { getAllTouched, useEventCallback } from "./utilities";
 
 /**
  * Create a new form. A form requires an initial value, a function to validate,
@@ -28,7 +28,12 @@ import { getAllTouched } from "./utilities";
  * });
  */
 export function useForm<T, R = T>(options: FormOptions<T, R>): Form<T, R> {
-  const { validate: runValidate, submit: runSubmit } = options;
+  const {
+    submit: runSubmit,
+    validate: runValidate,
+    validateOnBlur,
+    validateOnChange
+  } = options;
 
   const id = useIdentifier(options.id);
   const initialValue = useRef(options.initialValue).current;
@@ -41,46 +46,61 @@ export function useForm<T, R = T>(options: FormOptions<T, R>): Form<T, R> {
   const [isSubmitting, setSubmitting] = useState(false);
   const [isValidating, setValidating] = useState(false);
 
-  const validate = useCallback(async () => {
+  const executeValidate = async (touchAllErrors: boolean) => {
     setValidating(true);
 
     try {
       const result = await runValidate(value);
       const errors = result.valid ? undefined : result.error;
-      setTouched(getAllTouched(errors));
+
+      // When submitting, touch all fields that have errors.
+      if (touchAllErrors) {
+        setTouched(getAllTouched(errors));
+      }
+
       setError(errors);
       return result;
     } finally {
       setValidating(false);
     }
-  }, [value, runValidate]);
+  };
 
-  const submit = useCallback(async () => {
+  const validate = useEventCallback(() => {
+    return executeValidate(false);
+  });
+
+  const submit = useEventCallback(async () => {
     setSubmitting(true);
 
     try {
-      const result = await validate();
-      if (result.valid) await runSubmit(result.value);
+      const result = await executeValidate(true);
+
+      if (result.valid) {
+        await runSubmit(result.value);
+      }
     } finally {
       setSubmitting(false);
     }
-  }, [validate, runSubmit]);
+  });
 
-  const onSubmit = useCallback(
+  const onSubmit = useEventCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       return submit();
-    },
-    [submit]
+    }
   );
 
   useEffect(() => {
-    if (options.validateOnChange) validate();
-  }, [value, validate, options.validateOnChange]);
+    if (validateOnChange) {
+      validate();
+    }
+  }, [value, validateOnChange, validate]);
 
   useEffect(() => {
-    if (options.validateOnBlur) validate();
-  }, [touched, validate, options.validateOnBlur]);
+    if (validateOnBlur) {
+      validate();
+    }
+  }, [touched, validateOnBlur, validate]);
 
   return useMemo(
     () => ({

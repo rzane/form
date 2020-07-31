@@ -1,5 +1,5 @@
+import * as React from "react";
 import { Transform, SetState } from "./types";
-import { useCallback, useMemo } from "react";
 
 function isTransform<T>(value: T | Transform<T>): value is Transform<T> {
   return typeof value === "function";
@@ -34,18 +34,18 @@ function getItem(data: any, index: number): any {
 }
 
 export function useGetProperty(data: any, key: any): any {
-  return useMemo(() => getProperty(data, key), [data, key]);
+  return React.useMemo(() => getProperty(data, key), [data, key]);
 }
 
 export function useGetItem(data: any, index: number): any {
-  return useMemo(() => getItem(data, index), [data, index]);
+  return React.useMemo(() => getItem(data, index), [data, index]);
 }
 
 export function useSetProperty(
   setState: SetState<any>,
   name: any
 ): SetState<any> {
-  return useCallback(
+  return React.useCallback(
     update => {
       setState((state: any) => ({
         ...state,
@@ -60,7 +60,7 @@ export function useSetItem(
   setState: SetState<any>,
   index: number
 ): SetState<any> {
-  return useCallback(
+  return React.useCallback(
     update => {
       setState((state: any) => {
         const nextState = Array.isArray(state) ? [...state] : [];
@@ -90,4 +90,25 @@ export function getAllTouched(errors: any): any {
   }
 
   return true;
+}
+
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" &&
+  typeof window.document !== "undefined" &&
+  typeof window.document.createElement !== "undefined"
+    ? React.useLayoutEffect
+    : React.useEffect;
+
+export function useEventCallback<T extends (...args: any[]) => any>(fn: T): T {
+  const ref: any = React.useRef(fn);
+
+  // we copy a ref to the callback scoped to the current state/props on each render
+  useIsomorphicLayoutEffect(() => {
+    ref.current = fn;
+  });
+
+  return React.useCallback(
+    (...args: any[]) => ref.current.apply(void 0, args),
+    []
+  ) as T;
 }
