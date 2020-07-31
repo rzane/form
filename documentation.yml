@@ -11,8 +11,6 @@ toc:
   - FormOptions
   - Form
   - FormField
-  - FormError
-  - FormTouched
   - Validate
   - ValidationResult
   - Submit

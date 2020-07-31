@@ -16,14 +16,7 @@ export type FormTouched<T> =
       ? { [K in keyof T]?: FormTouched<T[K]> }
       : never);
 
-/**
- * @ignore
- */
 export type Transform<T> = (value: T) => T;
-
-/**
- * @ignore
- */
 export type SetState<T> = (value: T | Transform<T>) => void;
 
 /**
