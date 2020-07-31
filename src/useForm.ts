@@ -6,7 +6,7 @@ import { getAllTouched } from "./utilities";
 export function useForm<T, R = T>(options: FormOptions<T, R>): Form<T, R> {
   const { validate: runValidate, submit: runSubmit } = options;
 
-  const id = useIdentifier();
+  const id = useIdentifier(options.id);
   const initialValue = useRef(options.initialValue).current;
   const initialError = useRef(options.initialError).current;
   const initialTouched = useRef(options.initialTouched).current;

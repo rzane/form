@@ -11,8 +11,8 @@ const generate: () => string = (() => {
  *
  * This hook does not currently support SSR.
  */
-export const useIdentifier = (): string => {
-  const ref = React.useRef<string>();
+export const useIdentifier = (id?: string): string => {
+  const ref = React.useRef(id);
 
   if (ref.current === undefined) {
     ref.current = generate();

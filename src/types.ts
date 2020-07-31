@@ -40,6 +40,7 @@ export type Submit<T> = (value: T) => MaybeAsync<void>;
  * These are options that can be passed to `useForm`.
  */
 export interface FormOptions<T, R = T> {
+  id?: string;
   submit: Submit<R>;
   validate: Validate<T, R>;
   initialValue: T;
