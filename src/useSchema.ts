@@ -32,6 +32,7 @@ function setIn(obj: any, keys: Array<string | number>, val: any) {
     x = t[keys[i]];
     t = t[keys[i]] = (i === l - 1 ? val : (x != null ? x : isNumber(keys[i+1]) ? [] : {}));
   }
+  return obj
 }
 
 function convert<T>(result: Valid<T> | Invalid): any {
@@ -39,9 +40,13 @@ function convert<T>(result: Valid<T> | Invalid): any {
     return result;
   }
 
-  const error: any = {};
-  result.errors.forEach(err => setIn(error, err.path, err.message));
-  return { valid: false, error };
+  return {
+    valid: false,
+    error: result.errors.reduce(
+      (error, err) => setIn(error, err.path, err.message),
+      {}
+    )
+  };
 }
 
 /**
