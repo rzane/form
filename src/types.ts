@@ -1,14 +1,20 @@
-export type FormError<T> = T extends any[]
-  ? string | undefined | Array<string | undefined | FormError<T[number]>>
-  : T extends object
-  ? string | undefined | { [K in keyof T]?: FormError<T[K]> }
-  : string | undefined;
+export type FormError<T> =
+  | undefined
+  | string
+  | (T extends any[]
+      ? Array<FormError<T[number]>>
+      : T extends object
+      ? { [K in keyof T]?: FormError<T[K]> }
+      : never);
 
-export type FormTouched<T> = T extends any[]
-  ? boolean | undefined | Array<boolean | undefined | FormTouched<T[number]>>
-  : T extends object
-  ? boolean | undefined | { [K in keyof T]?: FormTouched<T[K]> }
-  : boolean | undefined;
+export type FormTouched<T> =
+  | undefined
+  | boolean
+  | (T extends any[]
+      ? Array<FormTouched<T[number]>>
+      : T extends object
+      ? { [K in keyof T]?: FormTouched<T[K]> }
+      : never);
 
 export type Transform<T> = (value: T) => T;
 export type SetState<T> = (value: T | Transform<T>) => void;
@@ -20,11 +26,11 @@ export interface FormField<T> {
   id: string;
   name: string | number;
   value: T;
-  error: FormError<T> | undefined;
-  touched: FormTouched<T> | undefined;
+  error: FormError<T>;
+  touched: FormTouched<T>;
   setValue: SetState<T>;
-  setError: SetState<FormError<T> | undefined>;
-  setTouched: SetState<FormTouched<T> | undefined>;
+  setError: SetState<FormError<T>>;
+  setTouched: SetState<FormTouched<T>>;
 }
 
 type MaybeAsync<T> = T | Promise<T>;
@@ -55,8 +61,8 @@ export interface FormOptions<T, R = T> {
  */
 export interface Form<T, R = T> extends FormField<T> {
   initialValue: T;
-  initialError: FormError<T> | undefined;
-  initialTouched: FormTouched<T> | undefined;
+  initialError: FormError<T>;
+  initialTouched: FormTouched<T>;
   isSubmitting: boolean;
   isValidating: boolean;
   submit: () => Promise<void>;
