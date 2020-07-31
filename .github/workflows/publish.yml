@@ -26,6 +26,12 @@ jobs:
       - name: Dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Typecheck
+        run: yarn tsc --noEmit -p .
+
+      - name: Lint
+        run: yarn lint
+
       - name: Test
         run: yarn test --ci --coverage
 
