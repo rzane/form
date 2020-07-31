@@ -3,6 +3,9 @@ import { useIdentifier } from "./useIdentifier";
 import { FormOptions, Form } from "./types";
 import { getAllTouched } from "./utilities";
 
+/**
+ * Create a form.
+ */
 export function useForm<T, R = T>(options: FormOptions<T, R>): Form<T, R> {
   const { validate: runValidate, submit: runSubmit } = options;
 
