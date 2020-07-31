@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 import { Validate } from "./types";
 
-interface Valid<T> {
+interface Valid<Result> {
   valid: true;
-  value: T;
+  value: Result;
 }
 
 interface Invalid {
@@ -16,8 +16,8 @@ interface Problem {
   message: string;
 }
 
-interface Validator<T, R> {
-  validate(values: T): Promise<Valid<R> | Invalid>;
+interface Validator<Value, Result> {
+  validate(values: Value): Promise<Valid<Result> | Invalid>;
 }
 
 function isNumber(value: any): value is number {
@@ -66,7 +66,9 @@ function convert<T>(result: Valid<T> | Invalid): any {
  *   initialValue: { name: "" }
  * });
  */
-export function useValidator<T, R>(validator: Validator<T, R>): Validate<T, R> {
+export function useValidator<Value, Result>(
+  validator: Validator<Value, Result>
+): Validate<Value, Result> {
   return useCallback(values => validator.validate(values).then(convert), [
     validator
   ]);

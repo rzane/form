@@ -12,7 +12,7 @@ import { FormField } from "./types";
  * const pet = useFieldItem(pets, 0);
  * const removePet = useRemoveItem(pets, 0);
  */
-export function useRemoveItem<T>(field: FormField<T[]>, index: number) {
+export function useRemoveItem<Value>(field: FormField<Value[]>, index: number) {
   const { setValue, setError, setTouched } = field;
 
   return useCallback(() => {

@@ -18,10 +18,10 @@ import { useGetItem, useSetItem } from "./utilities";
  * const pet = useFieldItem(pets, 0);
  * const name = useField(pet, "name");
  */
-export function useFieldItem<T>(
-  field: FormField<T[]>,
+export function useFieldItem<Value>(
+  field: FormField<Value[]>,
   index: number
-): FormField<T> {
+): FormField<Value> {
   const {
     setValue: setFieldValue,
     setError: setFieldError,

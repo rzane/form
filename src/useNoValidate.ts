@@ -11,6 +11,6 @@ import { Validate } from "./types";
  *   initialValue: { name: "" }
  * });
  */
-export function useNoValidate<T>(): Validate<T, T> {
+export function useNoValidate<Value>(): Validate<Value, Value> {
   return useCallback(value => ({ valid: true, value }), []);
 }

@@ -1,19 +1,19 @@
-export type FormError<T> =
+export type FormError<Value> =
   | undefined
   | string
-  | (T extends any[]
-      ? Array<FormError<T[number]>>
-      : T extends object
-      ? { [K in keyof T]?: FormError<T[K]> }
+  | (Value extends any[]
+      ? Array<FormError<Value[number]>>
+      : Value extends object
+      ? { [K in keyof Value]?: FormError<Value[K]> }
       : never);
 
-export type FormTouched<T> =
+export type FormTouched<Value> =
   | undefined
   | boolean
-  | (T extends any[]
-      ? Array<FormTouched<T[number]>>
-      : T extends object
-      ? { [K in keyof T]?: FormTouched<T[K]> }
+  | (Value extends any[]
+      ? Array<FormTouched<Value[number]>>
+      : Value extends object
+      ? { [K in keyof Value]?: FormTouched<Value[K]> }
       : never);
 
 export type Transform<T> = (value: T) => T;
@@ -22,7 +22,7 @@ export type SetState<T> = (value: T | Transform<T>) => void;
 /**
  * The primary form data structure.
  */
-export interface FormField<T> {
+export interface FormField<Value> {
   /**
    * A unique ID for this form field. This can be used to associate fields with a label.
    */
@@ -36,33 +36,33 @@ export interface FormField<T> {
   /**
    * The current value of the field.
    */
-  value: T;
+  value: Value;
 
   /**
    * An error or errors that are associated with this field or it's children.
    */
-  error: FormError<T>;
+  error: FormError<Value>;
 
   /**
    * Indicates that this field or it's children have been modified by the user.
    */
-  touched: FormTouched<T>;
+  touched: FormTouched<Value>;
 
   /**
    * Change the value. Just like with `setState`, you can pass a callback
    * to this function to get the current value and update it.
    */
-  setValue: SetState<T>;
+  setValue: SetState<Value>;
 
   /**
    * Update the error.
    */
-  setError: SetState<FormError<T>>;
+  setError: SetState<FormError<Value>>;
 
   /**
    * Indicate that this field has been touched. This is usually called in `onBlur`.
    */
-  setTouched: SetState<FormTouched<T>>;
+  setTouched: SetState<FormTouched<Value>>;
 }
 
 /**
@@ -74,27 +74,27 @@ export interface FormField<T> {
  * The `error` should have the same shape of your form data, but all of the
  * values should be strings.
  */
-export type ValidationResult<T, R> =
-  | { valid: true; value: R }
-  | { valid: false; error: FormError<T> };
+export type ValidationResult<Value, Result> =
+  | { valid: true; value: Result }
+  | { valid: false; error: FormError<Value> };
 
 /**
  * A function that is called to validate the form.
  */
-export type Validate<T, R> = (
-  value: T
-) => ValidationResult<T, R> | Promise<ValidationResult<T, R>>;
+export type Validate<Value, Result> = (
+  value: Value
+) => ValidationResult<Value, Result> | Promise<ValidationResult<Value, Result>>;
 
 /**
  * The function called when the form is submitted. The data will be validated
  * and converted before this function is called.
  */
-export type Submit<T> = (value: T) => void | Promise<void>;
+export type Submit<Result> = (value: Result) => void | Promise<void>;
 
 /**
  * The options that can be passed to {@link useForm}.
  */
-export interface FormOptions<T, R = T> {
+export interface FormOptions<Value, Result = Value> {
   /**
    * Customize the base ID for all fields.
    */
@@ -103,27 +103,27 @@ export interface FormOptions<T, R = T> {
   /**
    * Handles the submission of the form.
    */
-  submit: Submit<R>;
+  submit: Submit<Result>;
 
   /**
    * Validates the form.
    */
-  validate: Validate<T, R>;
+  validate: Validate<Value, Result>;
 
   /**
    * The initial values for the form.
    */
-  initialValue: T;
+  initialValue: Value;
 
   /**
    * The initial errors on the fields.
    */
-  initialError?: FormError<T>;
+  initialError?: FormError<Value>;
 
   /**
    * The initially touched fields.
    */
-  initialTouched?: FormTouched<T>;
+  initialTouched?: FormTouched<Value>;
 
   /**
    * Enables validation whenever values change.
@@ -141,21 +141,21 @@ export interface FormOptions<T, R = T> {
 /**
  * The value returned by `useForm`.
  */
-export interface Form<T, R = T> extends FormField<T> {
+export interface Form<Value, Result = Value> extends FormField<Value> {
   /**
    * The initial values for the form.
    */
-  initialValue: T;
+  initialValue: Value;
 
   /**
    * The initial errors on the fields.
    */
-  initialError: FormError<T>;
+  initialError: FormError<Value>;
 
   /**
    * The initially touched fields.
    */
-  initialTouched: FormTouched<T>;
+  initialTouched: FormTouched<Value>;
 
   /**
    * Indicates that the form is currently submitting.
@@ -175,7 +175,7 @@ export interface Form<T, R = T> extends FormField<T> {
   /**
    * Trigger form validation.
    */
-  validate: () => Promise<ValidationResult<T, R>>;
+  validate: () => Promise<ValidationResult<Value, Result>>;
 
   /**
    * This is the same as `submit`, but it'll `preventDefault` on the `event`.

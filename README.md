@@ -140,7 +140,7 @@ If your form doesn't require validation, see [useNoValidate](#usenovalidate).
 
 #### Parameters
 
--   `options` **[FormOptions](#formoptions)&lt;T, R>** 
+-   `options` **[FormOptions](#formoptions)&lt;Value, Result>** 
 
 #### Examples
 
@@ -152,7 +152,7 @@ const form = useForm({
 });
 ```
 
-Returns **[Form](#form)&lt;T, R>** 
+Returns **[Form](#form)&lt;Value, Result>** 
 
 ### useField
 
@@ -188,7 +188,7 @@ This hook is intended for use in building forms with "Add another" functionality
 
 #### Parameters
 
--   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>** 
+-   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Value>>** 
 -   `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 
 #### Examples
@@ -205,7 +205,7 @@ const pet = useFieldItem(pets, 0);
 const name = useField(pet, "name");
 ```
 
-Returns **[FormField](#formfield)&lt;T>** 
+Returns **[FormField](#formfield)&lt;Value>** 
 
 ### useNoValidate
 
@@ -221,7 +221,7 @@ const form = useForm({
 });
 ```
 
-Returns **[Validate](#validate)&lt;T, T>** 
+Returns **[Validate](#validate)&lt;Value, Value>** 
 
 ### useValidator
 
@@ -229,7 +229,7 @@ Use a validation schema produced by [@stackup/validate](https://github.com/rzane
 
 #### Parameters
 
--   `validator` **Validator&lt;T, R>** 
+-   `validator` **Validator&lt;Value, Result>** 
 
 #### Examples
 
@@ -248,7 +248,7 @@ const form = useForm({
 });
 ```
 
-Returns **[Validate](#validate)&lt;T, R>** 
+Returns **[Validate](#validate)&lt;Value, Result>** 
 
 ### usePushItem
 
@@ -258,8 +258,8 @@ This can be used to create a form with repeating fields.
 
 #### Parameters
 
--   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>** 
--   `value` **T** 
+-   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Value>>** 
+-   `value` **Value** 
 
 #### Examples
 
@@ -277,9 +277,9 @@ This can be used to create a form with repeating fields.
 
 #### Parameters
 
--   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>** 
+-   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Value>>** 
 -   `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
--   `value` **T** 
+-   `value` **Value** 
 
 #### Examples
 
@@ -297,7 +297,7 @@ This can be used to create a form with repeating fields.
 
 #### Parameters
 
--   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>** 
+-   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Value>>** 
 -   `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 
 #### Examples
@@ -334,31 +334,31 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 Handles the submission of the form.
 
-Type: [Submit](#submit)&lt;R>
+Type: [Submit](#submit)&lt;Result>
 
 #### validate
 
 Validates the form.
 
-Type: [Validate](#validate)&lt;T, R>
+Type: [Validate](#validate)&lt;Value, Result>
 
 #### initialValue
 
 The initial values for the form.
 
-Type: T
+Type: Value
 
 #### initialError
 
 The initial errors on the fields.
 
-Type: FormError&lt;T>
+Type: FormError&lt;Value>
 
 #### initialTouched
 
 The initially touched fields.
 
-Type: FormTouched&lt;T>
+Type: FormTouched&lt;Value>
 
 #### validateOnChange
 
@@ -374,7 +374,7 @@ Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Glob
 
 ### Form
 
-**Extends FormField&lt;T>**
+**Extends FormField&lt;Value>**
 
 The value returned by `useForm`.
 
@@ -382,19 +382,19 @@ The value returned by `useForm`.
 
 The initial values for the form.
 
-Type: T
+Type: Value
 
 #### initialError
 
 The initial errors on the fields.
 
-Type: FormError&lt;T>
+Type: FormError&lt;Value>
 
 #### initialTouched
 
 The initially touched fields.
 
-Type: FormTouched&lt;T>
+Type: FormTouched&lt;Value>
 
 #### isSubmitting
 
@@ -418,7 +418,7 @@ Type: function (): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/R
 
 Trigger form validation.
 
-Type: function (): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[ValidationResult](#validationresult)&lt;T, R>>
+Type: function (): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[ValidationResult](#validationresult)&lt;Value, Result>>
 
 #### onSubmit
 
@@ -446,44 +446,44 @@ Type: ([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Glob
 
 The current value of the field.
 
-Type: T
+Type: Value
 
 #### error
 
 An error or errors that are associated with this field or it's children.
 
-Type: FormError&lt;T>
+Type: FormError&lt;Value>
 
 #### touched
 
 Indicates that this field or it's children have been modified by the user.
 
-Type: FormTouched&lt;T>
+Type: FormTouched&lt;Value>
 
 #### setValue
 
 Change the value. Just like with `setState`, you can pass a callback
 to this function to get the current value and update it.
 
-Type: SetState&lt;T>
+Type: SetState&lt;Value>
 
 #### setError
 
 Update the error.
 
-Type: SetState&lt;FormError&lt;T>>
+Type: SetState&lt;FormError&lt;Value>>
 
 #### setTouched
 
 Indicate that this field has been touched. This is usually called in `onBlur`.
 
-Type: SetState&lt;FormTouched&lt;T>>
+Type: SetState&lt;FormTouched&lt;Value>>
 
 ### Validate
 
 A function that is called to validate the form.
 
-Type: function (value: T): ([ValidationResult](#validationresult)&lt;T, R> | [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[ValidationResult](#validationresult)&lt;T, R>>)
+Type: function (value: Value): ([ValidationResult](#validationresult)&lt;Value, Result> | [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[ValidationResult](#validationresult)&lt;Value, Result>>)
 
 ### ValidationResult
 
@@ -495,11 +495,11 @@ Many validation libraries support casting the data that you input. The
 The `error` should have the same shape of your form data, but all of the
 values should be strings.
 
-Type: ({valid: `true`, value: R} | {valid: `false`, error: FormError&lt;T>})
+Type: ({valid: `true`, value: Result} | {valid: `false`, error: FormError&lt;Value>})
 
 ### Submit
 
 The function called when the form is submitted. The data will be validated
 and converted before this function is called.
 
-Type: function (value: T): (void | [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>)
+Type: function (value: Result): (void | [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>)

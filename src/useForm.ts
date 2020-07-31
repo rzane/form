@@ -27,7 +27,9 @@ import { getAllTouched, useEventCallback } from "./utilities";
  *   submit: value => alert(`The value is ${value}`)
  * });
  */
-export function useForm<T, R = T>(options: FormOptions<T, R>): Form<T, R> {
+export function useForm<Value, Result = Value>(
+  options: FormOptions<Value, Result>
+): Form<Value, Result> {
   const {
     submit: runSubmit,
     validate: runValidate,

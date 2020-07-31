@@ -12,10 +12,10 @@ import { insertItem } from "./utilities";
  * const pet = useFieldItem(pets, 0);
  * const insert = useInsertItem(pets, 0, { name: "" });
  */
-export function useInsertItem<T>(
-  field: FormField<T[]>,
+export function useInsertItem<Value>(
+  field: FormField<Value[]>,
   index: number,
-  value: T
+  value: Value
 ) {
   const { setValue, setError, setTouched } = field;
 

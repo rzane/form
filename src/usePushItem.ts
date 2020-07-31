@@ -11,7 +11,7 @@ import { useCallback } from "react";
  * const pet = useFieldItem(pets, 0);
  * const addPet = usePushItem(pets, { name: ""  });
  */
-export function usePushItem<T>(field: FormField<T[]>, value: T) {
+export function usePushItem<Value>(field: FormField<Value[]>, value: Value) {
   const { setValue } = field;
 
   return useCallback(() => {
