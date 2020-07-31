@@ -18,25 +18,24 @@
     "build": "tsdx build",
     "test": "tsdx test",
     "lint": "tsdx lint src test",
-    "prepare": "tsdx build"
+    "prepare": "tsdx build",
+    "docs": "typedoc src/index.ts --out docs --mode library --theme minimal"
   },
   "prettier": {
     "arrowParens": "avoid",
     "trailingComma": "none"
   },
-  "peerDependencies": {
-    "react": ">=16"
-  },
+  "peerDependencies": {},
   "devDependencies": {
     "@stackup/validate": "^0.2.0",
     "@testing-library/react-hooks": "^3.3.0",
-    "@types/react": "^16.9.43",
     "@types/react-dom": "^16.9.8",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-test-renderer": "^16.13.1",
     "tsdx": "^0.13.2",
     "tslib": "^2.0.0",
+    "typedoc": "^0.17.0-3",
     "typescript": "^3.9.7"
   }
 }
