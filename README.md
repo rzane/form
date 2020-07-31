@@ -64,61 +64,61 @@ const Form = () => {
 
 #### Table of Contents
 
-- [useForm](#useform)
-  - [Parameters](#parameters)
-  - [Examples](#examples)
-- [useField](#usefield)
-  - [Parameters](#parameters-1)
-  - [Examples](#examples-1)
-- [useFieldItem](#usefielditem)
-  - [Parameters](#parameters-2)
-  - [Examples](#examples-2)
-- [useNoValidate](#usenovalidate)
-  - [Examples](#examples-3)
-- [useValidator](#usevalidator)
-  - [Parameters](#parameters-3)
-  - [Examples](#examples-4)
-- [usePushItem](#usepushitem)
-  - [Parameters](#parameters-4)
-  - [Examples](#examples-5)
-- [useInsertItem](#useinsertitem)
-  - [Parameters](#parameters-5)
-  - [Examples](#examples-6)
-- [useRemoveItem](#useremoveitem)
-  - [Parameters](#parameters-6)
-  - [Examples](#examples-7)
-- [useIdentifier](#useidentifier)
-  - [Parameters](#parameters-7)
-- [FormOptions](#formoptions)
-  - [id](#id)
-  - [submit](#submit)
-  - [validate](#validate)
-  - [initialValue](#initialvalue)
-  - [initialError](#initialerror)
-  - [initialTouched](#initialtouched)
-  - [validateOnChange](#validateonchange)
-  - [validateOnBlur](#validateonblur)
-- [Form](#form)
-  - [initialValue](#initialvalue-1)
-  - [initialError](#initialerror-1)
-  - [initialTouched](#initialtouched-1)
-  - [isSubmitting](#issubmitting)
-  - [isValidating](#isvalidating)
-  - [submit](#submit-1)
-  - [validate](#validate-1)
-  - [onSubmit](#onsubmit)
-- [FormField](#formfield)
-  - [id](#id-1)
-  - [name](#name)
-  - [value](#value)
-  - [error](#error)
-  - [touched](#touched)
-  - [setValue](#setvalue)
-  - [setError](#seterror)
-  - [setTouched](#settouched)
-- [Validate](#validate-2)
-- [ValidationResult](#validationresult)
-- [Submit](#submit-2)
+-   [useForm](#useform)
+    -   [Parameters](#parameters)
+    -   [Examples](#examples)
+-   [useField](#usefield)
+    -   [Parameters](#parameters-1)
+    -   [Examples](#examples-1)
+-   [useFieldItem](#usefielditem)
+    -   [Parameters](#parameters-2)
+    -   [Examples](#examples-2)
+-   [useNoValidate](#usenovalidate)
+    -   [Examples](#examples-3)
+-   [useValidator](#usevalidator)
+    -   [Parameters](#parameters-3)
+    -   [Examples](#examples-4)
+-   [usePushItem](#usepushitem)
+    -   [Parameters](#parameters-4)
+    -   [Examples](#examples-5)
+-   [useInsertItem](#useinsertitem)
+    -   [Parameters](#parameters-5)
+    -   [Examples](#examples-6)
+-   [useRemoveItem](#useremoveitem)
+    -   [Parameters](#parameters-6)
+    -   [Examples](#examples-7)
+-   [useIdentifier](#useidentifier)
+    -   [Parameters](#parameters-7)
+-   [FormOptions](#formoptions)
+    -   [id](#id)
+    -   [submit](#submit)
+    -   [validate](#validate)
+    -   [initialValue](#initialvalue)
+    -   [initialError](#initialerror)
+    -   [initialTouched](#initialtouched)
+    -   [validateOnChange](#validateonchange)
+    -   [validateOnBlur](#validateonblur)
+-   [Form](#form)
+    -   [initialValue](#initialvalue-1)
+    -   [initialError](#initialerror-1)
+    -   [initialTouched](#initialtouched-1)
+    -   [isSubmitting](#issubmitting)
+    -   [isValidating](#isvalidating)
+    -   [submit](#submit-1)
+    -   [validate](#validate-1)
+    -   [onSubmit](#onsubmit)
+-   [FormField](#formfield)
+    -   [id](#id-1)
+    -   [name](#name)
+    -   [value](#value)
+    -   [error](#error)
+    -   [touched](#touched)
+    -   [setValue](#setvalue)
+    -   [setError](#seterror)
+    -   [setTouched](#settouched)
+-   [Validate](#validate-2)
+-   [ValidationResult](#validationresult)
+-   [Submit](#submit-2)
 
 ### useForm
 
@@ -140,7 +140,7 @@ If your form doesn't require validation, see [useNoValidate](#usenovalidate).
 
 #### Parameters
 
-- `options` **[FormOptions](#formoptions)&lt;T, R>**
+-   `options` **[FormOptions](#formoptions)&lt;T, R>** 
 
 #### Examples
 
@@ -152,7 +152,7 @@ const form = useForm({
 });
 ```
 
-Returns **[Form](#form)&lt;T, R>**
+Returns **[Form](#form)&lt;T, R>** 
 
 ### useField
 
@@ -160,8 +160,8 @@ Create a field for a given property.
 
 #### Parameters
 
-- `field` **[FormField](#formfield)&lt;Value>**
-- `name` **[Name](https://developer.mozilla.org/)**
+-   `field` **[FormField](#formfield)&lt;Value>** 
+-   `name` **[Name](https://developer.mozilla.org/)** 
 
 #### Examples
 
@@ -178,7 +178,7 @@ const profile = useField(form, "profile");
 const name = useField(profile, "name");
 ```
 
-Returns **[FormField](#formfield)&lt;any>**
+Returns **[FormField](#formfield)&lt;any>** 
 
 ### useFieldItem
 
@@ -188,8 +188,8 @@ This hook is intended for use in building forms with "Add another" functionality
 
 #### Parameters
 
-- `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>**
-- `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)**
+-   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>** 
+-   `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 
 #### Examples
 
@@ -205,7 +205,7 @@ const pet = useFieldItem(pets, 0);
 const name = useField(pet, "name");
 ```
 
-Returns **[FormField](#formfield)&lt;T>**
+Returns **[FormField](#formfield)&lt;T>** 
 
 ### useNoValidate
 
@@ -221,7 +221,7 @@ const form = useForm({
 });
 ```
 
-Returns **[Validate](#validate)&lt;T, T>**
+Returns **[Validate](#validate)&lt;T, T>** 
 
 ### useValidator
 
@@ -229,7 +229,7 @@ Use a validation schema produced by [@stackup/validate](https://github.com/rzane
 
 #### Parameters
 
-- `validator` **Validator&lt;T, R>**
+-   `validator` **Validator&lt;T, R>** 
 
 #### Examples
 
@@ -248,7 +248,7 @@ const form = useForm({
 });
 ```
 
-Returns **[Validate](#validate)&lt;T, R>**
+Returns **[Validate](#validate)&lt;T, R>** 
 
 ### usePushItem
 
@@ -258,15 +258,15 @@ This can be used to create a form with repeating fields.
 
 #### Parameters
 
-- `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>**
-- `value` **T**
+-   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>** 
+-   `value` **T** 
 
 #### Examples
 
 ```javascript
 const pets = useField(form, "pets");
 const pet = useFieldItem(pets, 0);
-const addPet = usePushItem(pets, { name: "" });
+const addPet = usePushItem(pets, { name: ""  });
 ```
 
 ### useInsertItem
@@ -277,9 +277,9 @@ This can be used to create a form with repeating fields.
 
 #### Parameters
 
-- `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>**
-- `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)**
-- `value` **T**
+-   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>** 
+-   `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+-   `value` **T** 
 
 #### Examples
 
@@ -297,8 +297,8 @@ This can be used to create a form with repeating fields.
 
 #### Parameters
 
-- `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>**
-- `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)**
+-   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;T>>** 
+-   `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 
 #### Examples
 
@@ -316,9 +316,9 @@ This hook does not currently support SSR.
 
 #### Parameters
 
-- `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**
+-   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ### FormOptions
 

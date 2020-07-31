@@ -38,8 +38,8 @@ function App() {
       email: "",
       pets: [],
       profile: { name: "" }
-    },
-    validateOnBlur: true
+    }
+    // validateOnBlur: true
   });
 
   const email = useField(form, "email");
