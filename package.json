@@ -6,6 +6,10 @@
   "main": "dist/index.js",
   "module": "dist/form.esm.js",
   "typings": "dist/index.d.ts",
+  "description": "A type-safe approach to managing complex form state in React.",
+  "repository": "github:rzane/form",
+  "homepage": "https://github.com/rzane/form#readme",
+  "bugs": "https://github.com/rzane/form/issues",
   "files": [
     "dist",
     "src"
