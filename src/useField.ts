@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { FormField } from "./types";
-import { useGetProperty, useSetProperty } from "./utilities";
+import { getProperty, useSetProperty } from "./utilities";
 
 /**
  * Create a field for a given property.
@@ -21,9 +21,9 @@ export function useField<Value, Name extends keyof Value>(
   field: FormField<Value>,
   name: Name
 ): FormField<Value[Name]> {
-  const value = useGetProperty(field.value, name);
-  const error = useGetProperty(field.error, name);
-  const touched = useGetProperty(field.touched, name);
+  const value = getProperty(field.value, name);
+  const error = getProperty(field.error, name);
+  const touched = getProperty(field.touched, name);
 
   const setValue = useSetProperty(field.setValue, name);
   const setError = useSetProperty(field.setError, name);

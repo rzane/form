@@ -25,20 +25,12 @@ export function removeItem<T>(values: T[], index: number): T[] {
   return result;
 }
 
-function getProperty(data: any, key: any): any {
+export function getProperty(data: any, key: any): any {
   return isObject(data) ? data[key] : undefined;
 }
 
-function getItem(data: any, index: number): any {
+export function getItem(data: any, index: number): any {
   return Array.isArray(data) ? data[index] : undefined;
-}
-
-export function useGetProperty(data: any, key: any): any {
-  return React.useMemo(() => getProperty(data, key), [data, key]);
-}
-
-export function useGetItem(data: any, index: number): any {
-  return React.useMemo(() => getItem(data, index), [data, index]);
 }
 
 export function useSetProperty(

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { FormField } from "./types";
-import { useGetItem, useSetItem } from "./utilities";
+import { getItem, useSetItem } from "./utilities";
 
 /**
  * Create a field for a specific index in an array.
@@ -28,9 +28,9 @@ export function useFieldItem<Value>(
     setTouched: setFieldTouched
   } = field;
 
-  const value = useGetItem(field.value, index);
-  const error = useGetItem(field.error, index);
-  const touched = useGetItem(field.touched, index);
+  const value = getItem(field.value, index);
+  const error = getItem(field.error, index);
+  const touched = getItem(field.touched, index);
 
   const setValue = useSetItem(setFieldValue, index);
   const setError = useSetItem(setFieldError, index);
