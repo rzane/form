@@ -11,6 +11,8 @@
 
 A type-safe approach to managing complex form state in React.
 
+This library provides integration with [@stackup/validate](https://github.com/rzane/validate) to handle validation. However, it should be pretty easy to integrate whatever validation library you prefer.
+
 ## Usage
 
 ```jsx
@@ -68,61 +70,61 @@ const Input = ({
 
 #### Table of Contents
 
--   [useForm](#useform)
-    -   [Parameters](#parameters)
-    -   [Examples](#examples)
--   [useField](#usefield)
-    -   [Parameters](#parameters-1)
-    -   [Examples](#examples-1)
--   [useFieldItem](#usefielditem)
-    -   [Parameters](#parameters-2)
-    -   [Examples](#examples-2)
--   [useNoValidate](#usenovalidate)
-    -   [Examples](#examples-3)
--   [useValidator](#usevalidator)
-    -   [Parameters](#parameters-3)
-    -   [Examples](#examples-4)
--   [usePushItem](#usepushitem)
-    -   [Parameters](#parameters-4)
-    -   [Examples](#examples-5)
--   [useInsertItem](#useinsertitem)
-    -   [Parameters](#parameters-5)
-    -   [Examples](#examples-6)
--   [useRemoveItem](#useremoveitem)
-    -   [Parameters](#parameters-6)
-    -   [Examples](#examples-7)
--   [useIdentifier](#useidentifier)
-    -   [Parameters](#parameters-7)
--   [FormOptions](#formoptions)
-    -   [id](#id)
-    -   [submit](#submit)
-    -   [validate](#validate)
-    -   [initialValue](#initialvalue)
-    -   [initialError](#initialerror)
-    -   [initialTouched](#initialtouched)
-    -   [validateOnChange](#validateonchange)
-    -   [validateOnBlur](#validateonblur)
--   [Form](#form)
-    -   [initialValue](#initialvalue-1)
-    -   [initialError](#initialerror-1)
-    -   [initialTouched](#initialtouched-1)
-    -   [isSubmitting](#issubmitting)
-    -   [isValidating](#isvalidating)
-    -   [submit](#submit-1)
-    -   [validate](#validate-1)
-    -   [onSubmit](#onsubmit)
--   [FormField](#formfield)
-    -   [id](#id-1)
-    -   [name](#name)
-    -   [value](#value)
-    -   [error](#error)
-    -   [touched](#touched)
-    -   [setValue](#setvalue)
-    -   [setError](#seterror)
-    -   [setTouched](#settouched)
--   [Validate](#validate-2)
--   [ValidationResult](#validationresult)
--   [Submit](#submit-2)
+- [useForm](#useform)
+  - [Parameters](#parameters)
+  - [Examples](#examples)
+- [useField](#usefield)
+  - [Parameters](#parameters-1)
+  - [Examples](#examples-1)
+- [useFieldItem](#usefielditem)
+  - [Parameters](#parameters-2)
+  - [Examples](#examples-2)
+- [useNoValidate](#usenovalidate)
+  - [Examples](#examples-3)
+- [useValidator](#usevalidator)
+  - [Parameters](#parameters-3)
+  - [Examples](#examples-4)
+- [usePushItem](#usepushitem)
+  - [Parameters](#parameters-4)
+  - [Examples](#examples-5)
+- [useInsertItem](#useinsertitem)
+  - [Parameters](#parameters-5)
+  - [Examples](#examples-6)
+- [useRemoveItem](#useremoveitem)
+  - [Parameters](#parameters-6)
+  - [Examples](#examples-7)
+- [useIdentifier](#useidentifier)
+  - [Parameters](#parameters-7)
+- [FormOptions](#formoptions)
+  - [id](#id)
+  - [submit](#submit)
+  - [validate](#validate)
+  - [initialValue](#initialvalue)
+  - [initialError](#initialerror)
+  - [initialTouched](#initialtouched)
+  - [validateOnChange](#validateonchange)
+  - [validateOnBlur](#validateonblur)
+- [Form](#form)
+  - [initialValue](#initialvalue-1)
+  - [initialError](#initialerror-1)
+  - [initialTouched](#initialtouched-1)
+  - [isSubmitting](#issubmitting)
+  - [isValidating](#isvalidating)
+  - [submit](#submit-1)
+  - [validate](#validate-1)
+  - [onSubmit](#onsubmit)
+- [FormField](#formfield)
+  - [id](#id-1)
+  - [name](#name)
+  - [value](#value)
+  - [error](#error)
+  - [touched](#touched)
+  - [setValue](#setvalue)
+  - [setError](#seterror)
+  - [setTouched](#settouched)
+- [Validate](#validate-2)
+- [ValidationResult](#validationresult)
+- [Submit](#submit-2)
 
 ### useForm
 
@@ -144,19 +146,19 @@ If your form doesn't require validation, see [useNoValidate](#usenovalidate).
 
 #### Parameters
 
--   `options` **[FormOptions](#formoptions)&lt;Value, Result>** 
+- `options` **[FormOptions](#formoptions)&lt;Value, Result>**
 
 #### Examples
 
 ```javascript
 const form = useForm({
   initialValue: "",
-  validate: useSchema(mySchema),
+  validate: useValidate(mySchema),
   submit: value => alert(`The value is ${value}`)
 });
 ```
 
-Returns **[Form](#form)&lt;Value, Result>** 
+Returns **[Form](#form)&lt;Value, Result>**
 
 ### useField
 
@@ -164,8 +166,8 @@ Create a field for a given property.
 
 #### Parameters
 
--   `field` **[FormField](#formfield)&lt;Value>** 
--   `name` **[Name](https://developer.mozilla.org/)** 
+- `field` **[FormField](#formfield)&lt;Value>**
+- `name` **[Name](https://developer.mozilla.org/)**
 
 #### Examples
 
@@ -182,7 +184,7 @@ const profile = useField(form, "profile");
 const name = useField(profile, "name");
 ```
 
-Returns **[FormField](#formfield)&lt;any>** 
+Returns **[FormField](#formfield)&lt;any>**
 
 ### useFieldItem
 
@@ -192,8 +194,8 @@ This hook is intended for use in building forms with "Add another" functionality
 
 #### Parameters
 
--   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Value>>** 
--   `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+- `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Value>>**
+- `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)**
 
 #### Examples
 
@@ -209,7 +211,7 @@ const pet = useFieldItem(pets, 0);
 const name = useField(pet, "name");
 ```
 
-Returns **[FormField](#formfield)&lt;Value>** 
+Returns **[FormField](#formfield)&lt;Value>**
 
 ### useNoValidate
 
@@ -225,7 +227,7 @@ const form = useForm({
 });
 ```
 
-Returns **[Validate](#validate)&lt;Value, Value>** 
+Returns **[Validate](#validate)&lt;Value, Value>**
 
 ### useValidator
 
@@ -233,7 +235,7 @@ Use a validation schema produced by [@stackup/validate](https://github.com/rzane
 
 #### Parameters
 
--   `validator` **Validator&lt;Value, Result>** 
+- `validator` **Validator&lt;Value, Result>**
 
 #### Examples
 
@@ -252,7 +254,7 @@ const form = useForm({
 });
 ```
 
-Returns **[Validate](#validate)&lt;Value, Result>** 
+Returns **[Validate](#validate)&lt;Value, Result>**
 
 ### usePushItem
 
@@ -262,15 +264,15 @@ This can be used to create a form with repeating fields.
 
 #### Parameters
 
--   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Value>>** 
--   `value` **Value** 
+- `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Value>>**
+- `value` **Value**
 
 #### Examples
 
 ```javascript
 const pets = useField(form, "pets");
 const pet = useFieldItem(pets, 0);
-const addPet = usePushItem(pets, { name: ""  });
+const addPet = usePushItem(pets, { name: "" });
 ```
 
 ### useInsertItem
@@ -281,9 +283,9 @@ This can be used to create a form with repeating fields.
 
 #### Parameters
 
--   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Value>>** 
--   `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
--   `value` **Value** 
+- `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Value>>**
+- `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)**
+- `value` **Value**
 
 #### Examples
 
@@ -301,8 +303,8 @@ This can be used to create a form with repeating fields.
 
 #### Parameters
 
--   `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Value>>** 
--   `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+- `field` **[FormField](#formfield)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Value>>**
+- `index` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)**
 
 #### Examples
 
@@ -320,9 +322,9 @@ This hook does not currently support SSR.
 
 #### Parameters
 
--   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
+- `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**
 
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**
 
 ### FormOptions
 

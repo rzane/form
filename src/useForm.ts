@@ -23,7 +23,7 @@ import { getAllTouched, useEventCallback } from "./utilities";
  * @example
  * const form = useForm({
  *   initialValue: "",
- *   validate: useSchema(mySchema),
+ *   validate: useValidate(mySchema),
  *   submit: value => alert(`The value is ${value}`)
  * });
  */
