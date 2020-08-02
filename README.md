@@ -13,6 +13,8 @@ A type-safe approach to managing complex form state in React.
 
 This library provides integration with [@stackup/validate](https://github.com/rzane/validate) to handle validation. However, it should be pretty easy to integrate whatever validation library you prefer.
 
+You should also checkout [@stackup/inputs](https://github.com/promptworks/inputs), which includes some ready-made form fields.
+
 ## Usage
 
 ```jsx
