@@ -3,6 +3,18 @@ import { useIdentifier } from "./useIdentifier";
 import { FormOptions, Form } from "./types";
 import { getAllTouched, useEventCallback } from "./utilities";
 
+function useMounted() {
+  const ref = useRef<boolean>(true);
+
+  useEffect(() => {
+    return () => {
+      ref.current = false;
+    };
+  }, []);
+
+  return ref.current;
+}
+
 /**
  * Create a new form. A form requires an initial value, a function to validate,
  * and a submit handler.
@@ -42,28 +54,24 @@ export function useForm<Value, Result = Value>(
   const initialError = useRef(options.initialError).current;
   const initialTouched = useRef(options.initialTouched).current;
 
+  const isMounted = useMounted();
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState(initialError);
   const [touched, setTouched] = useState(initialTouched);
   const [isSubmitting, setSubmitting] = useState(false);
   const [isValidating, setValidating] = useState(false);
 
-  const executeValidate = async (touchAllErrors: boolean) => {
+  const executeValidate = async (isSubmit: boolean) => {
     setValidating(true);
 
     try {
       const result = await runValidate(value);
       const errors = result.valid ? undefined : result.error;
-
-      // When submitting, touch all fields that have errors.
-      if (touchAllErrors) {
-        setTouched(getAllTouched(errors));
-      }
-
-      setError(errors);
+      if (isMounted && isSubmit) setTouched(getAllTouched(errors));
+      if (isMounted) setError(errors);
       return result;
     } finally {
-      setValidating(false);
+      if (isMounted) setValidating(false);
     }
   };
 
@@ -76,12 +84,9 @@ export function useForm<Value, Result = Value>(
 
     try {
       const result = await executeValidate(true);
-
-      if (result.valid) {
-        await runSubmit(result.value);
-      }
+      if (result.valid) await runSubmit(result.value);
     } finally {
-      setSubmitting(false);
+      if (isMounted) setSubmitting(false);
     }
   });
 
@@ -93,15 +98,11 @@ export function useForm<Value, Result = Value>(
   );
 
   useEffect(() => {
-    if (validateOnChange) {
-      validate();
-    }
+    if (validateOnChange) validate();
   }, [value, validateOnChange, validate]);
 
   useEffect(() => {
-    if (validateOnBlur) {
-      validate();
-    }
+    if (validateOnBlur) validate();
   }, [touched, validateOnBlur, validate]);
 
   return useMemo(
