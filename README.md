@@ -29,9 +29,9 @@ const Form = () => {
     },
     validate(value) {
       if (value.email) {
-        return { value };
+        return { valid: true, value };
       }
-      return { error: { email: "This field is required." } };
+      return { valid: false, error: { email: "This field is required." } };
     },
     submit(value) {
       console.log(value);
