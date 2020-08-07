@@ -35,7 +35,7 @@ function useMounted() {
  * @example
  * const form = useForm({
  *   initialValue: "",
- *   validate: useValidate(mySchema),
+ *   validate: useValidator(validator),
  *   submit: value => alert(`The value is ${value}`)
  * });
  */

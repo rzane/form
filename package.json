@@ -23,7 +23,7 @@
     "test": "tsdx test",
     "lint": "tsdx lint src test",
     "prepare": "tsdx build",
-    "docs": "documentation readme --shallow -s API -c documentation.yml --parse-extension ts src"
+    "docs": "documentation readme --shallow -s API -c documentation.yml --parse-extension ts src && prettier --write README.md"
   },
   "prettier": {
     "arrowParens": "avoid",

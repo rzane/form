@@ -24,7 +24,7 @@ export interface User {
   pets: Pet[];
 }
 
-const userSchema = schema<User, User>({
+const validator = schema<User, User>({
   email: assert(isString).then(refute(isBlank)),
   profile: schema({ name: assert(isString).then(refute(isBlank)) }),
   pets: each(schema({ name: assert(isString).then(refute(isBlank)) }))
@@ -33,7 +33,7 @@ const userSchema = schema<User, User>({
 function App() {
   const form = useForm<User>({
     validateOnBlur: true,
-    validate: useValidator(userSchema),
+    validate: useValidator(validator),
     submit: value => console.log(value),
     initialValue: {
       email: "",
