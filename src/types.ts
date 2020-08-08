@@ -79,36 +79,13 @@ export type ValidationResult<Value, Result> =
   | { valid: false; error: FormError<Value> };
 
 /**
- * A function that is called to validate the form.
- */
-export type Validate<Value, Result> = (
-  value: Value
-) => ValidationResult<Value, Result> | Promise<ValidationResult<Value, Result>>;
-
-/**
- * The function called when the form is submitted. The data will be validated
- * and converted before this function is called.
- */
-export type Submit<Result> = (value: Result) => void | Promise<void>;
-
-/**
  * The options that can be passed to {@link useForm}.
  */
-export interface FormOptions<Value, Result = Value> {
+export interface FormOptions<Value> {
   /**
    * Customize the base ID for all fields.
    */
   id?: string;
-
-  /**
-   * Handles the submission of the form.
-   */
-  submit: Submit<Result>;
-
-  /**
-   * Validates the form.
-   */
-  validate: Validate<Value, Result>;
 
   /**
    * The initial values for the form.
@@ -124,24 +101,12 @@ export interface FormOptions<Value, Result = Value> {
    * The initially touched fields.
    */
   initialTouched?: FormTouched<Value>;
-
-  /**
-   * Enables validation whenever values change.
-   * @default false
-   */
-  validateOnChange?: boolean;
-
-  /**
-   * Enables validation whenever a field is touched.
-   * @default false
-   */
-  validateOnBlur?: boolean;
 }
 
 /**
  * The value returned by `useForm`.
  */
-export interface Form<Value, Result = Value> extends FormField<Value> {
+export interface Form<Value> extends FormField<Value> {
   /**
    * The initial values for the form.
    */
@@ -156,26 +121,44 @@ export interface Form<Value, Result = Value> extends FormField<Value> {
    * The initially touched fields.
    */
   initialTouched: FormTouched<Value>;
+}
+
+export interface ValidateOptions {
+  /**
+   * Enables validation whenever values change.
+   * @default false
+   */
+  onChange?: boolean;
 
   /**
-   * Indicates that the form is currently submitting.
+   * Enables validation whenever a field is touched.
+   * @default false
    */
-  isSubmitting: boolean;
+  onBlur?: boolean;
+}
 
+export interface Validate<Value, Result> {
   /**
    * Indicates that the form is currently validating.
    */
   isValidating: boolean;
 
   /**
-   * Trigger form submission.
-   */
-  submit: () => Promise<void>;
-
-  /**
    * Trigger form validation.
    */
-  validate: () => Promise<ValidationResult<Value, Result>>;
+  execute: (isSubmit?: boolean) => Promise<ValidationResult<Value, Result>>;
+}
+
+export interface Submit {
+  /**
+   * Indicates that the form is currently submitting.
+   */
+  isSubmitting: boolean;
+
+  /**
+   * Trigger form submission.
+   */
+  execute: () => Promise<void>;
 
   /**
    * This is the same as `submit`, but it'll `preventDefault` on the `event`.
