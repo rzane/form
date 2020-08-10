@@ -35,6 +35,8 @@ export function useForm<Value>(options: FormOptions<Value>): Form<Value> {
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState(initialError);
   const [touched, setTouched] = useState(initialTouched);
+  const [isValidating, setValidating] = useState(false);
+  const [isSubmitting, setSubmitting] = useState(false);
 
   return useMemo(
     () => ({
@@ -46,10 +48,24 @@ export function useForm<Value>(options: FormOptions<Value>): Form<Value> {
       value,
       error,
       touched,
+      isValidating,
+      isSubmitting,
       setValue,
       setError,
-      setTouched
+      setTouched,
+      setValidating,
+      setSubmitting
     }),
-    [id, value, error, touched, initialError, initialTouched, initialValue]
+    [
+      id,
+      initialValue,
+      initialError,
+      initialTouched,
+      value,
+      error,
+      touched,
+      isValidating,
+      isSubmitting
+    ]
   );
 }

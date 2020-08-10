@@ -105,7 +105,7 @@ export function useEventCallback<T extends (...args: any[]) => any>(fn: T): T {
   ) as T;
 }
 
-export function useMounted() {
+export function useMounted(): boolean {
   const ref = React.useRef<boolean>(true);
 
   React.useEffect(() => {

@@ -19,6 +19,16 @@ export type FormTouched<Value> =
 export type Transform<T> = (value: T) => T;
 export type SetState<T> = (value: T | Transform<T>) => void;
 
+export interface Valid<Value> {
+  valid: true;
+  value: Value;
+}
+
+export interface Invalid<Value> {
+  valid: false;
+  error: FormError<Value>;
+}
+
 /**
  * The primary form data structure.
  */
@@ -49,6 +59,16 @@ export interface FormField<Value> {
   touched: FormTouched<Value>;
 
   /**
+   * Indicates that validation is currently being run
+   */
+  isValidating: boolean;
+
+  /**
+   * Indicates that the form is currently being submitted
+   */
+  isSubmitting: boolean;
+
+  /**
    * Change the value. Just like with `setState`, you can pass a callback
    * to this function to get the current value and update it.
    */
@@ -64,19 +84,6 @@ export interface FormField<Value> {
    */
   setTouched: SetState<FormTouched<Value>>;
 }
-
-/**
- * The validation function should return either a `value` or an `error`.
- *
- * Many validation libraries support casting the data that you input. The
- * `value` that you return will be passed to your submit handler.
- *
- * The `error` should have the same shape of your form data, but all of the
- * values should be strings.
- */
-export type ValidationResult<Value, Result> =
-  | { valid: true; value: Result }
-  | { valid: false; error: FormError<Value> };
 
 /**
  * The options that can be passed to {@link useForm}.
@@ -121,9 +128,19 @@ export interface Form<Value> extends FormField<Value> {
    * The initially touched fields.
    */
   initialTouched: FormTouched<Value>;
+
+  /**
+   * Indicate that the form is validating
+   */
+  setValidating: SetState<boolean>;
+
+  /**
+   * Indicate that the form is submitting
+   */
+  setSubmitting: SetState<boolean>;
 }
 
-export interface ValidateOptions {
+export interface ValidationMode {
   /**
    * Enables validation whenever values change.
    * @default false
@@ -137,23 +154,30 @@ export interface ValidateOptions {
   onBlur?: boolean;
 }
 
+export interface ValidateOptions {
+  /**
+   * Touch erroneous fields.
+   */
+  touch?: boolean;
+}
+
 export interface Validate<Value, Result> {
   /**
-   * Indicates that the form is currently validating.
+   * A reference to form being validated.
    */
-  isValidating: boolean;
+  form: Form<Value>;
 
   /**
    * Trigger form validation.
    */
-  execute: (isSubmit?: boolean) => Promise<ValidationResult<Value, Result>>;
+  execute: (opts?: ValidateOptions) => Promise<Valid<Result> | Invalid<Value>>;
 }
 
-export interface Submit {
+export interface Submit<Value> {
   /**
-   * Indicates that the form is currently submitting.
+   * A reference to form being submitted.
    */
-  isSubmitting: boolean;
+  form: Form<Value>;
 
   /**
    * Trigger form submission.

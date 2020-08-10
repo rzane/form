@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Validator, Valid, Invalid } from "@stackup/validate";
-import { ValidateOptions, Form, Validate } from "./types";
+import { ValidationMode, Form, Validate, ValidateOptions } from "./types";
 import { useEventCallback, useMounted, getAllTouched } from "./utilities";
 
 function isNumber(value: any): value is number {
@@ -35,35 +35,31 @@ function convert<T>(result: Valid<T> | Invalid): any {
 export function useValidate<Value, Result>(
   form: Form<Value>,
   validator: Validator<Value, Result>,
-  options: ValidateOptions
+  mode: ValidationMode = {}
 ): Validate<Value, Result> {
   const isMounted = useMounted();
-  const [isValidating, setValidating] = useState<boolean>(false);
 
-  const execute = useEventCallback(async (touch?: boolean) => {
-    setValidating(true);
+  const execute = useEventCallback(async (opts: ValidateOptions = {}) => {
+    form.setValidating(true);
 
     try {
       const result = await validator.validate(form.value).then(convert);
       const errors = result.valid ? undefined : result.error;
       if (isMounted) form.setError(errors);
-      if (isMounted && touch) form.setTouched(getAllTouched(errors));
+      if (isMounted && opts.touch) form.setTouched(getAllTouched(errors));
       return result;
     } finally {
-      if (isMounted) setValidating(false);
+      if (isMounted) form.setValidating(false);
     }
   });
 
   useEffect(() => {
-    if (options.onChange) execute();
-  }, [form.value, options.onChange, execute]);
+    if (mode.onChange) execute();
+  }, [form.value, mode.onChange, execute]);
 
   useEffect(() => {
-    if (options.onBlur) execute();
-  }, [form.touched, options.onBlur, execute]);
+    if (mode.onBlur) execute();
+  }, [form.touched, mode.onBlur, execute]);
 
-  return {
-    execute,
-    isValidating
-  };
+  return { form, execute };
 }

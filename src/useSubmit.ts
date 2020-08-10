@@ -1,34 +1,35 @@
-import { useState } from "react";
 import { Form, Validate, Submit } from "./types";
 import { useEventCallback, useMounted } from "./utilities";
 
+type SubmitFn<T> = (values: T) => void | Promise<void>;
+
 export function useSubmit<Value>(
-  form: Form<Value>,
-  submit: (values: Value) => void | Promise<void>
-): Submit;
+  base: Form<Value>,
+  submit: SubmitFn<Value>
+): Submit<Value>;
 export function useSubmit<Value, Result>(
-  form: Validate<Value, Result>,
-  submit: (values: Result) => void | Promise<void>
-): Submit;
-export function useSubmit(
-  form: Form<any> | Validate<any, any>,
-  submit: (values: any) => void | Promise<void>
-): Submit {
+  base: Validate<Value, Result>,
+  submit: SubmitFn<Result>
+): Submit<Value>;
+export function useSubmit<Value>(
+  base: Form<Value> | Validate<Value, any>,
+  submit: SubmitFn<Value>
+): Submit<Value> {
   const isMounted = useMounted();
-  const [isSubmitting, setSubmitting] = useState<boolean>(false);
+  const form = "form" in base ? base.form : base;
 
   const execute = useEventCallback(async () => {
-    setSubmitting(true);
+    form.setSubmitting(true);
 
     try {
-      if ("execute" in form) {
-        const result = await form.execute(true);
+      if ("execute" in base) {
+        const result = await base.execute({ touch: true });
         if (result.valid) await submit(result.value);
-      } else if ("value" in form) {
+      } else {
         await submit(form.value);
       }
     } finally {
-      if (isMounted) setSubmitting(false);
+      if (isMounted) form.setSubmitting(false);
     }
   });
 
@@ -39,9 +40,5 @@ export function useSubmit(
     }
   );
 
-  return {
-    onSubmit,
-    execute,
-    isSubmitting
-  };
+  return { form, execute, onSubmit };
 }
