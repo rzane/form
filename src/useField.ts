@@ -38,8 +38,21 @@ export function useField<Value, Name extends keyof Value>(
       touched,
       setValue,
       setError,
-      setTouched
+      setTouched,
+      isSubmitting: field.isSubmitting,
+      isValidating: field.isValidating
     }),
-    [field.id, error, touched, value, name, setError, setTouched, setValue]
+    [
+      field.id,
+      field.isSubmitting,
+      field.isValidating,
+      name,
+      value,
+      error,
+      touched,
+      setValue,
+      setError,
+      setTouched
+    ]
   );
 }

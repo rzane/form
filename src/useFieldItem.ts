@@ -45,8 +45,21 @@ export function useFieldItem<Value>(
       touched,
       setValue,
       setError,
-      setTouched
+      setTouched,
+      isValidating: field.isValidating,
+      isSubmitting: field.isSubmitting
     }),
-    [field.id, index, value, error, touched, setValue, setError, setTouched]
+    [
+      field.id,
+      field.isValidating,
+      field.isSubmitting,
+      index,
+      value,
+      error,
+      touched,
+      setValue,
+      setError,
+      setTouched
+    ]
   );
 }
