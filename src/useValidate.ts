@@ -1,6 +1,19 @@
-import { Validator, Result } from "@stackup/validate";
 import { useValidation } from "./useValidation";
 import { Form, ValidationMode, Validate } from "./types";
+
+type ValidationResult<T> =
+  | {
+      valid: true;
+      value: T;
+    }
+  | {
+      valid: false;
+      errors: Array<{ message: string; path: Array<string | number> }>;
+    };
+
+interface Validator<T, R> {
+  validate(value: T): Promise<ValidationResult<R>>;
+}
 
 function isNumber(value: any): value is number {
   return typeof value === "number";
@@ -17,7 +30,7 @@ function setIn(data: any, keys: Array<string | number>, val: any) {
   return data;
 }
 
-function convert<T>(result: Result<T>): any {
+function convert<T>(result: ValidationResult<T>): any {
   if (result.valid) {
     return result;
   }
