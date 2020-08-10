@@ -22,19 +22,13 @@ export function useFieldItem<Value>(
   field: FormField<Value[]>,
   index: number
 ): FormField<Value> {
-  const {
-    setValue: setFieldValue,
-    setError: setFieldError,
-    setTouched: setFieldTouched
-  } = field;
-
   const value = getItem(field.value, index);
   const error = getItem(field.error, index);
   const touched = getItem(field.touched, index);
 
-  const setValue = useSetItem(setFieldValue, index);
-  const setError = useSetItem(setFieldError, index);
-  const setTouched = useSetItem(setFieldTouched, index);
+  const setValue = useSetItem(field.setValue, index);
+  const setError = useSetItem(field.setError, index);
+  const setTouched = useSetItem(field.setTouched, index);
 
   return useMemo(
     () => ({
