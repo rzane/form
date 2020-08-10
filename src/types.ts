@@ -140,6 +140,9 @@ export interface Form<Value> extends FormField<Value> {
   setSubmitting: SetState<boolean>;
 }
 
+/**
+ * Configures when validation runs.
+ */
 export interface ValidationMode {
   /**
    * Enables validation whenever values change.
@@ -154,6 +157,9 @@ export interface ValidationMode {
   onBlur?: boolean;
 }
 
+/**
+ * Options to run validation with.
+ */
 export interface ValidateOptions {
   /**
    * Touch erroneous fields.

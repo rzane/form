@@ -78,55 +78,58 @@ const Input = ({
 - [useField](#usefield)
   - [Parameters](#parameters-1)
   - [Examples](#examples-1)
-- [useFieldItem](#usefielditem)
+- [useValidation](#usevalidation)
   - [Parameters](#parameters-2)
-  - [Examples](#examples-2)
-- [useNoValidate](#usenovalidate)
-  - [Examples](#examples-3)
-- [useValidator](#usevalidator)
+- [useSubmit](#usesubmit)
   - [Parameters](#parameters-3)
-  - [Examples](#examples-4)
-- [usePushItem](#usepushitem)
+- [useFieldItem](#usefielditem)
   - [Parameters](#parameters-4)
-  - [Examples](#examples-5)
-- [useInsertItem](#useinsertitem)
+  - [Examples](#examples-2)
+- [usePushItem](#usepushitem)
   - [Parameters](#parameters-5)
-  - [Examples](#examples-6)
-- [useRemoveItem](#useremoveitem)
+  - [Examples](#examples-3)
+- [useInsertItem](#useinsertitem)
   - [Parameters](#parameters-6)
-  - [Examples](#examples-7)
-- [useIdentifier](#useidentifier)
+  - [Examples](#examples-4)
+- [useRemoveItem](#useremoveitem)
   - [Parameters](#parameters-7)
+  - [Examples](#examples-5)
+- [useIdentifier](#useidentifier)
+  - [Parameters](#parameters-8)
 - [FormOptions](#formoptions)
   - [id](#id)
-  - [submit](#submit)
-  - [validate](#validate)
   - [initialValue](#initialvalue)
   - [initialError](#initialerror)
   - [initialTouched](#initialtouched)
-  - [validateOnChange](#validateonchange)
-  - [validateOnBlur](#validateonblur)
 - [Form](#form)
   - [initialValue](#initialvalue-1)
   - [initialError](#initialerror-1)
   - [initialTouched](#initialtouched-1)
-  - [isSubmitting](#issubmitting)
-  - [isValidating](#isvalidating)
-  - [submit](#submit-1)
-  - [validate](#validate-1)
-  - [onSubmit](#onsubmit)
+  - [setValidating](#setvalidating)
+  - [setSubmitting](#setsubmitting)
 - [FormField](#formfield)
   - [id](#id-1)
   - [name](#name)
   - [value](#value)
   - [error](#error)
   - [touched](#touched)
+  - [isValidating](#isvalidating)
+  - [isSubmitting](#issubmitting)
   - [setValue](#setvalue)
   - [setError](#seterror)
   - [setTouched](#settouched)
-- [Validate](#validate-2)
-- [ValidationResult](#validationresult)
-- [Submit](#submit-2)
+- [Validate](#validate)
+  - [form](#form-1)
+  - [execute](#execute)
+- [ValidationMode](#validationmode)
+  - [onChange](#onchange)
+  - [onBlur](#onblur)
+- [ValidateOptions](#validateoptions)
+  - [touch](#touch)
+- [Submit](#submit)
+  - [form](#form-2)
+  - [execute](#execute-1)
+  - [onSubmit](#onsubmit)
 
 ### useForm
 
@@ -144,11 +147,11 @@ shape of your form state. The second is optional, but it describes the result
 of casting your form state with a validator. The casted value is what will be
 passed to `submit`.
 
-If your form doesn't require validation, see [useNoValidate](#usenovalidate).
+If your form doesn't require validation, see [useNoValidate](useNoValidate).
 
 #### Parameters
 
-- `options` **[FormOptions](#formoptions)&lt;Value, Result>**
+- `options` **[FormOptions](#formoptions)&lt;Value>**
 
 #### Examples
 
@@ -160,7 +163,7 @@ const form = useForm({
 });
 ```
 
-Returns **[Form](#form)&lt;Value, Result>**
+Returns **[Form](#form)&lt;Value>**
 
 ### useField
 
@@ -188,6 +191,29 @@ const name = useField(profile, "name");
 
 Returns **[FormField](#formfield)&lt;any>**
 
+### useValidation
+
+Add validation to the form using [@stackup/validate](https://github.com/rzane/validate).
+
+#### Parameters
+
+- `form` **[Form](#form)&lt;Value>**
+- `validator` **Validator&lt;Value, Result>**
+- `mode` **[ValidationMode](#validationmode)** (optional, default `{}`)
+
+Returns **[Validate](#validate)&lt;Value, Result>**
+
+### useSubmit
+
+Create a submit handler for the form.
+
+#### Parameters
+
+- `base` **[Form](#form)&lt;Value>**
+- `submit` **SubmitFn&lt;Value>**
+
+Returns **[Submit](#submit)&lt;Value>**
+
 ### useFieldItem
 
 Create a field for a specific index in an array.
@@ -214,49 +240,6 @@ const name = useField(pet, "name");
 ```
 
 Returns **[FormField](#formfield)&lt;Value>**
-
-### useNoValidate
-
-This can be used to create a form that doesn't require any validation.
-
-#### Examples
-
-```javascript
-const form = useForm({
-  submit: createUser,
-  validate: useNoValidate(),
-  initialValue: { name: "" }
-});
-```
-
-Returns **[Validate](#validate)&lt;Value, Value>**
-
-### useValidator
-
-Use a validation schema produced by [@stackup/validate](https://github.com/rzane/validate)
-
-#### Parameters
-
-- `validator` **Validator&lt;Value, Result>**
-
-#### Examples
-
-```javascript
-import { useForm, useValidator } from "@stackup/form";
-import { schema, assert, isString } from "@stackup/validate";
-
-const validator = schema({
-  name: assert(isString)
-});
-
-const form = useForm({
-  submit: createUser,
-  validate: useValidator(validator),
-  initialValue: { name: "" }
-});
-```
-
-Returns **[Validate](#validate)&lt;Value, Result>**
 
 ### usePushItem
 
@@ -338,18 +321,6 @@ Customize the base ID for all fields.
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-#### submit
-
-Handles the submission of the form.
-
-Type: [Submit](#submit)&lt;Result>
-
-#### validate
-
-Validates the form.
-
-Type: [Validate](#validate)&lt;Value, Result>
-
 #### initialValue
 
 The initial values for the form.
@@ -367,18 +338,6 @@ Type: FormError&lt;Value>
 The initially touched fields.
 
 Type: FormTouched&lt;Value>
-
-#### validateOnChange
-
-Enables validation whenever values change.
-
-Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
-
-#### validateOnBlur
-
-Enables validation whenever a field is touched.
-
-Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
 
 ### Form
 
@@ -404,35 +363,17 @@ The initially touched fields.
 
 Type: FormTouched&lt;Value>
 
-#### isSubmitting
+#### setValidating
 
-Indicates that the form is currently submitting.
+Indicate that the form is validating
 
-Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
+Type: SetState&lt;[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)>
 
-#### isValidating
+#### setSubmitting
 
-Indicates that the form is currently validating.
+Indicate that the form is submitting
 
-Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
-
-#### submit
-
-Trigger form submission.
-
-Type: function (): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>
-
-#### validate
-
-Trigger form validation.
-
-Type: function (): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[ValidationResult](#validationresult)&lt;Value, Result>>
-
-#### onSubmit
-
-This is the same as `submit`, but it'll `preventDefault` on the `event`.
-
-Type: function (event: React.FormEvent&lt;[HTMLFormElement](https://developer.mozilla.org/docs/Web/API/HTMLFormElement)>): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>
+Type: SetState&lt;[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)>
 
 ### FormField
 
@@ -468,6 +409,18 @@ Indicates that this field or it's children have been modified by the user.
 
 Type: FormTouched&lt;Value>
 
+#### isValidating
+
+Indicates that validation is currently being run
+
+Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
+
+#### isSubmitting
+
+Indicates that the form is currently being submitted
+
+Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
+
 #### setValue
 
 Change the value. Just like with `setState`, you can pass a callback
@@ -489,25 +442,64 @@ Type: SetState&lt;FormTouched&lt;Value>>
 
 ### Validate
 
-A function that is called to validate the form.
+The value returned by `useValidate`.
 
-Type: function (value: Value): ([ValidationResult](#validationresult)&lt;Value, Result> | [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[ValidationResult](#validationresult)&lt;Value, Result>>)
+#### form
 
-### ValidationResult
+A reference to form being validated.
 
-The validation function should return either a `value` or an `error`.
+Type: [Form](#form)&lt;Value>
 
-Many validation libraries support casting the data that you input. The
-`value` that you return will be passed to your submit handler.
+#### execute
 
-The `error` should have the same shape of your form data, but all of the
-values should be strings.
+Trigger form validation.
 
-Type: ({valid: `true`, value: Result} | {valid: `false`, error: FormError&lt;Value>})
+Type: function (opts: [ValidateOptions](#validateoptions)): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;(Valid&lt;Result> | Invalid&lt;Value>)>
+
+### ValidationMode
+
+Configures when validation runs.
+
+#### onChange
+
+Enables validation whenever values change.
+
+Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
+
+#### onBlur
+
+Enables validation whenever a field is touched.
+
+Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
+
+### ValidateOptions
+
+Options to run validation with.
+
+#### touch
+
+Touch erroneous fields.
+
+Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
 
 ### Submit
 
-The function called when the form is submitted. The data will be validated
-and converted before this function is called.
+The value returned by `useSubmit`.
 
-Type: function (value: Result): (void | [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>)
+#### form
+
+A reference to form being submitted.
+
+Type: [Form](#form)&lt;Value>
+
+#### execute
+
+Trigger form submission.
+
+Type: function (): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>
+
+#### onSubmit
+
+This is the same as `submit`, but it'll `preventDefault` on the `event`.
+
+Type: function (event: React.FormEvent&lt;[HTMLFormElement](https://developer.mozilla.org/docs/Web/API/HTMLFormElement)>): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>

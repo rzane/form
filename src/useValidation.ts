@@ -31,6 +31,9 @@ function convert(result: Valid<any> | Invalid): any {
   return { valid: false, error };
 }
 
+/**
+ * Add validation to the form using {@link https://github.com/rzane/validate @stackup/validate}.
+ */
 export function useValidation<Value, Result>(
   form: Form<Value>,
   validator: Validator<Value, Result>,

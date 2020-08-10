@@ -3,6 +3,9 @@ import { useEventCallback, useMounted } from "./utilities";
 
 type SubmitFn<T> = (values: T) => void | Promise<void>;
 
+/**
+ * Create a submit handler for the form.
+ */
 export function useSubmit<Value>(
   base: Form<Value>,
   submit: SubmitFn<Value>

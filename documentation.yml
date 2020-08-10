@@ -1,9 +1,9 @@
 toc:
   - useForm
   - useField
+  - useValidation
+  - useSubmit
   - useFieldItem
-  - useNoValidate
-  - useValidator
   - usePushItem
   - useInsertItem
   - useRemoveItem
@@ -12,5 +12,6 @@ toc:
   - Form
   - FormField
   - Validate
-  - ValidationResult
+  - ValidationMode
+  - ValidateOptions
   - Submit
