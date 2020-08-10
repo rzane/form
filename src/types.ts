@@ -19,15 +19,15 @@ export type FormTouched<Value> =
 export type Transform<T> = (value: T) => T;
 export type SetState<T> = (value: T | Transform<T>) => void;
 
-export interface Valid<Value> {
-  valid: true;
-  value: Value;
-}
+export type ValidationResult<Value, Result> =
+  | { valid: true; value: Result }
+  | { valid: false; error: FormError<Value> };
 
-export interface Invalid<Value> {
-  valid: false;
-  error: FormError<Value>;
-}
+export type ValidateFn<Value, Result> = (
+  value: Value
+) =>
+  | ValidationResult<Value, Result>
+  | PromiseLike<ValidationResult<Value, Result>>;
 
 /**
  * The primary form data structure.
@@ -179,7 +179,7 @@ export interface Validate<Value, Result> {
   /**
    * Trigger form validation.
    */
-  execute: (opts?: ValidateOptions) => Promise<Valid<Result> | Invalid<Value>>;
+  execute: (opts?: ValidateOptions) => Promise<ValidationResult<Value, Result>>;
 }
 
 /**

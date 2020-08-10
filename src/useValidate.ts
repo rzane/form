@@ -1,7 +1,6 @@
-import { useEffect } from "react";
-import { Validator, Valid, Invalid } from "@stackup/validate";
-import { ValidationMode, Form, Validate, ValidateOptions } from "./types";
-import { useEventCallback, useMounted, getAllTouched } from "./utilities";
+import { Validator, Result } from "@stackup/validate";
+import { useValidation } from "./useValidation";
+import { Form, ValidationMode, Validate } from "./types";
 
 function isNumber(value: any): value is number {
   return typeof value === "number";
@@ -18,14 +17,14 @@ function setIn(data: any, keys: Array<string | number>, val: any) {
   return data;
 }
 
-function convert(result: Valid<any> | Invalid): any {
+function convert<T>(result: Result<T>): any {
   if (result.valid) {
     return result;
   }
 
   const error = result.errors.reduce(
     (error, err) => setIn(error, err.path, err.message),
-    {}
+    undefined
   );
 
   return { valid: false, error };
@@ -33,38 +32,22 @@ function convert(result: Valid<any> | Invalid): any {
 
 /**
  * Add validation to the form using {@link https://github.com/rzane/validate @stackup/validate}.
+ *
+ * @example
+ * const validator = schema({
+ *   email: assert(isString).then(refute(isBlank))
+ * });
+ *
+ * const validate = useValidate(form, validator);
  */
 export function useValidate<Value, Result>(
   form: Form<Value>,
   validator: Validator<Value, Result>,
-  mode: ValidationMode = {}
+  mode?: ValidationMode
 ): Validate<Value, Result> {
-  const isMounted = useMounted();
-  const { onChange = true, onBlur = true } = mode;
-
-  const execute = useEventCallback(async (opts: ValidateOptions = {}) => {
-    form.setValidating(true);
-
-    try {
-      const result = await validator.validate(form.value).then(convert);
-      const errors = result.valid ? undefined : result.error;
-
-      if (isMounted) form.setError(errors);
-      if (isMounted && opts.touch) form.setTouched(getAllTouched(errors));
-
-      return result;
-    } finally {
-      if (isMounted) form.setValidating(false);
-    }
-  });
-
-  useEffect(() => {
-    if (onChange) execute();
-  }, [form.value, onChange, execute]);
-
-  useEffect(() => {
-    if (onBlur) execute();
-  }, [form.touched, onBlur, execute]);
-
-  return { form, execute };
+  return useValidation(
+    form,
+    value => validator.validate(value).then(convert),
+    mode
+  );
 }
