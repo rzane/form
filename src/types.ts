@@ -143,13 +143,13 @@ export interface Form<Value> extends FormField<Value> {
 export interface ValidationMode {
   /**
    * Enables validation whenever values change.
-   * @default false
+   * @default true
    */
   onChange?: boolean;
 
   /**
    * Enables validation whenever a field is touched.
-   * @default false
+   * @default true
    */
   onBlur?: boolean;
 }
@@ -161,6 +161,9 @@ export interface ValidateOptions {
   touch?: boolean;
 }
 
+/**
+ * The value returned by `useValidate`.
+ */
 export interface Validate<Value, Result> {
   /**
    * A reference to form being validated.
@@ -173,6 +176,9 @@ export interface Validate<Value, Result> {
   execute: (opts?: ValidateOptions) => Promise<Valid<Result> | Invalid<Value>>;
 }
 
+/**
+ * The value returned by `useSubmit`.
+ */
 export interface Submit<Value> {
   /**
    * A reference to form being submitted.
