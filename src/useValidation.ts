@@ -3,11 +3,11 @@ import { getAllTouched } from "./utilities/getAllTouched";
 import { useMounted } from "./utilities/useMounted";
 import { useEventCallback } from "./utilities/useEventCallback";
 import {
-  ValidationMode,
   Form,
-  Validate,
+  Validation,
   ValidateOptions,
-  ValidateFn
+  ValidateFn,
+  UseValidationOptions
 } from "./types";
 
 /**
@@ -27,10 +27,10 @@ import {
 export function useValidation<Value, Result>(
   form: Form<Value>,
   validate: ValidateFn<Value, Result>,
-  mode: ValidationMode = {}
-): Validate<Value, Result> {
+  opts: UseValidationOptions = {}
+): Validation<Value, Result> {
   const isMounted = useMounted();
-  const { onChange = true, onBlur = true } = mode;
+  const { onChange = true, onBlur = true } = opts;
 
   const execute = useEventCallback(async (opts: ValidateOptions = {}) => {
     form.setValidating(true);

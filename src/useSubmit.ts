@@ -1,4 +1,4 @@
-import { Form, Validate, Submit } from "./types";
+import { Form, Validation, Submit } from "./types";
 import { useMounted } from "./utilities/useMounted";
 import { useEventCallback } from "./utilities/useEventCallback";
 
@@ -12,11 +12,11 @@ export function useSubmit<Value>(
   submit: SubmitFn<Value>
 ): Submit<Value>;
 export function useSubmit<Value, Result>(
-  base: Validate<Value, Result>,
+  base: Validation<Value, Result>,
   submit: SubmitFn<Result>
 ): Submit<Value>;
 export function useSubmit<Value>(
-  base: Form<Value> | Validate<Value, any>,
+  base: Form<Value> | Validation<Value, any>,
   submit: SubmitFn<Value>
 ): Submit<Value> {
   const isMounted = useMounted();

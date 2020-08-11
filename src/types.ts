@@ -88,7 +88,7 @@ export interface FormField<Value> {
 /**
  * The options that can be passed to {@link useForm}.
  */
-export interface FormOptions<Value> {
+export interface UseFormOptions<Value> {
   /**
    * Customize the base ID for all fields.
    */
@@ -143,7 +143,7 @@ export interface Form<Value> extends FormField<Value> {
 /**
  * Configures when validation runs.
  */
-export interface ValidationMode {
+export interface UseValidationOptions {
   /**
    * Enables validation whenever values change.
    * @default true
@@ -170,7 +170,7 @@ export interface ValidateOptions {
 /**
  * The value returned by `useValidate`.
  */
-export interface Validate<Value, Result> {
+export interface Validation<Value, Result> {
   /**
    * A reference to form being validated.
    */

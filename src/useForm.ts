@@ -1,6 +1,6 @@
 import { useRef, useState, useMemo } from "react";
 import { useIdentifier } from "./useIdentifier";
-import { FormOptions, Form } from "./types";
+import { UseFormOptions, Form } from "./types";
 
 /**
  * Create a new form. A form requires an initial value, a function to validate,
@@ -26,7 +26,7 @@ import { FormOptions, Form } from "./types";
  *   submit: value => alert(`The value is ${value}`)
  * });
  */
-export function useForm<Value>(options: FormOptions<Value>): Form<Value> {
+export function useForm<Value>(options: UseFormOptions<Value>): Form<Value> {
   const id = useIdentifier(options.id);
   const initialValue = useRef(options.initialValue).current;
   const initialError = useRef(options.initialError).current;

@@ -1,5 +1,5 @@
 import { useValidation } from "./useValidation";
-import { Form, ValidationMode, Validate } from "./types";
+import { Form, UseValidationOptions, Validation } from "./types";
 import { setIn, Path } from "./utilities/setIn";
 
 interface Problem {
@@ -41,8 +41,8 @@ function convert<T>(result: ValidationResult<T>): any {
 export function useValidate<Value, Result>(
   form: Form<Value>,
   validator: Validator<Value, Result>,
-  mode?: ValidationMode
-): Validate<Value, Result> {
+  mode?: UseValidationOptions
+): Validation<Value, Result> {
   return useValidation(
     form,
     value => validator.validate(value).then(convert),
