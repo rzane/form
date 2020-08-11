@@ -1,4 +1,4 @@
-type Path = Array<string | number>;
+export type Path = Array<string | number>;
 
 /**
  * @private

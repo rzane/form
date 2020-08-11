@@ -1,16 +1,15 @@
 import { useValidation } from "./useValidation";
 import { Form, ValidationMode, Validate } from "./types";
-import { setIn } from "./utilities/setIn";
+import { setIn, Path } from "./utilities/setIn";
+
+interface Problem {
+  message: string;
+  path: Path;
+}
 
 type ValidationResult<T> =
-  | {
-      valid: true;
-      value: T;
-    }
-  | {
-      valid: false;
-      errors: Array<{ message: string; path: Array<string | number> }>;
-    };
+  | { valid: true; value: T }
+  | { valid: false; errors: Problem[] };
 
 interface Validator<T, R> {
   validate(value: T): Promise<ValidationResult<R>>;
