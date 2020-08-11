@@ -1,5 +1,6 @@
 import { useValidation } from "./useValidation";
 import { Form, ValidationMode, Validate } from "./types";
+import { setIn } from "./utilities/setIn";
 
 type ValidationResult<T> =
   | {
@@ -13,21 +14,6 @@ type ValidationResult<T> =
 
 interface Validator<T, R> {
   validate(value: T): Promise<ValidationResult<R>>;
-}
-
-function isNumber(value: any): value is number {
-  return typeof value === "number";
-}
-
-// Adapted from https://github.com/lukeed/dset
-// prettier-ignore
-function setIn(data: any, keys: Array<string | number>, val: any) {
-  let i = 0, l = keys.length, t = data, x;
-  for (; i < l; ++i) {
-    x = t[keys[i]];
-    t = t[keys[i]] = (i === l - 1 ? val : (x != null ? x : isNumber(keys[i+1]) ? [] : {}));
-  }
-  return data;
 }
 
 function convert<T>(result: ValidationResult<T>): any {
