@@ -1,5 +1,7 @@
 import { useEffect } from "react";
-import { useEventCallback, useMounted, getAllTouched } from "./utilities";
+import { getAllTouched } from "./utilities/getAllTouched";
+import { useMounted } from "./utilities/useMounted";
+import { useEventCallback } from "./utilities/useEventCallback";
 import {
   ValidationMode,
   Form,

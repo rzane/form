@@ -1,9 +1,9 @@
 type Path = Array<string | number>;
 
 /**
- * Update the value at a given path without mutating the original data.
- *
  * @private
+ *
+ * Update the value at a given path without mutating the original data.
  */
 export function setIn(data: any, path: Path, value: any): any {
   if (!path.length) {

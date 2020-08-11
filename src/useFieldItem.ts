@@ -1,6 +1,23 @@
-import { useMemo } from "react";
-import { FormField } from "./types";
-import { getItem, useSetItem } from "./utilities";
+import { useMemo, useCallback } from "react";
+import { FormField, SetState } from "./types";
+import { applyTransform } from "./utilities/applyTransform";
+
+function getItem(data: any, index: number): any {
+  return Array.isArray(data) ? data[index] : undefined;
+}
+
+function useSetItem(setState: SetState<any>, index: number): SetState<any> {
+  return useCallback(
+    update => {
+      setState((state: any) => {
+        const nextState = Array.isArray(state) ? [...state] : [];
+        nextState[index] = applyTransform(update, getItem(state, index));
+        return nextState;
+      });
+    },
+    [setState, index]
+  );
+}
 
 /**
  * Create a field for a specific index in an array.
