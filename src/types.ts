@@ -1,3 +1,6 @@
+export type Transform<T> = (value: T) => T;
+export type SetState<T> = (value: T | Transform<T>) => void;
+
 export type FormError<Value> =
   | undefined
   | string
@@ -15,19 +18,6 @@ export type FormTouched<Value> =
       : Value extends object
       ? { [K in keyof Value]?: FormTouched<Value[K]> }
       : never);
-
-export type Transform<T> = (value: T) => T;
-export type SetState<T> = (value: T | Transform<T>) => void;
-
-export type ValidationResult<Value, Result> =
-  | { valid: true; value: Result }
-  | { valid: false; error: FormError<Value> };
-
-export type ValidateFn<Value, Result> = (
-  value: Value
-) =>
-  | ValidationResult<Value, Result>
-  | PromiseLike<ValidationResult<Value, Result>>;
 
 /**
  * The primary form data structure.
@@ -140,6 +130,16 @@ export interface Form<Value> extends FormField<Value> {
   setSubmitting: SetState<boolean>;
 }
 
+export type ValidationResult<Value, Result> =
+  | { valid: true; value: Result }
+  | { valid: false; error: FormError<Value> };
+
+export type ValidateFn<Value, Result> = (
+  value: Value
+) =>
+  | ValidationResult<Value, Result>
+  | PromiseLike<ValidationResult<Value, Result>>;
+
 /**
  * Configures when validation runs.
  */
@@ -168,7 +168,7 @@ export interface ValidateOptions {
 }
 
 /**
- * The value returned by `useValidate`.
+ * The value returned by `useValidation`.
  */
 export interface Validation<Value, Result> {
   /**
