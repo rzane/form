@@ -1,15 +1,9 @@
 import { renderHook, act } from "@testing-library/react-hooks";
-import { FormOptions, useForm, useRemoveItem } from "../src";
+import { useForm, useRemoveItem, UseFormOptions } from "../src";
 
-function setup(options: Partial<FormOptions<number[]>> = {}) {
+function setup(options: Partial<UseFormOptions<number[]>> = {}) {
   return renderHook(() => {
-    const field = useForm<number[]>({
-      submit: jest.fn(),
-      validate: jest.fn(),
-      initialValue: [1, 2],
-      ...options
-    });
-
+    const field = useForm<number[]>({ initialValue: [1, 2], ...options });
     const remove = useRemoveItem(field, 1);
     return { remove, field };
   });

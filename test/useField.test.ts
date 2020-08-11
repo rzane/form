@@ -1,5 +1,5 @@
 import { renderHook, act } from "@testing-library/react-hooks";
-import { useForm, useField, FormOptions, useFieldItem } from "../src";
+import { useForm, useField, UseFormOptions, useFieldItem } from "../src";
 
 interface Basic {
   name: string;
@@ -14,15 +14,9 @@ interface List {
 }
 
 describe("basic", () => {
-  function setup(options: Partial<FormOptions<Basic>> = {}) {
+  function setup(options: Partial<UseFormOptions<Basic>> = {}) {
     return renderHook(() => {
-      const form = useForm<Basic>({
-        submit: jest.fn(),
-        validate: jest.fn(),
-        initialValue: { name: "" },
-        ...options
-      });
-
+      const form = useForm<Basic>({ initialValue: { name: "" }, ...options });
       const field = useField(form, "name");
       return { form, field };
     });
@@ -82,15 +76,10 @@ describe("basic", () => {
 });
 
 describe("nested", () => {
-  function setup(options: Partial<FormOptions<Nested>> = {}) {
+  function setup(options: Partial<UseFormOptions<Nested>> = {}) {
     return renderHook(() => {
-      const form = useForm<Nested>({
-        submit: jest.fn(),
-        validate: jest.fn(),
-        initialValue: { basic: { name: "" } },
-        ...options
-      });
-
+      const initialValue = { basic: { name: "" } };
+      const form = useForm<Nested>({ initialValue, ...options });
       const fields = useField(form, "basic");
       const field = useField(fields, "name");
       return { form, fields, field };
@@ -139,15 +128,10 @@ describe("nested", () => {
 });
 
 describe("list", () => {
-  function setup(options: Partial<FormOptions<List>> = {}) {
+  function setup(options: Partial<UseFormOptions<List>> = {}) {
     return renderHook(() => {
-      const form = useForm<List>({
-        submit: jest.fn(),
-        validate: jest.fn(),
-        initialValue: { items: [{ name: "" }] },
-        ...options
-      });
-
+      const initialValue = { items: [{ name: "" }] };
+      const form = useForm<List>({ initialValue, ...options });
       const items = useField(form, "items");
       const item = useFieldItem(items, 0);
       const field = useField(item, "name");
