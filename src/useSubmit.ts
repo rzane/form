@@ -1,5 +1,6 @@
 import { Form, Validate, Submit } from "./types";
-import { useEventCallback, useMounted } from "./utilities";
+import { useMounted } from "./utilities/useMounted";
+import { useEventCallback } from "./utilities/useEventCallback";
 
 type SubmitFn<T> = (values: T) => void | Promise<void>;
 
