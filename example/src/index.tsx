@@ -4,7 +4,7 @@ import * as ReactDOM from "react-dom";
 import { Code } from "./Code";
 import { Input } from "./Input";
 import { Pet, PetList } from "./PetList";
-import { useForm, useField, useValidation, useSubmit } from "../../src";
+import { useForm, useField, useValidate, useSubmit } from "../../src";
 import {
   schema,
   each,
@@ -42,7 +42,7 @@ function App() {
     initialValue: { email: "", pets: [], profile: { name: "", age: "" } }
   });
 
-  const validate = useValidation(form, validator);
+  const validate = useValidate(form, validator);
   const submit = useSubmit(validate, console.log);
 
   const email = useField(form, "email");
@@ -75,8 +75,8 @@ function App() {
       <Code label="Values" data={form.value} />
       <Code label="Errors" data={form.error} />
       <Code label="Touched" data={form.touched} />
-      <Code label="Submitting" data={submit.isSubmitting} />
-      <Code label="Validating" data={validate.isValidating} />
+      <Code label="Submitting" data={form.isSubmitting} />
+      <Code label="Validating" data={form.isValidating} />
     </form>
   );
 }
