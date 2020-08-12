@@ -1,4 +1,4 @@
-import { ValidateFn } from "./../src/types";
+import { ValidateFn, ValidateOptions } from "./../src/types";
 import { renderHook, act } from "@testing-library/react-hooks";
 import {
   useForm,
@@ -7,12 +7,14 @@ import {
   UseValidationOptions
 } from "../src";
 
+const ERROR = new Error("boom");
+
 const makeValidate = () => {
   return jest.fn(value => {
     if (value === "throw") {
-      throw new Error("boom");
+      throw ERROR;
     } else if (value === "throw-async") {
-      return Promise.reject("boom");
+      return Promise.reject(ERROR);
     } else if (value === "transform") {
       return { valid: true as const, value: "transformed" };
     } else if (value) {
@@ -31,7 +33,12 @@ const setup = (
   return renderHook(() => {
     const form = useForm(formOpts);
     const validation = useValidation(form, validate, validateOpts);
-    return { form, validation };
+
+    const run = async (opts?: ValidateOptions) => {
+      await validation.validate(opts);
+    };
+
+    return { form, validation, run };
   });
 };
 
@@ -55,15 +62,45 @@ it("clears out errors when valid", async () => {
   });
 
   expect(result.current.form.error).toEqual("error");
-  await act(async () => {
-    await result.current.validation.validate();
-  });
+  await act(result.current.run);
   expect(result.current.form.error).toBeUndefined();
 });
 
-it.todo("optionally touches erroneous fields");
-it.todo("resets `isValidating` when an error is thrown");
-it.todo("resets `isValidating` when a a promise is rejected");
+it("optionally touches erroneous fields", async () => {
+  const validate = makeValidate();
+  const { result } = setup(
+    validate,
+    { initialValue: "" },
+    { onBlur: false, onChange: false }
+  );
+
+  await act(() => result.current.run({ touch: true }));
+  expect(result.current.form.touched).toBe(true);
+});
+
+it("resets `isValidating` when an error is thrown", async () => {
+  const validate = makeValidate();
+  const { result } = setup(
+    validate,
+    { initialValue: "throw" },
+    { onBlur: false, onChange: false }
+  );
+
+  await expect(act(result.current.run)).rejects.toThrow(ERROR);
+  expect(result.current.form.isSubmitting).toBe(false);
+});
+
+it("resets `isValidating` when a a promise is rejected", async () => {
+  const validate = makeValidate();
+  const { result } = setup(
+    validate,
+    { initialValue: "throw-async" },
+    { onBlur: false, onChange: false }
+  );
+
+  await expect(act(result.current.run)).rejects.toThrow(ERROR);
+  expect(result.current.form.isSubmitting).toBe(false);
+});
 
 describe("onChange", () => {
   it("validates when a value changes", async () => {
