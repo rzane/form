@@ -7,24 +7,6 @@ import {
   UseValidationOptions
 } from "../src";
 
-const ERROR = new Error("boom");
-
-const makeValidate = () => {
-  return jest.fn(value => {
-    if (value === "throw") {
-      throw ERROR;
-    } else if (value === "throw-async") {
-      return Promise.reject(ERROR);
-    } else if (value === "transform") {
-      return { valid: true as const, value: "transformed" };
-    } else if (value) {
-      return { valid: true as const, value };
-    } else {
-      return { valid: false as const, error: "invalid" };
-    }
-  });
-};
-
 const setup = (
   validate: ValidateFn<string, string>,
   formOpts: UseFormOptions<string>,
@@ -43,8 +25,14 @@ const setup = (
 };
 
 it("transforms the value", async () => {
-  const validate = makeValidate();
-  const { result } = setup(validate, { initialValue: "transform" });
+  const validate = () => ({
+    valid: true as const,
+    value: "transformed"
+  });
+
+  const { result } = setup(validate, {
+    initialValue: "transform"
+  });
 
   await act(async () => {
     expect(await result.current.validation.validate()).toEqual({
@@ -55,7 +43,11 @@ it("transforms the value", async () => {
 });
 
 it("clears out errors when valid", async () => {
-  const validate = makeValidate();
+  const validate = (value: string) => ({
+    valid: true as const,
+    value
+  });
+
   const { result } = setup(validate, {
     initialValue: "value",
     initialError: "error"
@@ -67,7 +59,11 @@ it("clears out errors when valid", async () => {
 });
 
 it("optionally touches erroneous fields", async () => {
-  const validate = makeValidate();
+  const validate = () => ({
+    valid: false as const,
+    error: "invalid"
+  });
+
   const { result } = setup(
     validate,
     { initialValue: "" },
@@ -79,48 +75,59 @@ it("optionally touches erroneous fields", async () => {
 });
 
 it("resets `isValidating` when an error is thrown", async () => {
-  const validate = makeValidate();
+  const validate = () => {
+    throw new Error("boom");
+  };
+
   const { result } = setup(
     validate,
     { initialValue: "throw" },
     { onBlur: false, onChange: false }
   );
 
-  await expect(act(result.current.run)).rejects.toThrow(ERROR);
+  await expect(act(result.current.run)).rejects.toThrow("boom");
   expect(result.current.form.isSubmitting).toBe(false);
 });
 
 it("resets `isValidating` when a a promise is rejected", async () => {
-  const validate = makeValidate();
+  const validate = () => {
+    return Promise.reject(new Error("boom"));
+  };
+
   const { result } = setup(
     validate,
     { initialValue: "throw-async" },
     { onBlur: false, onChange: false }
   );
 
-  await expect(act(result.current.run)).rejects.toThrow(ERROR);
+  await expect(act(result.current.run)).rejects.toThrow("boom");
   expect(result.current.form.isSubmitting).toBe(false);
 });
 
 describe("onChange", () => {
   it("validates when a value changes", async () => {
-    const validate = makeValidate();
+    const validate = jest.fn(() => {
+      return { valid: false as const, error: "invalid" };
+    });
+
     const { result, waitForNextUpdate } = setup(
       validate,
-      { initialValue: "value" },
+      { initialValue: "initial" },
       { onBlur: false }
     );
 
     expect(validate).toHaveBeenCalledTimes(1);
     act(() => result.current.form.setValue(""));
     expect(validate).toHaveBeenCalledTimes(2);
+    expect(validate.mock.calls).toEqual([["initial"], [""]]);
 
     await waitForNextUpdate();
+
     expect(result.current.form.error).toEqual("invalid");
   });
 
   it("can be disabled", () => {
-    const validate = makeValidate();
+    const validate = jest.fn();
     const { result } = setup(
       validate,
       { initialValue: "value" },
@@ -134,7 +141,11 @@ describe("onChange", () => {
 
 describe("onBlur", () => {
   it("validates when a field is touched", async () => {
-    const validate = makeValidate();
+    const validate = jest.fn(() => ({
+      valid: false as const,
+      error: "invalid"
+    }));
+
     const { result, waitForNextUpdate } = setup(
       validate,
       { initialValue: "" },
@@ -150,7 +161,7 @@ describe("onBlur", () => {
   });
 
   it("can be disabled", () => {
-    const validate = makeValidate();
+    const validate = jest.fn();
     const { result } = setup(
       validate,
       { initialValue: "value" },
