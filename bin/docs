@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -euo pipefail
+
+node_modules/.bin/documentation readme \
+  --shallow \
+  -s API \
+  -c documentation.yml \
+  --parse-extension ts \
+  --markdown-toc-max-depth 2 \
+  src
+
+node_modules/.bin/prettier --write README.md

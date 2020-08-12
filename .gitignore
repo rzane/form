@@ -1,7 +1,11 @@
 *.log
 .DS_Store
-node_modules
-.cache
-dist
-coverage
-docs
+
+/node_modules
+/dist
+/coverage
+/docs
+
+/example/node_modules
+/example/.cache
+/example/dist
