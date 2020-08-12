@@ -25,10 +25,10 @@ const Form = () => {
   const form = useForm({ initialValue: { email: "", name: "" } });
 
   const validate = useValidation(form, value => {
-    if (value) {
+    if (value.email) {
       return { valid: true, value };
     } else {
-      return { valid: false, error: "Invalid!" };
+      return { valid: false, error: { email: "is required" } };
     }
   });
 
