@@ -7,6 +7,15 @@ type SubmitFn<T> = (values: T) => void | Promise<void>;
 
 /**
  * Create a submit handler for the form.
+ *
+ * @example <caption>Sumbitting a form</caption>
+ * const form = useForm({ initialValue: "foo" });
+ * const submit = useSubmit(form, console.log);
+ *
+ * @example <caption>Sumbitting with validation</caption>
+ * const form = useForm({ initialValue: "foo" });
+ * const validate = useValidate(form, myValidator);
+ * const submit = useSubmit(validate, console.log);
  */
 export function useSubmit<Value, Result>(
   form: Form<Value, Result>,

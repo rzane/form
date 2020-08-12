@@ -22,24 +22,22 @@ import React from "react";
 import { useForm, useField, useNoValidate } from "@stackup/form";
 
 const Form = () => {
-  const form = useForm({
-    initialValue: {
-      email: "",
-      name: ""
-    },
-    validate(value) {
-      if (value.email) {
-        return { valid: true, value };
-      }
-      return { valid: false, error: { email: "This field is required." } };
-    },
-    submit(value) {
-      console.log(value);
+  const form = useForm({ initialValue: { email: "", name: "" } });
+
+  const validate = useValidation(form, value => {
+    if (value) {
+      return { valid: true, value };
+    } else {
+      return { valid: false, error: "Invalid!" };
     }
   });
 
+  const submit = useSubmit(validate, value => {
+    console.log(value);
+  });
+
   return (
-    <form onSubmit={form.onSubmit}>
+    <form onSubmit={submit}>
       <Input type="email" label="Email" field={useField(form, "email")} />
       <Input type="text" label="Name" field={useField(form, "name")} />
       <button type="submit">Save</button>
@@ -73,63 +71,21 @@ const Input = ({
 #### Table of Contents
 
 - [useForm](#useform)
-  - [Parameters](#parameters)
-  - [Examples](#examples)
 - [useField](#usefield)
-  - [Parameters](#parameters-1)
-  - [Examples](#examples-1)
 - [useValidation](#usevalidation)
-  - [Parameters](#parameters-2)
+- [useValidate](#usevalidate)
 - [useSubmit](#usesubmit)
-  - [Parameters](#parameters-3)
 - [useFieldItem](#usefielditem)
-  - [Parameters](#parameters-4)
-  - [Examples](#examples-2)
 - [usePushItem](#usepushitem)
-  - [Parameters](#parameters-5)
-  - [Examples](#examples-3)
 - [useInsertItem](#useinsertitem)
-  - [Parameters](#parameters-6)
-  - [Examples](#examples-4)
 - [useRemoveItem](#useremoveitem)
-  - [Parameters](#parameters-7)
-  - [Examples](#examples-5)
 - [useIdentifier](#useidentifier)
-  - [Parameters](#parameters-8)
-- [FormOptions](#formoptions)
-  - [id](#id)
-  - [initialValue](#initialvalue)
-  - [initialError](#initialerror)
-  - [initialTouched](#initialtouched)
 - [Form](#form)
-  - [initialValue](#initialvalue-1)
-  - [initialError](#initialerror-1)
-  - [initialTouched](#initialtouched-1)
-  - [setValidating](#setvalidating)
-  - [setSubmitting](#setsubmitting)
 - [FormField](#formfield)
-  - [id](#id-1)
-  - [name](#name)
-  - [value](#value)
-  - [error](#error)
-  - [touched](#touched)
-  - [isValidating](#isvalidating)
-  - [isSubmitting](#issubmitting)
-  - [setValue](#setvalue)
-  - [setError](#seterror)
-  - [setTouched](#settouched)
-- [Validate](#validate)
-  - [form](#form-1)
-  - [execute](#execute)
-- [ValidationMode](#validationmode)
-  - [onChange](#onchange)
-  - [onBlur](#onblur)
-- [ValidateOptions](#validateoptions)
-  - [touch](#touch)
+- [ValidateFn](#validatefn)
 - [Submit](#submit)
-  - [form](#form-2)
-  - [execute](#execute-1)
-  - [onSubmit](#onsubmit)
+- [UseFormOptions](#useformoptions)
+- [UseValidationOptions](#usevalidationoptions)
 
 ### useForm
 
@@ -151,7 +107,7 @@ If your form doesn't require validation, see [useNoValidate](useNoValidate).
 
 #### Parameters
 
-- `options` **[FormOptions](#formoptions)&lt;Value>**
+- `options` **[UseFormOptions](#useformoptions)&lt;Value>**
 
 #### Examples
 
@@ -193,15 +149,51 @@ Returns **[FormField](#formfield)&lt;any>**
 
 ### useValidation
 
+Use a plain ol' function for validation.
+
+This hook can also be used to incorporate your favorite validation library.
+
+#### Parameters
+
+- `form` **[Form](#form)&lt;Value, Value>**
+- `fn` **[ValidateFn](#validatefn)&lt;Value, Result>**
+- `opts` **[UseValidationOptions](#usevalidationoptions)** (optional, default `{}`)
+
+#### Examples
+
+```javascript
+const validation = useValidation(form, value => {
+  if (!value.email) {
+    return { valid: false, error: { email: "can't be blank" } };
+  }
+
+  return { valid: true, value };
+});
+```
+
+Returns **[Form](#form)&lt;Value, Result>**
+
+### useValidate
+
 Add validation to the form using [@stackup/validate](https://github.com/rzane/validate).
 
 #### Parameters
 
-- `form` **[Form](#form)&lt;Value>**
+- `form` **[Form](#form)&lt;Value, Value>**
 - `validator` **Validator&lt;Value, Result>**
-- `mode` **[ValidationMode](#validationmode)** (optional, default `{}`)
+- `opts` **[UseValidationOptions](#usevalidationoptions)?**
 
-Returns **[Validate](#validate)&lt;Value, Result>**
+#### Examples
+
+```javascript
+const validator = schema({
+  email: assert(isString).then(refute(isBlank))
+});
+
+const validate = useValidate(form, validator);
+```
+
+Returns **[Form](#form)&lt;Value, Result>**
 
 ### useSubmit
 
@@ -209,10 +201,27 @@ Create a submit handler for the form.
 
 #### Parameters
 
-- `base` **[Form](#form)&lt;Value>**
-- `submit` **SubmitFn&lt;Value>**
+- `form` **[Form](#form)&lt;Value, Result>**
+- `fn` **SubmitFn&lt;Result>**
 
-Returns **[Submit](#submit)&lt;Value>**
+#### Examples
+
+Sumbitting a form
+
+```javascript
+const form = useForm({ initialValue: "foo" });
+const submit = useSubmit(form, console.log);
+```
+
+Sumbitting with validation
+
+```javascript
+const form = useForm({ initialValue: "foo" });
+const validate = useValidate(form, myValidator);
+const submit = useSubmit(validate, console.log);
+```
+
+Returns **[Submit](#submit)**
 
 ### useFieldItem
 
@@ -311,34 +320,6 @@ This hook does not currently support SSR.
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**
 
-### FormOptions
-
-The options that can be passed to [useForm](#useform).
-
-#### id
-
-Customize the base ID for all fields.
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-#### initialValue
-
-The initial values for the form.
-
-Type: Value
-
-#### initialError
-
-The initial errors on the fields.
-
-Type: FormError&lt;Value>
-
-#### initialTouched
-
-The initially touched fields.
-
-Type: FormTouched&lt;Value>
-
 ### Form
 
 **Extends FormField&lt;Value>**
@@ -371,9 +352,15 @@ Type: SetState&lt;[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Re
 
 #### setSubmitting
 
-Indicate that the form is submitting
+Indicate that the form is validating
 
 Type: SetState&lt;[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)>
+
+#### validate
+
+Run validation
+
+Type: function (opts: ValidateOptions): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ValidationResult&lt;Value, Result>>
 
 ### FormField
 
@@ -440,23 +427,53 @@ Indicate that this field has been touched. This is usually called in `onBlur`.
 
 Type: SetState&lt;FormTouched&lt;Value>>
 
-### Validate
+### ValidateFn
 
-The value returned by `useValidate`.
+A function used for validation. This function must indicate whether
+or not the form is valid.
 
-#### form
+The `error` property can be used to set errors on the form.
 
-A reference to form being validated.
+The `value` property can be used to transform the form's values before
+validation.
 
-Type: [Form](#form)&lt;Value>
+Type: function (value: Value): (ValidationResult&lt;Value, Result> | PromiseLike&lt;ValidationResult&lt;Value, Result>>)
 
-#### execute
+### Submit
 
-Trigger form validation.
+Submits the form.
 
-Type: function (opts: [ValidateOptions](#validateoptions)): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;(Valid&lt;Result> | Invalid&lt;Value>)>
+Type: function (event: FormEvent&lt;[HTMLFormElement](https://developer.mozilla.org/docs/Web/API/HTMLFormElement)>): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>
 
-### ValidationMode
+### UseFormOptions
+
+The options that can be passed to [useForm](#useform).
+
+#### id
+
+Customize the base ID for all fields.
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### initialValue
+
+The initial values for the form.
+
+Type: Value
+
+#### initialError
+
+The initial errors on the fields.
+
+Type: FormError&lt;Value>
+
+#### initialTouched
+
+The initially touched fields.
+
+Type: FormTouched&lt;Value>
+
+### UseValidationOptions
 
 Configures when validation runs.
 
@@ -471,35 +488,3 @@ Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Glob
 Enables validation whenever a field is touched.
 
 Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
-
-### ValidateOptions
-
-Options to run validation with.
-
-#### touch
-
-Touch erroneous fields.
-
-Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
-
-### Submit
-
-The value returned by `useSubmit`.
-
-#### form
-
-A reference to form being submitted.
-
-Type: [Form](#form)&lt;Value>
-
-#### execute
-
-Trigger form submission.
-
-Type: function (): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>
-
-#### onSubmit
-
-This is the same as `submit`, but it'll `preventDefault` on the `event`.
-
-Type: function (event: React.FormEvent&lt;[HTMLFormElement](https://developer.mozilla.org/docs/Web/API/HTMLFormElement)>): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>

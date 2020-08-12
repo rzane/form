@@ -21,6 +21,46 @@ export type FormTouched<Value> =
       ? { [K in keyof Value]?: FormTouched<Value[K]> }
       : never);
 
+export interface ValidateOptions {
+  touch?: boolean;
+}
+
+export type ValidationResult<Value, Result> =
+  | { valid: true; value: Result }
+  | { valid: false; error: FormError<Value> };
+
+/**
+ * A function used for validation. This function must indicate whether
+ * or not the form is valid.
+ *
+ * The `error` property can be used to set errors on the form.
+ *
+ * The `value` property can be used to transform the form's values before
+ * validation.
+ */
+export type ValidateFn<Value, Result> = (
+  value: Value
+) =>
+  | ValidationResult<Value, Result>
+  | PromiseLike<ValidationResult<Value, Result>>;
+
+/**
+ * Configures when validation runs.
+ */
+export interface UseValidationOptions {
+  /**
+   * Enables validation whenever values change.
+   * @default true
+   */
+  onChange?: boolean;
+
+  /**
+   * Enables validation whenever a field is touched.
+   * @default true
+   */
+  onBlur?: boolean;
+}
+
 /**
  * The primary form data structure.
  */
@@ -137,43 +177,6 @@ export interface Form<Value, Result = Value> extends FormField<Value> {
   validate: (
     opts?: ValidateOptions
   ) => Promise<ValidationResult<Value, Result>>;
-}
-
-export type ValidationResult<Value, Result> =
-  | { valid: true; value: Result }
-  | { valid: false; error: FormError<Value> };
-
-export type ValidateFn<Value, Result> = (
-  value: Value
-) =>
-  | ValidationResult<Value, Result>
-  | PromiseLike<ValidationResult<Value, Result>>;
-
-/**
- * Configures when validation runs.
- */
-export interface UseValidationOptions {
-  /**
-   * Enables validation whenever values change.
-   * @default true
-   */
-  onChange?: boolean;
-
-  /**
-   * Enables validation whenever a field is touched.
-   * @default true
-   */
-  onBlur?: boolean;
-}
-
-/**
- * Options to run validation with.
- */
-export interface ValidateOptions {
-  /**
-   * Touch erroneous fields.
-   */
-  touch?: boolean;
 }
 
 /**
