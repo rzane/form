@@ -43,7 +43,7 @@ function App() {
   });
 
   const validate = useValidate(form, validator);
-  const submit = useSubmit(validate, console.log);
+  const submit = useSubmit(validate, value => console.log(value));
 
   const email = useField(form, "email");
   const profile = useField(form, "profile");
@@ -51,7 +51,7 @@ function App() {
   const pets = useField(form, "pets");
 
   return (
-    <form onSubmit={submit.onSubmit}>
+    <form onSubmit={submit}>
       <h1>@stackup/form</h1>
 
       {/** A plain ol' field */}
