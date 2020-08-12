@@ -1,6 +1,23 @@
-import { useMemo } from "react";
-import { FormField } from "./types";
-import { getProperty, useSetProperty } from "./utilities";
+import { useMemo, useCallback } from "react";
+import { FormField, SetState } from "./types";
+import { isPlainObject } from "./utilities/isPlainObject";
+import { applyTransform } from "./utilities/applyTransform";
+
+function getProperty(data: any, key: any): any {
+  return isPlainObject(data) ? data[key] : undefined;
+}
+
+function useSetProperty(setState: SetState<any>, name: any): SetState<any> {
+  return useCallback(
+    update => {
+      setState((state: any) => ({
+        ...state,
+        [name]: applyTransform(update, getProperty(state, name))
+      }));
+    },
+    [setState, name]
+  );
+}
 
 /**
  * Create a field for a given property.
@@ -38,8 +55,21 @@ export function useField<Value, Name extends keyof Value>(
       touched,
       setValue,
       setError,
-      setTouched
+      setTouched,
+      isSubmitting: field.isSubmitting,
+      isValidating: field.isValidating
     }),
-    [field.id, error, touched, value, name, setError, setTouched, setValue]
+    [
+      field.id,
+      field.isSubmitting,
+      field.isValidating,
+      name,
+      value,
+      error,
+      touched,
+      setValue,
+      setError,
+      setTouched
+    ]
   );
 }

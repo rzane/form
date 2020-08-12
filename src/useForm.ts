@@ -1,19 +1,7 @@
-import { useRef, useState, useMemo, useEffect } from "react";
+import { useRef, useState, useMemo } from "react";
 import { useIdentifier } from "./useIdentifier";
-import { FormOptions, Form } from "./types";
-import { getAllTouched, useEventCallback } from "./utilities";
-
-function useMounted() {
-  const ref = useRef<boolean>(true);
-
-  useEffect(() => {
-    return () => {
-      ref.current = false;
-    };
-  }, []);
-
-  return ref.current;
-}
+import { UseFormOptions, Form } from "./types";
+import { useEventCallback } from "./utilities/useEventCallback";
 
 /**
  * Create a new form. A form requires an initial value, a function to validate,
@@ -39,71 +27,21 @@ function useMounted() {
  *   submit: value => alert(`The value is ${value}`)
  * });
  */
-export function useForm<Value, Result = Value>(
-  options: FormOptions<Value, Result>
-): Form<Value, Result> {
-  const {
-    submit: runSubmit,
-    validate: runValidate,
-    validateOnBlur,
-    validateOnChange
-  } = options;
-
+export function useForm<Value>(options: UseFormOptions<Value>): Form<Value> {
   const id = useIdentifier(options.id);
   const initialValue = useRef(options.initialValue).current;
   const initialError = useRef(options.initialError).current;
   const initialTouched = useRef(options.initialTouched).current;
 
-  const isMounted = useMounted();
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState(initialError);
   const [touched, setTouched] = useState(initialTouched);
-  const [isSubmitting, setSubmitting] = useState(false);
   const [isValidating, setValidating] = useState(false);
-
-  const executeValidate = async (isSubmit: boolean) => {
-    setValidating(true);
-
-    try {
-      const result = await runValidate(value);
-      const errors = result.valid ? undefined : result.error;
-      if (isMounted && isSubmit) setTouched(getAllTouched(errors));
-      if (isMounted) setError(errors);
-      return result;
-    } finally {
-      if (isMounted) setValidating(false);
-    }
-  };
+  const [isSubmitting, setSubmitting] = useState(false);
 
   const validate = useEventCallback(() => {
-    return executeValidate(false);
+    return Promise.resolve({ value, valid: true as const });
   });
-
-  const submit = useEventCallback(async () => {
-    setSubmitting(true);
-
-    try {
-      const result = await executeValidate(true);
-      if (result.valid) await runSubmit(result.value);
-    } finally {
-      if (isMounted) setSubmitting(false);
-    }
-  });
-
-  const onSubmit = useEventCallback(
-    (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      return submit();
-    }
-  );
-
-  useEffect(() => {
-    if (validateOnChange) validate();
-  }, [value, validateOnChange, validate]);
-
-  useEffect(() => {
-    if (validateOnBlur) validate();
-  }, [touched, validateOnBlur, validate]);
 
   return useMemo(
     () => ({
@@ -115,28 +53,26 @@ export function useForm<Value, Result = Value>(
       value,
       error,
       touched,
+      isValidating,
+      isSubmitting,
       setValue,
       setError,
       setTouched,
-      isSubmitting,
-      isValidating,
-      submit,
-      validate,
-      onSubmit
+      setValidating,
+      setSubmitting,
+      validate
     }),
     [
       id,
+      initialValue,
+      initialError,
+      initialTouched,
       value,
       error,
       touched,
-      initialError,
-      initialTouched,
-      initialValue,
-      isSubmitting,
       isValidating,
-      submit,
-      validate,
-      onSubmit
+      isSubmitting,
+      validate
     ]
   );
 }

@@ -1,6 +1,11 @@
 import { useCallback } from "react";
-import { removeItem } from "./utilities";
 import { FormField } from "./types";
+
+function remove<T>(values: T[], index: number): T[] {
+  const result = [...values];
+  result.splice(index, 1);
+  return result;
+}
 
 /**
  * Removes a value at the given index from array of values.
@@ -16,17 +21,17 @@ export function useRemoveItem<Value>(field: FormField<Value[]>, index: number) {
   const { setValue, setError, setTouched } = field;
 
   return useCallback(() => {
-    setValue(values => removeItem(values, index));
+    setValue(values => remove(values, index));
     setError(errors => {
       if (Array.isArray(errors)) {
-        return removeItem(errors, index);
+        return remove(errors, index);
       } else {
         return errors;
       }
     });
     setTouched(touched => {
       if (Array.isArray(touched)) {
-        return removeItem(touched, index);
+        return remove(touched, index);
       } else {
         return touched;
       }

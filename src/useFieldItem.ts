@@ -1,6 +1,23 @@
-import { useMemo } from "react";
-import { FormField } from "./types";
-import { getItem, useSetItem } from "./utilities";
+import { useMemo, useCallback } from "react";
+import { FormField, SetState } from "./types";
+import { applyTransform } from "./utilities/applyTransform";
+
+function getItem(data: any, index: number): any {
+  return Array.isArray(data) ? data[index] : undefined;
+}
+
+function useSetItem(setState: SetState<any>, index: number): SetState<any> {
+  return useCallback(
+    update => {
+      setState((state: any) => {
+        const nextState = Array.isArray(state) ? [...state] : [];
+        nextState[index] = applyTransform(update, getItem(state, index));
+        return nextState;
+      });
+    },
+    [setState, index]
+  );
+}
 
 /**
  * Create a field for a specific index in an array.
@@ -22,19 +39,13 @@ export function useFieldItem<Value>(
   field: FormField<Value[]>,
   index: number
 ): FormField<Value> {
-  const {
-    setValue: setFieldValue,
-    setError: setFieldError,
-    setTouched: setFieldTouched
-  } = field;
-
   const value = getItem(field.value, index);
   const error = getItem(field.error, index);
   const touched = getItem(field.touched, index);
 
-  const setValue = useSetItem(setFieldValue, index);
-  const setError = useSetItem(setFieldError, index);
-  const setTouched = useSetItem(setFieldTouched, index);
+  const setValue = useSetItem(field.setValue, index);
+  const setError = useSetItem(field.setError, index);
+  const setTouched = useSetItem(field.setTouched, index);
 
   return useMemo(
     () => ({
@@ -45,8 +56,21 @@ export function useFieldItem<Value>(
       touched,
       setValue,
       setError,
-      setTouched
+      setTouched,
+      isValidating: field.isValidating,
+      isSubmitting: field.isSubmitting
     }),
-    [field.id, index, value, error, touched, setValue, setError, setTouched]
+    [
+      field.id,
+      field.isValidating,
+      field.isSubmitting,
+      index,
+      value,
+      error,
+      touched,
+      setValue,
+      setError,
+      setTouched
+    ]
   );
 }

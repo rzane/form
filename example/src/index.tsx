@@ -4,18 +4,20 @@ import * as ReactDOM from "react-dom";
 import { Code } from "./Code";
 import { Input } from "./Input";
 import { Pet, PetList } from "./PetList";
-import { useForm, useField, useValidator } from "../../src";
+import { useForm, useField, useValidate, useSubmit } from "../../src";
 import {
   schema,
   each,
   isString,
   isBlank,
   refute,
-  assert
+  assert,
+  map
 } from "@stackup/validate";
 
 export interface Profile {
   name: string;
+  age: number;
 }
 
 export interface User {
@@ -24,23 +26,24 @@ export interface User {
   pets: Pet[];
 }
 
-const validator = schema<User, User>({
+const validator = schema<unknown, User>({
   email: assert(isString).then(refute(isBlank)),
-  profile: schema({ name: assert(isString).then(refute(isBlank)) }),
+  profile: schema({
+    name: assert(isString).then(refute(isBlank)),
+    age: assert(isString)
+      .then(refute(isBlank))
+      .then(map(parseFloat))
+  }),
   pets: each(schema({ name: assert(isString).then(refute(isBlank)) }))
 });
 
 function App() {
-  const form = useForm<User>({
-    validateOnBlur: true,
-    validate: useValidator(validator),
-    submit: value => console.log(value),
-    initialValue: {
-      email: "",
-      pets: [],
-      profile: { name: "" }
-    }
+  const form = useForm({
+    initialValue: { email: "", pets: [], profile: { name: "", age: "" } }
   });
+
+  const validate = useValidate(form, validator);
+  const submit = useSubmit(validate, value => console.log(value));
 
   const email = useField(form, "email");
   const profile = useField(form, "profile");
@@ -48,7 +51,7 @@ function App() {
   const pets = useField(form, "pets");
 
   return (
-    <form onSubmit={form.onSubmit}>
+    <form onSubmit={submit}>
       <h1>@stackup/form</h1>
 
       {/** A plain ol' field */}

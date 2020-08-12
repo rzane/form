@@ -1,6 +1,11 @@
 import { useCallback } from "react";
 import { FormField } from "./types";
-import { insertItem } from "./utilities";
+
+function insert<T>(values: T[], index: number, value: T): T[] {
+  const result = [...values];
+  result.splice(index, 0, value);
+  return result;
+}
 
 /**
  * Adds a new value at a specific position to an array of values.
@@ -20,17 +25,17 @@ export function useInsertItem<Value>(
   const { setValue, setError, setTouched } = field;
 
   return useCallback(() => {
-    setValue(values => insertItem(values, index, value));
+    setValue(values => insert(values, index, value));
     setError(errors => {
       if (Array.isArray(errors)) {
-        return insertItem(errors, index, undefined);
+        return insert(errors, index, undefined);
       } else {
         return errors;
       }
     });
     setTouched(touched => {
       if (Array.isArray(touched)) {
-        return insertItem(touched, index, undefined);
+        return insert(touched, index, undefined);
       } else {
         return touched;
       }

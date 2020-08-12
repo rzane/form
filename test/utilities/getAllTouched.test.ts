@@ -1,18 +1,4 @@
-import { insertItem, removeItem, getAllTouched } from "../src/utilities";
-
-test("insertItem", () => {
-  const values = [1, 2, 3];
-  const nextValues = insertItem(values, 1, 4);
-  expect(nextValues).toEqual([1, 4, 2, 3]);
-  expect(nextValues).not.toBe(values);
-});
-
-test("removeItem", () => {
-  const values = [1, 2, 3];
-  const nextValues = removeItem(values, 1);
-  expect(nextValues).toEqual([1, 3]);
-  expect(nextValues).not.toBe(values);
-});
+import { getAllTouched } from "../../src/utilities/getAllTouched";
 
 test("getAllTouched", () => {
   expect(getAllTouched(undefined)).toEqual(undefined);

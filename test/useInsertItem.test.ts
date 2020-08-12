@@ -1,15 +1,9 @@
 import { renderHook, act } from "@testing-library/react-hooks";
-import { FormOptions, useForm, useInsertItem } from "../src";
+import { useForm, useInsertItem, UseFormOptions } from "../src";
 
-function setup(options: Partial<FormOptions<number[]>> = {}) {
+function setup(options: Partial<UseFormOptions<number[]>> = {}) {
   return renderHook(() => {
-    const field = useForm<number[]>({
-      submit: jest.fn(),
-      validate: jest.fn(),
-      initialValue: [1, 2],
-      ...options
-    });
-
+    const field = useForm<number[]>({ initialValue: [1, 2], ...options });
     const insert = useInsertItem(field, 1, 3);
     return { insert, field };
   });

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useRef } from "react";
 
 const generate: () => string = (() => {
   let previousId = 0;
@@ -11,7 +11,7 @@ const generate: () => string = (() => {
  * This hook does not currently support SSR.
  */
 export const useIdentifier = (id?: string): string => {
-  const ref = React.useRef(id);
+  const ref = useRef(id);
 
   if (ref.current === undefined) {
     ref.current = generate();

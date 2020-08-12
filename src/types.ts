@@ -1,3 +1,8 @@
+import { FormEvent } from "react";
+
+export type Transform<T> = (value: T) => T;
+export type SetState<T> = (value: T | Transform<T>) => void;
+
 export type FormError<Value> =
   | undefined
   | string
@@ -16,8 +21,45 @@ export type FormTouched<Value> =
       ? { [K in keyof Value]?: FormTouched<Value[K]> }
       : never);
 
-export type Transform<T> = (value: T) => T;
-export type SetState<T> = (value: T | Transform<T>) => void;
+export interface ValidateOptions {
+  touch?: boolean;
+}
+
+export type ValidationResult<Value, Result> =
+  | { valid: true; value: Result }
+  | { valid: false; error: FormError<Value> };
+
+/**
+ * A function used for validation. This function must indicate whether
+ * or not the form is valid.
+ *
+ * The `error` property can be used to set errors on the form.
+ *
+ * The `value` property can be used to transform the form's values before
+ * validation.
+ */
+export type ValidateFn<Value, Result> = (
+  value: Value
+) =>
+  | ValidationResult<Value, Result>
+  | PromiseLike<ValidationResult<Value, Result>>;
+
+/**
+ * Configures when validation runs.
+ */
+export interface UseValidationOptions {
+  /**
+   * Enables validation whenever values change.
+   * @default true
+   */
+  onChange?: boolean;
+
+  /**
+   * Enables validation whenever a field is touched.
+   * @default true
+   */
+  onBlur?: boolean;
+}
 
 /**
  * The primary form data structure.
@@ -49,6 +91,16 @@ export interface FormField<Value> {
   touched: FormTouched<Value>;
 
   /**
+   * Indicates that validation is currently being run
+   */
+  isValidating: boolean;
+
+  /**
+   * Indicates that the form is currently being submitted
+   */
+  isSubmitting: boolean;
+
+  /**
    * Change the value. Just like with `setState`, you can pass a callback
    * to this function to get the current value and update it.
    */
@@ -66,49 +118,13 @@ export interface FormField<Value> {
 }
 
 /**
- * The validation function should return either a `value` or an `error`.
- *
- * Many validation libraries support casting the data that you input. The
- * `value` that you return will be passed to your submit handler.
- *
- * The `error` should have the same shape of your form data, but all of the
- * values should be strings.
- */
-export type ValidationResult<Value, Result> =
-  | { valid: true; value: Result }
-  | { valid: false; error: FormError<Value> };
-
-/**
- * A function that is called to validate the form.
- */
-export type Validate<Value, Result> = (
-  value: Value
-) => ValidationResult<Value, Result> | Promise<ValidationResult<Value, Result>>;
-
-/**
- * The function called when the form is submitted. The data will be validated
- * and converted before this function is called.
- */
-export type Submit<Result> = (value: Result) => void | Promise<void>;
-
-/**
  * The options that can be passed to {@link useForm}.
  */
-export interface FormOptions<Value, Result = Value> {
+export interface UseFormOptions<Value> {
   /**
    * Customize the base ID for all fields.
    */
   id?: string;
-
-  /**
-   * Handles the submission of the form.
-   */
-  submit: Submit<Result>;
-
-  /**
-   * Validates the form.
-   */
-  validate: Validate<Value, Result>;
 
   /**
    * The initial values for the form.
@@ -124,18 +140,6 @@ export interface FormOptions<Value, Result = Value> {
    * The initially touched fields.
    */
   initialTouched?: FormTouched<Value>;
-
-  /**
-   * Enables validation whenever values change.
-   * @default false
-   */
-  validateOnChange?: boolean;
-
-  /**
-   * Enables validation whenever a field is touched.
-   * @default false
-   */
-  validateOnBlur?: boolean;
 }
 
 /**
@@ -158,27 +162,24 @@ export interface Form<Value, Result = Value> extends FormField<Value> {
   initialTouched: FormTouched<Value>;
 
   /**
-   * Indicates that the form is currently submitting.
+   * Indicate that the form is validating
    */
-  isSubmitting: boolean;
+  setValidating: SetState<boolean>;
 
   /**
-   * Indicates that the form is currently validating.
+   * Indicate that the form is validating
    */
-  isValidating: boolean;
+  setSubmitting: SetState<boolean>;
 
   /**
-   * Trigger form submission.
+   * Run validation
    */
-  submit: () => Promise<void>;
-
-  /**
-   * Trigger form validation.
-   */
-  validate: () => Promise<ValidationResult<Value, Result>>;
-
-  /**
-   * This is the same as `submit`, but it'll `preventDefault` on the `event`.
-   */
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
+  validate: (
+    opts?: ValidateOptions
+  ) => Promise<ValidationResult<Value, Result>>;
 }
+
+/**
+ * Submits the form.
+ */
+export type Submit = (event?: FormEvent<HTMLFormElement>) => Promise<void>;
