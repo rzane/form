@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { getAllTouched } from "./utilities/getAllTouched";
 import { useMounted } from "./utilities/useMounted";
 import { useEventCallback } from "./utilities/useEventCallback";
@@ -6,8 +6,7 @@ import {
   Form,
   ValidateOptions,
   ValidateFn,
-  UseValidationOptions,
-  Submittable
+  UseValidationOptions
 } from "./types";
 
 /**
@@ -25,10 +24,10 @@ import {
  * });
  */
 export function useValidation<Value, Result>(
-  form: Form<Value>,
+  form: Form<Value, Value>,
   fn: ValidateFn<Value, Result>,
   opts: UseValidationOptions = {}
-): Submittable<Value, Result> {
+): Form<Value, Result> {
   const isMounted = useMounted();
   const { onChange = true, onBlur = true } = opts;
 
@@ -56,5 +55,5 @@ export function useValidation<Value, Result>(
     if (onBlur) validate();
   }, [form.touched, onBlur, validate]);
 
-  return { validate, setSubmitting: form.setSubmitting };
+  return useMemo(() => ({ ...form, validate }), [form, validate]);
 }

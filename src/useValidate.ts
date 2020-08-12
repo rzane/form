@@ -1,6 +1,6 @@
 import { useValidation } from "./useValidation";
 import { setIn, Path } from "./utilities/setIn";
-import { Form, UseValidationOptions, Submittable } from "./types";
+import { Form, UseValidationOptions } from "./types";
 
 interface Problem {
   message: string;
@@ -39,10 +39,10 @@ function convert<T>(result: ValidationResult<T>): any {
  * const validate = useValidate(form, validator);
  */
 export function useValidate<Value, Result>(
-  form: Form<Value>,
+  form: Form<Value, Value>,
   validator: Validator<Value, Result>,
   opts?: UseValidationOptions
-): Submittable<Value, Result> {
+): Form<Value, Result> {
   return useValidation(
     form,
     value => validator.validate(value).then(convert),

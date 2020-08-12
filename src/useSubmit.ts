@@ -1,5 +1,5 @@
 import { FormEvent } from "react";
-import { Submittable, Submit } from "./types";
+import { Form, Submit } from "./types";
 import { useMounted } from "./utilities/useMounted";
 import { useEventCallback } from "./utilities/useEventCallback";
 
@@ -9,7 +9,7 @@ type SubmitFn<T> = (values: T) => void | Promise<void>;
  * Create a submit handler for the form.
  */
 export function useSubmit<Value, Result>(
-  form: Submittable<Value, Result>,
+  form: Form<Value, Result>,
   fn: SubmitFn<Result>
 ): Submit {
   const isMounted = useMounted();

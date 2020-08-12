@@ -105,9 +105,7 @@ export interface UseFormOptions<Value> {
 /**
  * The value returned by `useForm`.
  */
-export interface Form<Value>
-  extends FormField<Value>,
-    Submittable<Value, Value> {
+export interface Form<Value, Result = Value> extends FormField<Value> {
   /**
    * The initial values for the form.
    */
@@ -127,6 +125,18 @@ export interface Form<Value>
    * Indicate that the form is validating
    */
   setValidating: SetState<boolean>;
+
+  /**
+   * Indicate that the form is validating
+   */
+  setSubmitting: SetState<boolean>;
+
+  /**
+   * Run validation
+   */
+  validate: (
+    opts?: ValidateOptions
+  ) => Promise<ValidationResult<Value, Result>>;
 }
 
 export type ValidationResult<Value, Result> =
@@ -164,23 +174,6 @@ export interface ValidateOptions {
    * Touch erroneous fields.
    */
   touch?: boolean;
-}
-
-/**
- * Something that can be submitted.
- */
-export interface Submittable<Value, Result> {
-  /**
-   * Indicate that the form is validating
-   */
-  setSubmitting: SetState<boolean>;
-
-  /**
-   * Run validation
-   */
-  validate: (
-    opts?: ValidateOptions
-  ) => Promise<ValidationResult<Value, Result>>;
 }
 
 /**

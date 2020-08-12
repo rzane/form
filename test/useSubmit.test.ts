@@ -2,7 +2,7 @@ import { renderHook } from "@testing-library/react-hooks";
 import { useSubmit } from "../src";
 
 test("submits valid values", async () => {
-  const form = {
+  const form: any = {
     setSubmitting: jest.fn(),
     validate: jest.fn().mockResolvedValue({
       value: "value",
@@ -18,7 +18,7 @@ test("submits valid values", async () => {
 });
 
 test("aborts submission when the form is not valid", async () => {
-  const form = {
+  const form: any = {
     setSubmitting: jest.fn(),
     validate: jest.fn().mockResolvedValue({
       error: "error",
@@ -34,7 +34,7 @@ test("aborts submission when the form is not valid", async () => {
 });
 
 test("resets `isSubmitting` when an error is thrown", async () => {
-  const form = {
+  const form: any = {
     setSubmitting: jest.fn(),
     validate: jest.fn(() => {
       throw new Error("boom");
@@ -49,7 +49,7 @@ test("resets `isSubmitting` when an error is thrown", async () => {
 });
 
 test("resets `isSubmitting` when a promise is rejected", async () => {
-  const form = {
+  const form: any = {
     setSubmitting: jest.fn(),
     validate: jest.fn().mockRejectedValue(new Error("boom"))
   };
@@ -62,7 +62,7 @@ test("resets `isSubmitting` when a promise is rejected", async () => {
 });
 
 test("prevents default and stops propagation", async () => {
-  const form = {
+  const form: any = {
     setSubmitting: jest.fn(),
     validate: jest.fn().mockResolvedValue({
       value: "value",
