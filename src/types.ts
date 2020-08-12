@@ -1,3 +1,5 @@
+import { FormEvent } from "react";
+
 export type Transform<T> = (value: T) => T;
 export type SetState<T> = (value: T | Transform<T>) => void;
 
@@ -103,7 +105,9 @@ export interface UseFormOptions<Value> {
 /**
  * The value returned by `useForm`.
  */
-export interface Form<Value> extends FormField<Value> {
+export interface Form<Value>
+  extends FormField<Value>,
+    Submittable<Value, Value> {
   /**
    * The initial values for the form.
    */
@@ -123,11 +127,6 @@ export interface Form<Value> extends FormField<Value> {
    * Indicate that the form is validating
    */
   setValidating: SetState<boolean>;
-
-  /**
-   * Indicate that the form is submitting
-   */
-  setSubmitting: SetState<boolean>;
 }
 
 export type ValidationResult<Value, Result> =
@@ -168,36 +167,21 @@ export interface ValidateOptions {
 }
 
 /**
- * The value returned by `useValidation`.
+ * Something that can be submitted.
  */
-export interface Validation<Value, Result> {
+export interface Submittable<Value, Result> {
   /**
-   * A reference to form being validated.
+   * Indicate that the form is validating
    */
-  form: Form<Value>;
+  setSubmitting: SetState<boolean>;
 
   /**
-   * Trigger form validation.
+   * Run validation
    */
-  execute: (opts?: ValidateOptions) => Promise<ValidationResult<Value, Result>>;
+  validate: (opts: ValidateOptions) => Promise<ValidationResult<Value, Result>>;
 }
 
 /**
- * The value returned by `useSubmit`.
+ * Submits the form.
  */
-export interface Submit<Value> {
-  /**
-   * A reference to form being submitted.
-   */
-  form: Form<Value>;
-
-  /**
-   * Trigger form submission.
-   */
-  execute: () => Promise<void>;
-
-  /**
-   * This is the same as `submit`, but it'll `preventDefault` on the `event`.
-   */
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
-}
+export type Submit = (event?: FormEvent<HTMLFormElement>) => Promise<void>;

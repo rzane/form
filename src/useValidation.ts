@@ -4,10 +4,10 @@ import { useMounted } from "./utilities/useMounted";
 import { useEventCallback } from "./utilities/useEventCallback";
 import {
   Form,
-  Validation,
   ValidateOptions,
   ValidateFn,
-  UseValidationOptions
+  UseValidationOptions,
+  Submittable
 } from "./types";
 
 /**
@@ -16,7 +16,7 @@ import {
  * This hook can also be used to incorporate your favorite validation library.
  *
  * @example
- * const validate = useValidation(form, value => {
+ * const validation = useValidation(form, value => {
  *   if (!value.email) {
  *     return { valid: false, error: { email: "can't be blank" } };
  *   }
@@ -26,17 +26,17 @@ import {
  */
 export function useValidation<Value, Result>(
   form: Form<Value>,
-  validate: ValidateFn<Value, Result>,
+  fn: ValidateFn<Value, Result>,
   opts: UseValidationOptions = {}
-): Validation<Value, Result> {
+): Submittable<Value, Result> {
   const isMounted = useMounted();
   const { onChange = true, onBlur = true } = opts;
 
-  const execute = useEventCallback(async (opts: ValidateOptions = {}) => {
+  const validate = useEventCallback(async (opts: ValidateOptions = {}) => {
     form.setValidating(true);
 
     try {
-      const result = await validate(form.value);
+      const result = await fn(form.value);
       const errors = result.valid ? undefined : result.error;
 
       if (isMounted) form.setError(errors);
@@ -49,12 +49,12 @@ export function useValidation<Value, Result>(
   });
 
   useEffect(() => {
-    if (onChange) execute();
-  }, [form.value, onChange, execute]);
+    if (onChange) validate();
+  }, [form.value, onChange, validate]);
 
   useEffect(() => {
-    if (onBlur) execute();
-  }, [form.touched, onBlur, execute]);
+    if (onBlur) validate();
+  }, [form.touched, onBlur, validate]);
 
-  return { form, execute };
+  return { validate, setSubmitting: form.setSubmitting };
 }
