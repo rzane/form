@@ -1,10 +1,11 @@
-import { ValidateFn, ValidateOptions } from "./../src/types";
 import { renderHook, act } from "@testing-library/react-hooks";
 import {
   useForm,
   useValidation,
   UseFormOptions,
-  UseValidationOptions
+  UseValidationOptions,
+  ValidateFn,
+  ValidateOptions
 } from "../src";
 
 const setup = (
