@@ -57,3 +57,11 @@ test("changes `touched` with `setTouched`", () => {
   expect(result.current.touched).toEqual(true);
   expect(result.current.initialTouched).toBeUndefined();
 });
+
+test("returns the value when `validate` is called", async () => {
+  const { result } = setup();
+  expect(await result.current.validate()).toEqual({
+    valid: true,
+    value: ""
+  });
+});

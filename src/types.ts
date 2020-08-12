@@ -178,7 +178,9 @@ export interface Submittable<Value, Result> {
   /**
    * Run validation
    */
-  validate: (opts: ValidateOptions) => Promise<ValidationResult<Value, Result>>;
+  validate: (
+    opts?: ValidateOptions
+  ) => Promise<ValidationResult<Value, Result>>;
 }
 
 /**
