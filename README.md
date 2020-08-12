@@ -111,11 +111,20 @@ If your form doesn't require validation, see [useNoValidate](useNoValidate).
 
 #### Examples
 
+Form values can be primitive
+
+```javascript
+const form = useForm({ initialValue: "" });
+```
+
+But usually, they'll contain an object
+
 ```javascript
 const form = useForm({
-  initialValue: "",
-  validate: useValidator(validator),
-  submit: value => alert(`The value is ${value}`)
+  initialValue: {
+    email: "",
+    name: ""
+  }
 });
 ```
 
@@ -237,12 +246,7 @@ This hook is intended for use in building forms with "Add another" functionality
 #### Examples
 
 ```javascript
-const form = useForm({
-  initialValue: {
-    pets: [{ name: "" }]
-  }
-});
-
+const form = useForm({ initialValue: { pets: [{ name: "" }] } });
 const pets = useField(form, "pets");
 const pet = useFieldItem(pets, 0);
 const name = useField(pet, "name");

@@ -25,12 +25,7 @@ function useSetItem(setState: SetState<any>, index: number): SetState<any> {
  * This hook is intended for use in building forms with "Add another" functionality.
  *
  * @example
- * const form = useForm({
- *   initialValue: {
- *     pets: [{ name: "" }]
- *   }
- * });
- *
+ * const form = useForm({ initialValue: { pets: [{ name: "" }] } });
  * const pets = useField(form, "pets");
  * const pet = useFieldItem(pets, 0);
  * const name = useField(pet, "name");

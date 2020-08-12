@@ -20,11 +20,15 @@ import { useEventCallback } from "./utilities/useEventCallback";
  *
  * If your form doesn't require validation, see {@link useNoValidate}.
  *
- * @example
+ * @example <caption>Form values can be primitive</caption>
+ * const form = useForm({ initialValue: "" });
+ *
+ * @example <caption>But usually, they'll contain an object</caption>
  * const form = useForm({
- *   initialValue: "",
- *   validate: useValidator(validator),
- *   submit: value => alert(`The value is ${value}`)
+ *   initialValue: {
+ *     email: "",
+ *     name: ""
+ *   }
  * });
  */
 export function useForm<Value>(options: UseFormOptions<Value>): Form<Value> {
