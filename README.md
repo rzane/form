@@ -75,6 +75,7 @@ const Input = ({
 - [useValidation](#usevalidation)
 - [useValidate](#usevalidate)
 - [useSubmit](#usesubmit)
+- [useReset](#usereset)
 - [useFieldItem](#usefielditem)
 - [usePushItem](#usepushitem)
 - [useInsertItem](#useinsertitem)
@@ -84,6 +85,7 @@ const Input = ({
 - [FormField](#formfield)
 - [ValidateFn](#validatefn)
 - [Submit](#submit)
+- [Reset](#reset)
 - [UseFormOptions](#useformoptions)
 - [UseValidationOptions](#usevalidationoptions)
 
@@ -182,7 +184,7 @@ Add validation to the form using [@stackup/validate](https://github.com/rzane/va
 #### Parameters
 
 - `form` **[Form](#form)&lt;Value, Value>**
-- `validator` **Validator&lt;Value, Result>**
+- `validator` **Validator&lt;(Value | any), Result>**
 - `opts` **[UseValidationOptions](#usevalidationoptions)?**
 
 #### Examples
@@ -224,6 +226,23 @@ const submit = useSubmit(validate, console.log);
 ```
 
 Returns **[Submit](#submit)**
+
+### useReset
+
+Create a reset handler for the form.
+
+#### Parameters
+
+- `form` **[Form](#form)&lt;Value, Result>**
+
+#### Examples
+
+```javascript
+const form = useForm({ initialValue: "foo" });
+const reset = useReset(form);
+```
+
+Returns **[Reset](#reset)**
 
 ### useFieldItem
 
@@ -353,6 +372,12 @@ Indicate that the form is validating
 
 Type: SetState&lt;[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)>
 
+#### reset
+
+Reset the state of the form
+
+Type: function (opts: ResetOptions&lt;Value>): void
+
 #### validate
 
 Run validation
@@ -439,6 +464,12 @@ Type: function (value: Value): (ValidationResult&lt;Value, Result> | PromiseLike
 ### Submit
 
 Submits the form.
+
+Type: function (event: FormEvent&lt;[HTMLFormElement](https://developer.mozilla.org/docs/Web/API/HTMLFormElement)>): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>
+
+### Reset
+
+Resets the form.
 
 Type: function (event: FormEvent&lt;[HTMLFormElement](https://developer.mozilla.org/docs/Web/API/HTMLFormElement)>): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>
 

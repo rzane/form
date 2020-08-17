@@ -4,6 +4,7 @@ toc:
   - useValidation
   - useValidate
   - useSubmit
+  - useReset
   - useFieldItem
   - usePushItem
   - useInsertItem
@@ -13,5 +14,6 @@ toc:
   - FormField
   - ValidateFn
   - Submit
+  - Reset
   - UseFormOptions
   - UseValidationOptions
