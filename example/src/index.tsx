@@ -4,7 +4,7 @@ import * as ReactDOM from "react-dom";
 import { Code } from "./Code";
 import { Input } from "./Input";
 import { Pet, PetList } from "./PetList";
-import { useForm, useField, useValidate, useSubmit } from "../../src";
+import { useForm, useField, useValidate, useSubmit, useReset } from "../../src";
 import {
   schema,
   each,
@@ -43,6 +43,7 @@ function App() {
   });
 
   const validate = useValidate(form, validator);
+  const reset = useReset(validate);
   const submit = useSubmit(validate, value => console.log(value));
 
   const email = useField(form, "email");
@@ -51,7 +52,7 @@ function App() {
   const pets = useField(form, "pets");
 
   return (
-    <form onSubmit={submit}>
+    <form onSubmit={submit} onReset={reset}>
       <h1>@stackup/form</h1>
 
       {/** A plain ol' field */}
@@ -68,6 +69,7 @@ function App() {
 
       <p>
         <button type="submit">Submit</button>
+        <button type="reset">Reset</button>
       </p>
 
       <hr />

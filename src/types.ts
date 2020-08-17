@@ -194,3 +194,8 @@ export interface Form<Value, Result = Value> extends FormField<Value> {
  * Submits the form.
  */
 export type Submit = (event?: FormEvent<HTMLFormElement>) => Promise<void>;
+
+/**
+ * Resets the form.
+ */
+export type Reset = (event?: FormEvent<HTMLFormElement>) => Promise<void>;
