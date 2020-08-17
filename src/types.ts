@@ -25,6 +25,12 @@ export interface ValidateOptions {
   touch?: boolean;
 }
 
+export interface ResetOptions<Value> {
+  value?: Value;
+  error?: FormError<Value>;
+  touched?: FormTouched<Value>;
+}
+
 export type ValidationResult<Value, Result> =
   | { valid: true; value: Result }
   | { valid: false; error: FormError<Value> };
@@ -172,6 +178,11 @@ export interface Form<Value, Result = Value> extends FormField<Value> {
   setSubmitting: SetState<boolean>;
 
   /**
+   * Reset the state of the form
+   */
+  reset: (opts?: ResetOptions<Value>) => void;
+
+  /**
    * Run validation
    */
   validate: (
@@ -183,3 +194,8 @@ export interface Form<Value, Result = Value> extends FormField<Value> {
  * Submits the form.
  */
 export type Submit = (event?: FormEvent<HTMLFormElement>) => Promise<void>;
+
+/**
+ * Resets the form.
+ */
+export type Reset = (event?: FormEvent<HTMLFormElement>) => Promise<void>;

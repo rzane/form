@@ -19,7 +19,7 @@ You should also checkout [@stackup/inputs](https://github.com/promptworks/inputs
 
 ```jsx
 import React from "react";
-import { useForm, useField, useNoValidate } from "@stackup/form";
+import { useForm, useField } from "@stackup/form";
 
 const Form = () => {
   const form = useForm({ initialValue: { email: "", name: "" } });
@@ -75,6 +75,7 @@ const Input = ({
 - [useValidation](#usevalidation)
 - [useValidate](#usevalidate)
 - [useSubmit](#usesubmit)
+- [useReset](#usereset)
 - [useFieldItem](#usefielditem)
 - [usePushItem](#usepushitem)
 - [useInsertItem](#useinsertitem)
@@ -84,6 +85,7 @@ const Input = ({
 - [FormField](#formfield)
 - [ValidateFn](#validatefn)
 - [Submit](#submit)
+- [Reset](#reset)
 - [UseFormOptions](#useformoptions)
 - [UseValidationOptions](#usevalidationoptions)
 
@@ -97,13 +99,6 @@ managing submission.
 
 The initial value for the form can be literally anything! Usually, it's an
 object, but it could be any type of value.
-
-The `useForm` function takes two generic parameters. The first describes the
-shape of your form state. The second is optional, but it describes the result
-of casting your form state with a validator. The casted value is what will be
-passed to `submit`.
-
-If your form doesn't require validation, see [useNoValidate](useNoValidate).
 
 #### Parameters
 
@@ -189,7 +184,7 @@ Add validation to the form using [@stackup/validate](https://github.com/rzane/va
 #### Parameters
 
 - `form` **[Form](#form)&lt;Value, Value>**
-- `validator` **Validator&lt;Value, Result>**
+- `validator` **Validator&lt;(Value | any), Result>**
 - `opts` **[UseValidationOptions](#usevalidationoptions)?**
 
 #### Examples
@@ -231,6 +226,23 @@ const submit = useSubmit(validate, console.log);
 ```
 
 Returns **[Submit](#submit)**
+
+### useReset
+
+Create a reset handler for the form.
+
+#### Parameters
+
+- `form` **[Form](#form)&lt;Value, Result>**
+
+#### Examples
+
+```javascript
+const form = useForm({ initialValue: "foo" });
+const reset = useReset(form);
+```
+
+Returns **[Reset](#reset)**
 
 ### useFieldItem
 
@@ -360,6 +372,12 @@ Indicate that the form is validating
 
 Type: SetState&lt;[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)>
 
+#### reset
+
+Reset the state of the form
+
+Type: function (opts: ResetOptions&lt;Value>): void
+
 #### validate
 
 Run validation
@@ -446,6 +464,12 @@ Type: function (value: Value): (ValidationResult&lt;Value, Result> | PromiseLike
 ### Submit
 
 Submits the form.
+
+Type: function (event: FormEvent&lt;[HTMLFormElement](https://developer.mozilla.org/docs/Web/API/HTMLFormElement)>): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>
+
+### Reset
+
+Resets the form.
 
 Type: function (event: FormEvent&lt;[HTMLFormElement](https://developer.mozilla.org/docs/Web/API/HTMLFormElement)>): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>
 
