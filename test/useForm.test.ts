@@ -65,3 +65,24 @@ test("returns the value when `validate` is called", async () => {
     value: ""
   });
 });
+
+test("re-initializes the form `reset` is called", async () => {
+  const { result } = setup();
+
+  act(() =>
+    result.current.reset({
+      value: "value",
+      error: "error",
+      touched: true
+    })
+  );
+
+  expect(result.current.initialValue).toEqual("value");
+  expect(result.current.value).toEqual("value");
+
+  expect(result.current.initialError).toEqual("error");
+  expect(result.current.error).toEqual("error");
+
+  expect(result.current.initialTouched).toEqual(true);
+  expect(result.current.touched).toEqual(true);
+});
