@@ -19,7 +19,7 @@ You should also checkout [@stackup/inputs](https://github.com/promptworks/inputs
 
 ```jsx
 import React from "react";
-import { useForm, useField, useNoValidate } from "@stackup/form";
+import { useForm, useField } from "@stackup/form";
 
 const Form = () => {
   const form = useForm({ initialValue: { email: "", name: "" } });
@@ -97,13 +97,6 @@ managing submission.
 
 The initial value for the form can be literally anything! Usually, it's an
 object, but it could be any type of value.
-
-The `useForm` function takes two generic parameters. The first describes the
-shape of your form state. The second is optional, but it describes the result
-of casting your form state with a validator. The casted value is what will be
-passed to `submit`.
-
-If your form doesn't require validation, see [useNoValidate](useNoValidate).
 
 #### Parameters
 

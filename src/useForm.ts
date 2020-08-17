@@ -13,13 +13,6 @@ import { useEventCallback } from "./utilities/useEventCallback";
  * The initial value for the form can be literally anything! Usually, it's an
  * object, but it could be any type of value.
  *
- * The `useForm` function takes two generic parameters. The first describes the
- * shape of your form state. The second is optional, but it describes the result
- * of casting your form state with a validator. The casted value is what will be
- * passed to `submit`.
- *
- * If your form doesn't require validation, see {@link useNoValidate}.
- *
  * @example <caption>Form values can be primitive</caption>
  * const form = useForm({ initialValue: "" });
  *
@@ -33,13 +26,13 @@ import { useEventCallback } from "./utilities/useEventCallback";
  */
 export function useForm<Value>(options: UseFormOptions<Value>): Form<Value> {
   const id = useIdentifier(options.id);
-  const initialValue = useRef(options.initialValue).current;
-  const initialError = useRef(options.initialError).current;
-  const initialTouched = useRef(options.initialTouched).current;
+  const initialValue = useRef(options.initialValue);
+  const initialError = useRef(options.initialError);
+  const initialTouched = useRef(options.initialTouched);
 
-  const [value, setValue] = useState(initialValue);
-  const [error, setError] = useState(initialError);
-  const [touched, setTouched] = useState(initialTouched);
+  const [value, setValue] = useState(initialValue.current);
+  const [error, setError] = useState(initialError.current);
+  const [touched, setTouched] = useState(initialTouched.current);
   const [isValidating, setValidating] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
 
@@ -47,13 +40,31 @@ export function useForm<Value>(options: UseFormOptions<Value>): Form<Value> {
     return Promise.resolve({ value, valid: true as const });
   });
 
+  const reset = useEventCallback(opts => {
+    if (opts && "value" in opts) {
+      initialValue.current = opts.value;
+    }
+
+    if (opts && "error" in opts) {
+      initialError.current = opts.error;
+    }
+
+    if (opts && "touched" in opts) {
+      initialTouched.current = opts.touched;
+    }
+
+    setValue(initialValue.current);
+    setError(initialError.current);
+    setTouched(initialTouched.current);
+  });
+
   return useMemo(
     () => ({
       id: `form-${id}`,
       name: "form",
-      initialValue,
-      initialError,
-      initialTouched,
+      initialValue: initialValue.current,
+      initialError: initialError.current,
+      initialTouched: initialTouched.current,
       value,
       error,
       touched,
@@ -64,6 +75,7 @@ export function useForm<Value>(options: UseFormOptions<Value>): Form<Value> {
       setTouched,
       setValidating,
       setSubmitting,
+      reset,
       validate
     }),
     [
@@ -76,6 +88,7 @@ export function useForm<Value>(options: UseFormOptions<Value>): Form<Value> {
       touched,
       isValidating,
       isSubmitting,
+      reset,
       validate
     ]
   );
