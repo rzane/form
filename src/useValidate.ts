@@ -40,7 +40,7 @@ function convert<T>(result: ValidationResult<T>): any {
  */
 export function useValidate<Value, Result>(
   form: Form<Value, Value>,
-  validator: Validator<Value, Result>,
+  validator: Validator<Value | unknown, Result>,
   opts?: UseValidationOptions
 ): Form<Value, Result> {
   return useValidation(
