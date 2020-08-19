@@ -29,6 +29,10 @@ export function useSubmit<Value, Result>(
       event.stopPropagation();
     }
 
+    if (form.isSubmitting) {
+      return;
+    }
+
     form.setSubmitting(true);
 
     try {
