@@ -81,3 +81,11 @@ test("prevents default and stops propagation", async () => {
   expect(event.preventDefault).toHaveBeenCalled();
   expect(event.stopPropagation).toHaveBeenCalled();
 });
+
+test("makes no attempt to submit when already submitting", async () => {
+  const form: any = { isSubmitting: true };
+  const submit = jest.fn();
+  const onSubmit = renderHook(() => useSubmit(form, submit));
+  await onSubmit.result.current();
+  expect(submit).not.toHaveBeenCalled();
+});
