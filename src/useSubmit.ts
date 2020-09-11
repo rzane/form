@@ -3,7 +3,7 @@ import { Form, Submit } from "./types";
 import { useMounted } from "./utilities/useMounted";
 import { useEventCallback } from "./utilities/useEventCallback";
 
-type SubmitFn<T> = (values: T) => void | Promise<void>;
+type SubmitFn<T> = (values: T) => void | Promise<any>;
 
 /**
  * Create a submit handler for the form.
