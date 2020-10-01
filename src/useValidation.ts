@@ -38,12 +38,17 @@ export function useValidation<Value, Result>(
       const result = await fn(form.value);
       const errors = result.valid ? undefined : result.error;
 
-      if (isMounted) form.setError(errors);
-      if (isMounted && opts.touch) form.setTouched(getAllTouched(errors));
+      if (isMounted.current) {
+        form.setError(errors);
+
+        if (opts.touch) {
+          form.setTouched(getAllTouched(errors));
+        }
+      }
 
       return result;
     } finally {
-      if (isMounted) form.setValidating(false);
+      if (isMounted.current) form.setValidating(false);
     }
   });
 
