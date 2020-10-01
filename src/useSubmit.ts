@@ -39,7 +39,7 @@ export function useSubmit<Value, Result>(
       const result = await form.validate({ touch: true });
       if (result.valid) await fn(result.value);
     } finally {
-      if (isMounted) form.setSubmitting(false);
+      if (isMounted.current) form.setSubmitting(false);
     }
   });
 }
