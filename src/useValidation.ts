@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from "react";
+import { toPromise } from "./utilities/toPromise";
 import { getAllTouched } from "./utilities/getAllTouched";
 import { useMounted } from "./utilities/useMounted";
 import { useEventCallback } from "./utilities/useEventCallback";
@@ -31,25 +32,28 @@ export function useValidation<Value, Result>(
   const isMounted = useMounted();
   const { onChange = true, onBlur = true } = opts;
 
-  const validate = useEventCallback(async (opts: ValidateOptions = {}) => {
+  const validate = useEventCallback((opts: ValidateOptions = {}) => {
     form.setValidating(true);
 
-    try {
-      const result = await fn(form.value);
-      const errors = result.valid ? undefined : result.error;
+    return toPromise(() => fn(form.value))
+      .then(result => {
+        const errors = result.valid ? undefined : result.error;
 
-      if (isMounted.current) {
-        form.setError(errors);
+        if (isMounted.current) {
+          form.setError(errors);
 
-        if (opts.touch) {
-          form.setTouched(getAllTouched(errors));
+          if (opts.touch) {
+            form.setTouched(getAllTouched(errors));
+          }
         }
-      }
 
-      return result;
-    } finally {
-      if (isMounted.current) form.setValidating(false);
-    }
+        return result;
+      })
+      .finally(() => {
+        if (isMounted.current) {
+          form.setValidating(false);
+        }
+      });
   });
 
   useEffect(() => {

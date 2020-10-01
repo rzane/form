@@ -1,5 +1,6 @@
 import { FormEvent } from "react";
 import { Form, Submit } from "./types";
+import { toPromise } from "./utilities/toPromise";
 import { useMounted } from "./utilities/useMounted";
 import { useEventCallback } from "./utilities/useEventCallback";
 
@@ -23,43 +24,39 @@ export function useSubmit<Value, Result>(
 ): Submit {
   const isMounted = useMounted();
 
-  return useEventCallback(async (event?: FormEvent<HTMLFormElement>) => {
+  return useEventCallback((event?: FormEvent<HTMLFormElement>) => {
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
 
     if (form.isSubmitting) {
-      return;
+      return Promise.resolve();
     }
 
     form.setSubmitting(true);
 
-    try {
-      const result = await form.validate({ touch: true });
+    return toPromise(() => form.validate({ touch: true }))
+      .then(result => {
+        if (!result.valid) return;
 
-      if (result.valid) {
-        await fn(result.value);
-
+        return toPromise(() => fn(result.value)).then(() => {
+          if (isMounted.current) {
+            form.setSubmission(prev => ({ count: prev.count + 1 }));
+          }
+        });
+      })
+      .catch(error => {
         if (isMounted.current) {
-          form.setSubmission(prev => ({
-            count: prev.count + 1
-          }));
+          form.setSubmission(prev => ({ count: prev.count + 1, error }));
         }
-      }
-    } catch (error) {
-      if (isMounted.current) {
-        form.setSubmission(prev => ({
-          count: prev.count + 1,
-          error
-        }));
-      }
 
-      throw error;
-    } finally {
-      if (isMounted.current) {
-        form.setSubmitting(false);
-      }
-    }
+        throw error;
+      })
+      .finally(() => {
+        if (isMounted.current) {
+          form.setSubmitting(false);
+        }
+      });
   });
 }

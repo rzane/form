@@ -33,11 +33,11 @@
   "size-limit": [
     {
       "path": "dist/form.esm.js",
-      "limit": "5 KB"
+      "limit": "2 KB"
     },
     {
       "path": "dist/form.cjs.production.min.js",
-      "limit": "5 KB"
+      "limit": "2 KB"
     }
   ],
   "peerDependencies": {

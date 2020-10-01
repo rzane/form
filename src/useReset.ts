@@ -10,12 +10,13 @@ import { useEventCallback } from "./utilities/useEventCallback";
  * const reset = useReset(form);
  */
 export function useReset<Value, Result>(form: Form<Value, Result>): Reset {
-  return useEventCallback(async (event?: FormEvent<HTMLFormElement>) => {
+  return useEventCallback((event?: FormEvent<HTMLFormElement>) => {
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
 
     form.reset();
+    return Promise.resolve();
   });
 }
