@@ -14,6 +14,7 @@ toc:
   - FormField
   - ValidateFn
   - Submit
+  - Submission
   - Reset
   - UseFormOptions
   - UseValidationOptions

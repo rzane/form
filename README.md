@@ -85,6 +85,7 @@ const Input = ({
 - [FormField](#formfield)
 - [ValidateFn](#validatefn)
 - [Submit](#submit)
+- [Submission](#submission)
 - [Reset](#reset)
 - [UseFormOptions](#useformoptions)
 - [UseValidationOptions](#usevalidationoptions)
@@ -372,6 +373,12 @@ Indicate that the form is validating
 
 Type: SetState&lt;[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)>
 
+#### setSubmission
+
+Update the form's submission status
+
+Type: SetState&lt;[Submission](#submission)>
+
 #### reset
 
 Reset the state of the form
@@ -430,6 +437,12 @@ Indicates that the form is currently being submitted
 
 Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
 
+#### submission
+
+Keeps track of the form's submission status
+
+Type: [Submission](#submission)
+
 #### setValue
 
 Change the value. Just like with `setState`, you can pass a callback
@@ -466,6 +479,22 @@ Type: function (value: Value): (ValidationResult&lt;Value, Result> | PromiseLike
 Submits the form.
 
 Type: function (event: FormEvent&lt;[HTMLFormElement](https://developer.mozilla.org/docs/Web/API/HTMLFormElement)>): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>
+
+### Submission
+
+Keeps track of submissions.
+
+#### count
+
+The number of times the form has been submitted
+
+Type: [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)
+
+#### error
+
+If the submission flow throws an error, it will appear here.
+
+Type: [Error](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error)
 
 ### Reset
 
