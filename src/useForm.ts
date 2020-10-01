@@ -1,7 +1,9 @@
 import { useRef, useState, useMemo } from "react";
 import { useIdentifier } from "./useIdentifier";
-import { UseFormOptions, Form } from "./types";
+import { UseFormOptions, Form, Submission } from "./types";
 import { useEventCallback } from "./utilities/useEventCallback";
+
+const initialSubmission: Submission = { count: 0 };
 
 /**
  * Create a new form. A form requires an initial value, a function to validate,
@@ -35,6 +37,7 @@ export function useForm<Value>(options: UseFormOptions<Value>): Form<Value> {
   const [touched, setTouched] = useState(initialTouched.current);
   const [isValidating, setValidating] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
+  const [submission, setSubmission] = useState(initialSubmission);
 
   const validate = useEventCallback(() => {
     return Promise.resolve({ value, valid: true as const });
@@ -68,6 +71,7 @@ export function useForm<Value>(options: UseFormOptions<Value>): Form<Value> {
       value,
       error,
       touched,
+      submission,
       isValidating,
       isSubmitting,
       setValue,
@@ -75,6 +79,7 @@ export function useForm<Value>(options: UseFormOptions<Value>): Form<Value> {
       setTouched,
       setValidating,
       setSubmitting,
+      setSubmission,
       reset,
       validate
     }),
@@ -86,6 +91,7 @@ export function useForm<Value>(options: UseFormOptions<Value>): Form<Value> {
       value,
       error,
       touched,
+      submission,
       isValidating,
       isSubmitting,
       reset,

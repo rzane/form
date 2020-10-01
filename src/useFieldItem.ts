@@ -53,12 +53,14 @@ export function useFieldItem<Value>(
       setError,
       setTouched,
       isValidating: field.isValidating,
-      isSubmitting: field.isSubmitting
+      isSubmitting: field.isSubmitting,
+      submission: field.submission
     }),
     [
       field.id,
       field.isValidating,
       field.isSubmitting,
+      field.submission,
       index,
       value,
       error,
