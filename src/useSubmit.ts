@@ -33,22 +33,33 @@ export function useSubmit<Value, Result>(
       return;
     }
 
-    const stopSubmitting = (error?: Error) => {
-      if (isMounted.current) {
-        form.setSubmission(prev => ({ count: prev.count + 1, error }));
-        form.setSubmitting(false);
-      }
-    };
-
     form.setSubmitting(true);
 
     try {
       const result = await form.validate({ touch: true });
-      if (result.valid) await fn(result.value);
-      stopSubmitting();
+
+      if (result.valid) {
+        await fn(result.value);
+
+        if (isMounted.current) {
+          form.setSubmission(prev => ({
+            count: prev.count + 1
+          }));
+        }
+      }
     } catch (error) {
-      stopSubmitting(error);
+      if (isMounted.current) {
+        form.setSubmission(prev => ({
+          count: prev.count + 1,
+          error
+        }));
+      }
+
       throw error;
+    } finally {
+      if (isMounted.current) {
+        form.setSubmitting(false);
+      }
     }
   });
 }

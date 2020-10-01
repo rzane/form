@@ -16,6 +16,7 @@ test("submits valid values", async () => {
   await onSubmit.result.current();
   expect(submit).toHaveBeenCalledWith("value");
   expect(form.setSubmitting).toHaveBeenCalledTimes(2);
+  expect(form.setSubmission).toHaveBeenCalledTimes(1);
 });
 
 test("aborts submission when the form is not valid", async () => {
@@ -33,6 +34,7 @@ test("aborts submission when the form is not valid", async () => {
   await onSubmit.result.current();
   expect(submit).not.toHaveBeenCalled();
   expect(form.setSubmitting).toHaveBeenCalledTimes(2);
+  expect(form.setSubmission).not.toHaveBeenCalled();
 });
 
 test("resets `isSubmitting` when an error is thrown", async () => {
@@ -49,6 +51,7 @@ test("resets `isSubmitting` when an error is thrown", async () => {
   await expect(onSubmit.result.current()).rejects.toThrow("boom");
   expect(submit).not.toHaveBeenCalled();
   expect(form.setSubmitting).toHaveBeenCalledTimes(2);
+  expect(form.setSubmission).toHaveBeenCalledTimes(1);
 });
 
 test("resets `isSubmitting` when a promise is rejected", async () => {
@@ -63,6 +66,7 @@ test("resets `isSubmitting` when a promise is rejected", async () => {
   await expect(onSubmit.result.current()).rejects.toThrow("boom");
   expect(submit).not.toHaveBeenCalled();
   expect(form.setSubmitting).toHaveBeenCalledTimes(2);
+  expect(form.setSubmission).toHaveBeenCalledTimes(1);
 });
 
 test("prevents default and stops propagation", async () => {
