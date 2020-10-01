@@ -107,6 +107,11 @@ export interface FormField<Value> {
   isSubmitting: boolean;
 
   /**
+   * Keeps track of the form's submission status
+   */
+  submission: Submission;
+
+  /**
    * Change the value. Just like with `setState`, you can pass a callback
    * to this function to get the current value and update it.
    */
@@ -178,6 +183,11 @@ export interface Form<Value, Result = Value> extends FormField<Value> {
   setSubmitting: SetState<boolean>;
 
   /**
+   * Update the form's submission status
+   */
+  setSubmission: SetState<Submission>;
+
+  /**
    * Reset the state of the form
    */
   reset: (opts?: ResetOptions<Value>) => void;
@@ -199,3 +209,18 @@ export type Submit = (event?: FormEvent<HTMLFormElement>) => Promise<void>;
  * Resets the form.
  */
 export type Reset = (event?: FormEvent<HTMLFormElement>) => Promise<void>;
+
+/**
+ * Keeps track of submissions.
+ */
+export interface Submission {
+  /**
+   * The number of times the form has been submitted
+   */
+  count: number;
+
+  /**
+   * If the submission flow throws an error, it will appear here.
+   */
+  error?: Error;
+}

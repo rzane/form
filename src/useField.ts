@@ -57,12 +57,14 @@ export function useField<Value, Name extends keyof Value>(
       setError,
       setTouched,
       isSubmitting: field.isSubmitting,
-      isValidating: field.isValidating
+      isValidating: field.isValidating,
+      submission: field.submission
     }),
     [
       field.id,
       field.isSubmitting,
       field.isValidating,
+      field.submission,
       name,
       value,
       error,
