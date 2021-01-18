@@ -51,23 +51,6 @@ export type ValidateFn<Value, Result> = (
   | PromiseLike<ValidationResult<Value, Result>>;
 
 /**
- * Configures when validation runs.
- */
-export interface UseValidationOptions {
-  /**
-   * Enables validation whenever values change.
-   * @default true
-   */
-  onChange?: boolean;
-
-  /**
-   * Enables validation whenever a field is touched.
-   * @default true
-   */
-  onBlur?: boolean;
-}
-
-/**
  * The primary form data structure.
  */
 export interface FormField<Value> {
@@ -151,6 +134,26 @@ export interface UseFormOptions<Value> {
    * The initially touched fields.
    */
   initialTouched?: FormTouched<Value>;
+}
+
+export interface UseValidFormOptions<Value, Result>
+  extends UseFormOptions<Value> {
+  /**
+   * The function that validates the input.
+   */
+  validate: ValidateFn<Value, Result>;
+
+  /**
+   * Should validation run when fields are changed?
+   * @default false
+   */
+  validateOnChange?: boolean;
+
+  /**
+   * Should validation run when fields are blurred?
+   * @default false
+   */
+  validateOnBlur?: boolean;
 }
 
 /**
