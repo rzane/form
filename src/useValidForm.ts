@@ -1,36 +1,22 @@
 import { useEffect, useMemo } from "react";
-import { toPromise } from "./utilities/toPromise";
-import { getAllTouched } from "./utilities/getAllTouched";
+import { useForm } from "./useForm";
+import { Form, UseValidFormOptions, ValidateOptions } from "./types";
 import { useMounted } from "./utilities/useMounted";
 import { useEventCallback } from "./utilities/useEventCallback";
-import {
-  Form,
-  ValidateOptions,
-  ValidateFn,
-  UseValidationOptions
-} from "./types";
+import { toPromise } from "./utilities/toPromise";
+import { getAllTouched } from "./utilities/getAllTouched";
 
-/**
- * Use a plain ol' function for validation.
- *
- * This hook can also be used to incorporate your favorite validation library.
- *
- * @example
- * const validation = useValidation(form, value => {
- *   if (!value.email) {
- *     return { valid: false, error: { email: "can't be blank" } };
- *   }
- *
- *   return { valid: true, value };
- * });
- */
-export function useValidation<Value, Result>(
-  form: Form<Value, Value>,
-  fn: ValidateFn<Value, Result>,
-  opts: UseValidationOptions = {}
+export function useValidForm<Value, Result>(
+  options: UseValidFormOptions<Value, Result>
 ): Form<Value, Result> {
+  const form = useForm<Value>(options);
   const isMounted = useMounted();
-  const { onChange = true, onBlur = true } = opts;
+
+  const {
+    validate: fn,
+    validateOnChange = true,
+    validateOnBlur = true
+  } = options;
 
   const validate = useEventCallback((opts: ValidateOptions = {}) => {
     form.setValidating(true);
@@ -57,12 +43,12 @@ export function useValidation<Value, Result>(
   });
 
   useEffect(() => {
-    if (onChange) validate();
-  }, [form.value, onChange, validate]);
+    if (validateOnChange) validate();
+  }, [form.value, validateOnChange, validate]);
 
   useEffect(() => {
-    if (onBlur) validate();
-  }, [form.touched, onBlur, validate]);
+    if (validateOnBlur) validate();
+  }, [form.touched, validateOnBlur, validate]);
 
   return useMemo(() => ({ ...form, validate }), [form, validate]);
 }

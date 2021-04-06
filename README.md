@@ -472,7 +472,7 @@ The `error` property can be used to set errors on the form.
 The `value` property can be used to transform the form's values before
 validation.
 
-Type: function (value: Value): (ValidationResult&lt;Value, Result> | PromiseLike&lt;ValidationResult&lt;Value, Result>>)
+Type: function (value: Value): (ValidationResult&lt;Value, Result> | Promise&lt;ValidationResult&lt;Value, Result>>)
 
 ### Submit
 
