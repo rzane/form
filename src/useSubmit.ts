@@ -21,9 +21,10 @@ type SubmitFn<T> = (values: T) => void | Promise<any>;
 export function useSubmit<Value, Result>(
   form: Form<Value, Result>,
   fn: SubmitFn<Result>,
-  opts: ValidateOptions = { touch: true }
+  opts: ValidateOptions = {}
 ): Submit {
   const isMounted = useMounted();
+  const { touch = true } = opts;
 
   return useEventCallback((event?: FormEvent<HTMLFormElement>) => {
     if (event) {
@@ -37,7 +38,7 @@ export function useSubmit<Value, Result>(
 
     form.setSubmitting(true);
 
-    return toPromise(() => form.validate(opts))
+    return toPromise(() => form.validate({ touch }))
       .then(result => {
         if (!result.valid) return;
 
