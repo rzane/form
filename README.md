@@ -208,6 +208,7 @@ Create a submit handler for the form.
 
 - `form` **[Form](#form)&lt;Value, Result>**
 - `fn` **SubmitFn&lt;Result>**
+- `opts` **ValidateOptions** (optional, default `{touch:true}`)
 
 #### Examples
 

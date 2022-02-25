@@ -1,5 +1,5 @@
 import { FormEvent } from "react";
-import { Form, Submit } from "./types";
+import { Form, Submit, ValidateOptions } from "./types";
 import { toPromise } from "./utilities/toPromise";
 import { useMounted } from "./utilities/useMounted";
 import { useEventCallback } from "./utilities/useEventCallback";
@@ -20,7 +20,8 @@ type SubmitFn<T> = (values: T) => void | Promise<any>;
  */
 export function useSubmit<Value, Result>(
   form: Form<Value, Result>,
-  fn: SubmitFn<Result>
+  fn: SubmitFn<Result>,
+  opts: ValidateOptions = { touch: true }
 ): Submit {
   const isMounted = useMounted();
 
@@ -36,7 +37,7 @@ export function useSubmit<Value, Result>(
 
     form.setSubmitting(true);
 
-    return toPromise(() => form.validate({ touch: true }))
+    return toPromise(() => form.validate(opts))
       .then(result => {
         if (!result.valid) return;
 
